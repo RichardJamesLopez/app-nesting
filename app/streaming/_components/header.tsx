@@ -1,4 +1,5 @@
 //import { Logo } from '#/ui/logo';
+import Logo from '#/ui/logo';
 import { SearchIcon, ShoppingCartIcon } from '@heroicons/react/solid';
 import Image from 'next/image';
 import Link from 'next/link';
