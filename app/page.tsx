@@ -4,7 +4,7 @@ import Link from 'next/link';
 export default function Page() {
   return (
     <div className="space-y-8">
-      <h1 className="text-xl font-medium text-gray-300">Examples</h1>
+      <h1 className="text-xl font-medium text-gray-300">Site Directory</h1>
 
       <div className="space-y-10 text-white">
         {demos.map((section) => {
@@ -27,7 +27,7 @@ export default function Page() {
                       </div>
 
                       {item.description ? (
-                        <div className="text-sm text-gray-400 line-clamp-3 group-hover:text-gray-300">
+                        <div className="line-clamp-3 text-sm text-gray-400 group-hover:text-gray-300">
                           {item.description}
                         </div>
                       ) : null}

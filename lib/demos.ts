@@ -6,93 +6,111 @@ export type Item = {
 
 export const demos: { name: string; items: Item[] }[] = [
   {
-    name: 'Layouts',
+    name: 'Dashboards',
     items: [
       {
-        name: 'Nested Layouts',
+        name: 'Home',
         slug: 'layouts',
-        description: 'Create UI that is shared across routes',
+        description: '',
       },
       {
-        name: 'Grouped Layouts',
+        name: 'Leaderboard',
         slug: 'route-groups',
-        description: 'Organize routes without affecting URL paths',
+        description: '',
       },
     ],
   },
   {
-    name: 'File Conventions',
+    name: 'Activities',
     items: [
       {
-        name: 'Loading',
+        name: 'Table',
         slug: 'loading',
-        description:
-          'Create meaningful Loading UI for specific parts of an app',
+        description: 'View the main list of activities for YourDAO',
       },
       {
-        name: 'Error',
+        name: 'Filters',
         slug: 'error-handling',
-        description: 'Create Error UI for specific parts of an app',
+        description: 'Create specific filters to get you the info you need',
+      },
+      {
+        name: 'Comments',
+        slug: 'error-handling',
+        description: 'View the main comments for YourDAO',
       },
       {
         name: 'Not Found',
         slug: 'not-found',
-        description: 'Create Not Found UI for specific parts of an app',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
       },
     ],
   },
   {
-    name: 'Data Fetching',
+    name: 'Kanban',
     items: [
       {
-        name: 'Streaming with Suspense',
+        name: 'Relationships',
         slug: 'streaming',
         description:
           'Streaming data fetching from the server with React Suspense',
       },
       {
-        name: 'Static Data',
+        name: 'Funnel',
         slug: 'ssg',
-        description: 'Generate static pages',
+        description: 'View activities within a custom funnel',
       },
       {
-        name: 'Dynamic Data',
+        name: 'Team',
         slug: 'ssr',
-        description: 'Server-render pages',
+        description: 'View activities within your Teams structure',
       },
       {
-        name: 'Incremental Static Regeneration',
+        name: 'Custom',
         slug: 'isr',
-        description: 'Get the best of both worlds between static & dynamic',
+        description: 'Create a custom view of activities',
       },
     ],
   },
   {
-    name: 'Components',
+    name: 'Data',
     items: [
       {
-        name: 'Client Context',
+        name: 'JSON',
         slug: 'context',
-        description:
-          'Pass context between Client Components that cross Server/Client Component boundary',
+        description: 'Export your data in JSON format',
+      },
+      {
+        name: 'XML',
+        slug: 'context',
+        description: 'Export your data in XML format',
       },
     ],
   },
   {
-    name: 'New Name',
+    name: 'Admin',
+    items: [
+      {
+        name: 'Moderator',
+        slug: 'context',
+        description: 'Define key parameters for your YourDAO data instance',
+      },
+    ],
+  },
+  {
+    name: 'Settings',
     items: [
       {
         name: 'Misc',
         slug: 'hooks',
-        description: 'Preview the routing hooks available in Client Components',
+        description: 'Configure your YourDAO instance',
       },
       {
-        name: 'CSS and CSS-in-JS',
+        name: 'Styling',
         slug: 'styling',
-        description: 'Preview the supported styling solutions',
+        description: 'Style your YourDAO instance',
       },
       {
-        name: 'Code Snippets',
+        name: 'Code',
         slug: 'snippets',
         description: 'A collection of useful App Router code snippets',
       },
