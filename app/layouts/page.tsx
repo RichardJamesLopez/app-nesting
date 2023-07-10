@@ -7,9 +7,8 @@ export default function Page() {
 
       <ul>
         <li>
-          A layout is UI that is shared between multiple pages. On navigation,
-          layouts preserve state, remain interactive, and do not re-render. Two
-          or more layouts can also be nested.
+          A layout is UI that is lorem ipsum. It is used to wrap pages and other
+          layouts.
         </li>
         <li>Try navigating between categories and sub categories.</li>
       </ul>

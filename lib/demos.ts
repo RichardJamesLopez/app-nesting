@@ -79,10 +79,10 @@ export const demos: { name: string; items: Item[] }[] = [
     ],
   },
   {
-    name: 'Misc',
+    name: 'New Name',
     items: [
       {
-        name: 'Client Component Hooks',
+        name: 'Misc',
         slug: 'hooks',
         description: 'Preview the routing hooks available in Client Components',
       },

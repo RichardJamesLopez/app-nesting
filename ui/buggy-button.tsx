@@ -17,7 +17,7 @@ export default function BuggyButton() {
         setClicked(true);
       }}
     >
-      Trigger Error
+      Uh Oh! Trigger Error
     </Button>
   );
 }

@@ -47,7 +47,7 @@ const data: Category[] = [
   { name: 'Tops', slug: 'tops', count: 3, parent: 'clothing' },
   { name: 'Shorts', slug: 'shorts', count: 4, parent: 'clothing' },
   { name: 'Shoes', slug: 'shoes', count: 5, parent: 'clothing' },
-  { name: 'Fiction', slug: 'fiction', count: 5, parent: 'books' },
+  { name: 'Bad Religion', slug: 'Bad Religion', count: 5, parent: 'books' },
   { name: 'Biography', slug: 'biography', count: 2, parent: 'books' },
   { name: 'Education', slug: 'education', count: 3, parent: 'books' },
 ];
