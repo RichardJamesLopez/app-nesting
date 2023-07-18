@@ -36,7 +36,7 @@ const PageForm: React.FC<PageFormProps> = ({ onSubmit }) => {
     setIsTitleValid(true); // Reset the validation state when the field value changes
   };
 
-  const handleContentChange = (e: ChangeEvent<HTMLTextAreaElement>): void => {
+  const handleContentChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setContent(e.target.value);
   };
 
