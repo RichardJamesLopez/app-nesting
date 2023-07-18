@@ -7,7 +7,7 @@ import React from 'react';
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="mx-auto max-w-4xl space-y-8 px-2 pt-20 lg:px-8 lg:py-8">
-      <div className="bg-vc-border-gradient rounded-lg to-blue-600 p-px shadow-lg">
+      <div className="bg-vc-border-gradient rounded-lg p-px shadow-lg shadow-black/20">
         <div className="rounded-lg bg-black p-3.5 lg:p-6">
           <div className="space-y-12 lg:space-y-16">
             <div className="flex items-center justify-between space-x-3 rounded-lg bg-gray-800 px-3 py-3 lg:px-5 lg:py-4">
@@ -19,7 +19,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 </Link>
                 <div className="relative flex-1">
                   <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                    <SearchIcon className="h-5 w-5 text-gray-300" />
+                    <SearchIcon className="h-5 w-5 text-blue-300" />
                   </div>
                   <input
                     aria-label="Search"

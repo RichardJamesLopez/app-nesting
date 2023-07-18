@@ -12,12 +12,28 @@ export default async function Layout({
   const categories = await getCategories();
 
   return (
-    <Boundary
-      labels={['main layout']}
-      color="orange"
-      animateRerendering={false}
-    >
-      <div className="space-y-9">
+    <div className="space-y-9">
+      <div className="flex justify-between">
+        <TabGroup
+          path="/layouts"
+          items={[
+            {
+              text: 'Home',
+            },
+            ...categories.map((x) => ({
+              text: x.name,
+              slug: x.slug,
+            })),
+          ]}
+        />
+      </div>
+
+      {children}
+    </div>
+  );
+}
+/*
+ <div className="space-y-9">
         <div className="flex justify-between">
           <TabGroup
             path="/route-groups"
@@ -33,14 +49,11 @@ export default async function Layout({
               { text: 'Blog', slug: 'blog' },
             ]}
           />
-
+        
           <div className="self-start">
             <ClickCounter />
           </div>
         </div>
 
-        <div>{children}</div>
-      </div>
-    </Boundary>
-  );
-}
+        
+      </div> */

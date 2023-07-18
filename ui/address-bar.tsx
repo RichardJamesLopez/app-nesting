@@ -40,7 +40,7 @@ export function AddressBar() {
 
   return (
     <div className="flex items-center gap-x-2 p-3.5 lg:px-5 lg:py-3">
-      <div className="text-gray-600">
+      <div className="text-blue-200">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-4"

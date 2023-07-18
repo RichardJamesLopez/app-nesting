@@ -19,7 +19,7 @@ export default async function Layout({
     <div className="space-y-9">
       <div className="flex justify-between">
         <TabGroup
-          path="/loading"
+          path="/layouts"
           items={[
             {
               text: 'Home',

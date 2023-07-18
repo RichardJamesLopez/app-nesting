@@ -3,8 +3,14 @@ import { ExternalLink } from '#/ui/external-link';
 export default function Page() {
   return (
     <div className="prose prose-sm prose-invert max-w-none">
-      <h1 className="text-xl font-bold">Route Groups</h1>
+      <h1 className="text-xl font-bold">Homepage</h1>
+      <p>Under Construction</p>
+    </div>
+  );
+}
 
+/*
+<h1 className="text-xl font-bold">Route Groups</h1>
       <ul>
         <li>
           This example uses Route Groups to create layouts for different
@@ -24,7 +30,7 @@ export default function Page() {
           </li>
         </ul>
       </ul>
-
+      
       <div className="flex gap-2">
         <ExternalLink href="https://nextjs.org/docs/app/building-your-application/routing/route-groups">
           Docs
@@ -33,6 +39,4 @@ export default function Page() {
           Code
         </ExternalLink>
       </div>
-    </div>
-  );
-}
+      */

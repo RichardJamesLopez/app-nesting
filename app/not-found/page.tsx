@@ -25,7 +25,7 @@ export default function Page() {
           In this example, when fetching the data we return{' '}
           <code>notFound()</code> for{' '}
           <Link href="/not-found/does-not-exist">Categories</Link> and{' '}
-          <Link href="/not-found/electronics/does-not-exist">
+          <Link href="/not-found/activities/does-not-exist">
             Sub Categories
           </Link>{' '}
           that do not exist. This renders the closest appropriate{' '}

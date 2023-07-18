@@ -12,7 +12,7 @@ export const Tab = ({ path, item }: { path: string; item: Item }) => {
     // Example home pages e.g. `/layouts`
     (!item.slug && segment === null) ||
     segment === item.segment ||
-    // Nested pages e.g. `/layouts/electronics`
+    // Nested pages e.g. `/layouts/activities`
     segment === item.slug;
 
   return (

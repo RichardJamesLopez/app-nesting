@@ -9,12 +9,12 @@ export const demos: { name: string; items: Item[] }[] = [
     name: 'Dashboards',
     items: [
       {
-        name: 'Home',
+        name: 'Welcome',
         slug: 'layouts',
         description: '',
       },
       {
-        name: 'Leaderboard',
+        name: 'Home',
         slug: 'route-groups',
         description: '',
       },
@@ -54,7 +54,7 @@ export const demos: { name: string; items: Item[] }[] = [
         description:
           'Streaming data fetching from the server with React Suspense',
       },
-      {
+      /*{
         name: 'Funnel',
         slug: 'ssg',
         description: 'View activities within a custom funnel',
@@ -68,7 +68,7 @@ export const demos: { name: string; items: Item[] }[] = [
         name: 'Custom',
         slug: 'isr',
         description: 'Create a custom view of activities',
-      },
+      },*/
     ],
   },
   {

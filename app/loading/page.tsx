@@ -3,7 +3,14 @@ import { ExternalLink } from '#/ui/external-link';
 export default function Page() {
   return (
     <div className="prose prose-sm prose-invert max-w-none">
-      <h1 className="text-xl font-bold">Instant Loading States</h1>
+      <h1 className="text-xl font-bold">Table</h1>
+      <p>Under Construction</p>
+    </div>
+  );
+}
+
+/*
+<h1 className="text-xl font-bold">Instant Loading States</h1>
 
       <ul>
         <li>
@@ -29,7 +36,5 @@ export default function Page() {
         <ExternalLink href="https://github.com/vercel/app-playground/tree/main/app/loading">
           Code
         </ExternalLink>
-      </div>
-    </div>
-  );
-}
+      </div>  
+*/

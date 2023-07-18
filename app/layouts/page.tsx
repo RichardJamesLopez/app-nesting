@@ -1,26 +1,29 @@
-import { ExternalLink } from '#/ui/external-link';
+import { TabNavItem } from '#/ui/tab-nav-item';
 
 export default function Page() {
   return (
     <div className="prose prose-sm prose-invert max-w-none">
-      <h1 className="text-xl font-bold">Layouts</h1>
-
-      <ul>
-        <li>
-          A layout is UI that is lorem ipsum. It is used to wrap pages and other
-          layouts.
-        </li>
-        <li>Try navigating between categories and sub categories.</li>
-      </ul>
-
-      <div className="flex gap-2">
-        <ExternalLink href="https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts">
-          Docs
-        </ExternalLink>
-        <ExternalLink href="https://github.com/vercel/app-playground/tree/main/app/layouts">
-          Code
-        </ExternalLink>
+      <h1 className="text-xl font-bold">Welcome to YourDAO</h1>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <img
+          src="/logo.png"
+          alt="YourDAO Logo"
+          style={{ width: '75%', height: 'auto' }} // Set the desired width to 75% and maintain aspect ratio
+        />
       </div>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <TabNavItem href="/layouts/activities">Start Here</TabNavItem>
+      </div>
+      <p style={{ fontSize: '18px', textAlign: 'center' }}>
+        Ourmada features all of YourDAO activities and empowers Community
+        Members to contribute, colloborate and view the latests.
+      </p>
     </div>
   );
 }
