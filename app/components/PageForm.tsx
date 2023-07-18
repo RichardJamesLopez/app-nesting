@@ -4,6 +4,8 @@ export interface Page {
   id: number;
   title: string;
   content: string;
+  thumbsUp?: number; // Add the thumbsUp property with an optional number type
+  thumbsDown?: number; // Add the thumbsDown property with an optional number type
 }
 
 interface PageFormProps {
