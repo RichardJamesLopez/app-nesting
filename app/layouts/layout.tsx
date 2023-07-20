@@ -1,10 +1,10 @@
-import { getCategories } from '#/app/api/categories/getCategories';
+import { getCategories, getCategory } from '#/app/api/categories/getCategories';
 import { ClickCounter } from '#/ui/click-counter';
 import { TabGroup } from '#/ui/tab-group';
 import React from 'react';
 
 export const metadata = {
-  title: 'Nested Layouts',
+  title: 'Ourmada',
 };
 
 export default async function Layout({
@@ -17,6 +17,7 @@ export default async function Layout({
   return <div>{children}</div>;
 }
 
+console.log(getCategories);
 /*
 <div className="space-y-9">
       <div className="flex justify-between">
@@ -36,4 +37,5 @@ export default async function Layout({
      
         </div>
         </div>
+
 */

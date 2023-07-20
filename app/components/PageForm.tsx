@@ -61,42 +61,40 @@ const PageForm: React.FC<PageFormProps> = ({ onSubmit }) => {
 
   return (
     <div>
-      <h2 className=" font-large w-8/12 text-2xl text-blue-400">Update Here</h2>
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-1">
-        <form onSubmit={handleSubmit}>
-          <div>
-            <input
-              type="text"
-              placeholder="Title"
-              value={title}
-              onChange={handleTitleChange}
-              className={!isTitleValid ? 'invalid' : ''}
-              style={inputStyle}
-            />
-            {!isTitleValid && (
-              <p className="error">Please enter a valid title</p>
-            )}
-          </div>
-          <div>
-            <input
-              placeholder="Content"
-              value={content}
-              onChange={handleContentChange}
-              style={inputStyle}
-            ></input>
-          </div>
-          <div>
-            <button type="submit" style={buttonStyle}>
-              Add a New Update
-            </button>
-          </div>
-        </form>
-        <div className="space-y-4">
-          <h2 className=" font-large w-8/12 text-2xl text-blue-400">
-            Latest Updates
-          </h2>
-          <div className="space-y-4"></div>
+      <h2 className=" font-large w-8/12 text-2xl text-blue-400">
+        Update Locally
+      </h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <input
+            type="text"
+            placeholder="Title"
+            value={title}
+            onChange={handleTitleChange}
+            className={!isTitleValid ? 'invalid' : ''}
+            style={inputStyle}
+          />
+          {!isTitleValid && <p className="error">Please enter a valid title</p>}
         </div>
+        <div>
+          <input
+            placeholder="Content"
+            value={content}
+            onChange={handleContentChange}
+            style={inputStyle}
+          ></input>
+        </div>
+        <div>
+          <button type="submit" style={buttonStyle}>
+            Add a New Update
+          </button>
+        </div>
+      </form>
+      <div className="space-y-4">
+        <h2 className=" font-large w-8/12 text-2xl text-blue-400">
+          Latest Updates
+        </h2>
+        <div className="space-y-4"></div>
       </div>
     </div>
   );

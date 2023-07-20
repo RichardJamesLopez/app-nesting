@@ -38,13 +38,13 @@ export async function GET(request: Request) {
 }
 
 const data: Category[] = [
-  { name: 'Activities', slug: 'activities', count: 4, parent: null },
+  { name: 'Activities', slug: 'activities', count: 1, parent: null },
   { name: '..', slug: '..', count: 12, parent: null },
   { name: '...', slug: '...', count: 10, parent: null },
   { name: 'Updates', slug: 'updates', count: 4, parent: 'activities' },
   { name: 'Comments', slug: 'comments', count: 5, parent: 'activities' },
   { name: 'Deletions', slug: 'deletions', count: 2, parent: 'activities' },
-  { name: 'New', slug: 'new', count: 4, parent: 'activities' },
+  { name: 'New', slug: 'new', count: 1, parent: 'activities' },
   { name: 'Tops', slug: 'tops', count: 3, parent: '...' },
   { name: 'Shorts', slug: 'shorts', count: 4, parent: '..' },
   { name: 'Shoes', slug: 'shoes', count: 5, parent: '..' },
