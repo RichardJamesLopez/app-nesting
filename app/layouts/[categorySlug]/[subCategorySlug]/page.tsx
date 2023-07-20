@@ -7,6 +7,7 @@ interface Page extends FormInputData {
   thumbsUp: number;
   thumbsDown: number;
 }
+
 export default function Page({
   params,
 }: {

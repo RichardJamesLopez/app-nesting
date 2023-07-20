@@ -13,7 +13,8 @@ interface FormProps {
   onSubmit: (data: FormInputData) => void;
 }
 
-const Form: React.FC = () => {
+const Form: React.FC<FormProps> = ({ onSubmit }) => {
+  // Modify this line to accept FormProps and destructure onSubmit from it
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
 
@@ -38,21 +39,15 @@ const Form: React.FC = () => {
     event.preventDefault();
 
     const formInputData: FormInputData = {
-      id: Date.now(), // create some id or you might have an input for this.
+      id: Date.now(),
       title: title,
       content: content,
     };
 
-    function fetchData() {
-      fetch(
-        'ep-summer-darkness-477684-pooler.us-east-1.postgres.vercel-storage.com',
-      )
-        .then((response) => response.json())
-        .then((data) => console.log(data))
-        .catch((error) => console.error('Error:', error));
-    }
+    onSubmit(formInputData); // Use onSubmit here instead of directly calling the fetch function
 
-    fetchData();
+    setTitle('');
+    setContent('');
   };
 
   return (
