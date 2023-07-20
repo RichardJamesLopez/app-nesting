@@ -1,6 +1,5 @@
 import { ExternalLink } from '#/ui/external-link';
 
-/*
 export default function Page() {
   return (
     <div className="prose prose-sm prose-invert max-w-none">
@@ -29,4 +28,3 @@ export default function Page() {
     </div>
   );
 }
-*/
