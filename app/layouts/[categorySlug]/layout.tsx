@@ -24,7 +24,7 @@ export default async function Layout({
   const [content, setContent] = useState(null);
 
   useEffect(() => {
-    fetch('ep-summer-darkness-477684-pooler.us-east-1.postgres.vercel-storage.com')
+    fetch('REACT_APP_API_URL')
       .then(response => response.json())
       .then(data => {
         console.log(data); // log the entire data object

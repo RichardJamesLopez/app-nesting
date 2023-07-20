@@ -12,16 +12,13 @@ const handleSubmit = (e) => {
   }
 
   // Proceed with submitting the form
-  fetch(
-    'ep-summer-darkness-477684-pooler.us-east-1.postgres.vercel-storage.com',
-    {
-      method: 'POST',
-      body: JSON.stringify({ title, content }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+  fetch('REACT_APP_API_URL', {
+    method: 'POST',
+    body: JSON.stringify({ title, content }),
+    headers: {
+      'Content-Type': 'application/json',
     },
-  )
+  })
     .then((response) => response.json())
     .then((data) => {
       console.log('Response from server:', data);

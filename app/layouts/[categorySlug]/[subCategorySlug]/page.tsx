@@ -97,7 +97,7 @@ export default function Page() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('ep-summer-darkness-477684-pooler.us-east-1.postgres.vercel-storage.com');
+        const response = await fetch('REACT_APP_API_URL');
         const data = await response.json();
         setApiData(data);
       } catch (error) {
