@@ -12,7 +12,7 @@ const handleSubmit = (e) => {
   }
 
   // Proceed with submitting the form
-  fetch('REACT_APP_API_URL', {
+  fetch('API_URL', {
     method: 'POST',
     body: JSON.stringify({ title, content }),
     headers: {
