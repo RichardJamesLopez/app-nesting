@@ -22,7 +22,7 @@ const Form: React.FC<FormProps> = ({ onSubmit }) => {
     backgroundColor: 'white',
     color: 'blue',
     borderRadius: '10px',
-    padding: '1.5rem 1rem',
+    padding: '1.5rem 1.5rem',
     width: '100%',
     margin: '4px',
   };
@@ -30,7 +30,7 @@ const Form: React.FC<FormProps> = ({ onSubmit }) => {
     backgroundColor: 'white',
     color: 'black',
     borderRadius: '10px',
-    padding: '1.5rem 1rem',
+    padding: '1.5rem 1.5rem',
     width: '100%',
     margin: '4px',
   };
