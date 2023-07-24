@@ -20,6 +20,9 @@ dependencies:
   dinero.js:
     specifier: 2.0.0-alpha.8
     version: 2.0.0-alpha.8
+  dotenv:
+    specifier: 16.3.1
+    version: 16.3.1
   ms:
     specifier: 3.0.0-canary.1
     version: 3.0.0-canary.1
