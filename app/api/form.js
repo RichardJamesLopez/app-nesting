@@ -6,7 +6,7 @@ const handleSubmit = (e) => {
   const content = e.target.content.value;
 
   if (!title || !content) {
-    // Show an error message or handle the validation error
+    // Show an error message or the validation error
     console.log('Title or content is missing');
     return;
   }
