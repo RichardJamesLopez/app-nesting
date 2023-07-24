@@ -12,7 +12,7 @@ const handleSubmit = (e) => {
   }
 
   // Proceed with submitting the form
-  fetch('API_URL', {
+  fetch('${process.env.API_URL', {
     method: 'POST',
     body: JSON.stringify({ title, content }),
     headers: {
