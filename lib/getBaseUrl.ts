@@ -1,4 +1,5 @@
-/*import { cache } from 'react';
+/*
+import { cache } from 'react';
 
 export const getBaseUrl = cache(() =>
   process.env.API_URL
@@ -7,6 +8,7 @@ export const getBaseUrl = cache(() =>
 );
 */
 
+//test
 export const getBaseUrl = process.env.API_URL
   ? `${process.env.API_URL}`
   : `http://localhost:${process.env.PORT ?? 3000}`;

@@ -1,6 +1,6 @@
 import { ExternalLink } from '#/ui/external-link';
 
-export default function Page() {
+export default async function Page() {
   return (
     <div className="space-y-9">
       <div className="prose prose-sm prose-invert max-w-none">
@@ -17,7 +17,12 @@ export default function Page() {
             <code>page.js</code> files.
           </li>
         </ul>
+      </div>
+    </div>
+  );
+}
 
+/*
         <div className="flex gap-2">
           <ExternalLink href="https://nextjs.org/docs/app/building-your-application/data-fetching/fetching#revalidating-data">
             Docs
@@ -26,7 +31,5 @@ export default function Page() {
             Code
           </ExternalLink>
         </div>
-      </div>
-    </div>
-  );
-}
+
+*/
