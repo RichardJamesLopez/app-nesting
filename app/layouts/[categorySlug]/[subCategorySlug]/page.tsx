@@ -97,7 +97,7 @@ export default function Page() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('REACT_APP_API_URL');
+        const response = await fetch('API_URL');
         const data = await response.json();
         setApiData(data);
       } catch (error) {

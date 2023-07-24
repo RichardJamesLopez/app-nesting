@@ -24,7 +24,7 @@ export default async function Layout({
   const [content, setContent] = useState(null);
 
   useEffect(() => {
-    fetch('REACT_APP_API_URL')
+    fetch('API_URL')
       .then(response => response.json())
       .then(data => {
         console.log(data); // log the entire data object
