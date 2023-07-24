@@ -16,7 +16,7 @@ export default async function Layout({
   const categories = await getCategories({ parent: params.categorySlug });
 
   const handlePageSubmit = (formData: FormInputData) => {
-    // Handle the form data when the form is submitted.
+    // Handle the form data when  form is submitted.
     // 'formData' will be an object containing the form data.
     console.log(formData);
   };
