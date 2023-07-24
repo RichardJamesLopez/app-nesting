@@ -13,11 +13,11 @@ export default async function Page({ params }: { params: { id: string } }) {
     <div className="space-y-8 lg:space-y-14">
       {/* @ts-expect-error Async Server Component */}
       <SingleProduct
-        data={fetch(`${getBaseUrl()}/api/products?id=${params.id}`)}
+        data={fetch(`${getBaseUrl}/api/products?id=${params.id}`)}
       />
 
       <div className="relative">
-        <div className="absolute top-2 -left-4">
+        <div className="absolute -left-4 top-2">
           <Ping />
         </div>
       </div>
@@ -29,7 +29,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           data={fetch(
             // We intentionally delay the reponse to simulate a slow data
             // request that would benefit from streaming
-            `${getBaseUrl()}/api/products?delay=500&filter=${params.id}`,
+            `${getBaseUrl}/api/products?delay=500&filter=${params.id}`,
             {
               // We intentionally disable Next.js Cache to better demo
               // streaming
@@ -40,7 +40,7 @@ export default async function Page({ params }: { params: { id: string } }) {
       </Suspense>
 
       <div className="relative">
-        <div className="absolute top-2 -left-4">
+        <div className="absolute -left-4 top-2">
           <Ping />
         </div>
       </div>
@@ -51,7 +51,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           data={fetch(
             // We intentionally delay the reponse to simulate a slow data
             // request that would benefit from streaming
-            `${getBaseUrl()}/api/reviews?delay=1000`,
+            `${getBaseUrl}/api/reviews?delay=1000`,
             {
               // We intentionally disable Next.js Cache to better demo
               // streaming

@@ -10,7 +10,7 @@ import type { Category } from './category';
 
 export async function getCategories({ parent }: { parent?: string } = {}) {
   const res = await fetch(
-    `${getBaseUrl()}/api/categories${parent ? `?parent=${parent}` : ''}`,
+    `${getBaseUrl}/api/categories${parent ? `?parent=${parent}` : ''}`,
   );
 
   if (!res.ok) {
@@ -30,7 +30,7 @@ export async function getCategories({ parent }: { parent?: string } = {}) {
 
 export async function getCategory({ slug }: { slug: string }) {
   const res = await fetch(
-    `${getBaseUrl()}/api/categories${slug ? `?slug=${slug}` : ''}`,
+    `${getBaseUrl}/api/categories${slug ? `?slug=${slug}` : ''}`,
   );
 
   if (!res.ok) {
