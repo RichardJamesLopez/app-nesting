@@ -12,7 +12,7 @@ const handleSubmit = (e) => {
   }
 
   // Proceed with submitting the form
-  fetch('${process.env.API_URL', {
+  fetch('${process.env.NEXT_PUBLIC_API_URL', {
     method: 'POST',
     body: JSON.stringify({ title, content }),
     headers: {
