@@ -1,8 +1,6 @@
 import type { Category } from './category';
-import { NextApiRequest, NextApiResponse } from 'next';
-import handleCors from '#/handleCors';
-
-export const runtime = 'edge';
+//import { NextApiRequest, NextApiResponse } from 'next';
+//import handleCors from '#/handleCors';
 
 /*
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -20,6 +18,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   // And so on for other HTTP methods like DELETE, PUT, etc.
 }
 */
+
+export const runtime = 'edge';
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
 
