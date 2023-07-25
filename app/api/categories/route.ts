@@ -4,6 +4,7 @@ import handleCors from '#/handleCors';
 
 export const runtime = 'edge';
 
+/*
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (handleCors(req, res)) {
     // If it was an OPTIONS request, we're done.
@@ -18,7 +19,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   }
   // And so on for other HTTP methods like DELETE, PUT, etc.
 }
-
+*/
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
 
