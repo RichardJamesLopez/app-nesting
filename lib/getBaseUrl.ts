@@ -1,18 +1,9 @@
-/*
-import { cache } from 'react';
-
-export const getBaseUrl = cache(() =>
-  process.env.API_URL
-    ? `${process.env.API_URL}`
-    : `http://localhost:${process.env.PORT ?? 3000}`,
-);
-*/
-//test
-
-if (!process.env.NEXT_PUBLIC_API_URL) {
-  throw new Error('Missing environment variable API_URL');
-}
-
-export const getBaseUrl = process.env.NEXT_PUBLIC_API_URL
-  ? `${process.env.NEXT_PUBLIC_API_URL}`
-  : `http://localhost:${process.env.PORT ?? 3000}`;
+export const getBaseUrl = () => {
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
+  } else if (process.env.PORT) {
+    return `http://localhost:${process.env.PORT}`;
+  } else {
+    return 'http://localhost:3000';
+  }
+};

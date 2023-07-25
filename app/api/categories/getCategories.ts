@@ -10,19 +10,19 @@ import type { Category } from './category';
 
 export async function getCategories({ parent }: { parent?: string } = {}) {
   const res = await fetch(
-    `${getBaseUrl}/api/categories${parent ? `?parent=${parent}` : ''}`,
+    `${getBaseUrl()}/api/categories${parent ? `?parent=${parent}` : ''}`,
   );
 
   if (!res.ok) {
     // Render the closest `error.js` Error Boundary
-    throw new Error('Something went wrong!');
+    throw new Error(`Fetch error: ${res.status} ${res.statusText}`);
   }
 
   const categories = (await res.json()) as Category[];
 
   if (categories.length === 0) {
     // Render the closest `not-found.js` Error Boundary
-    notFound();
+    //notFound();
   }
 
   return categories;
@@ -30,7 +30,8 @@ export async function getCategories({ parent }: { parent?: string } = {}) {
 
 export async function getCategory({ slug }: { slug: string }) {
   const res = await fetch(
-    `${getBaseUrl}/api/categories${slug ? `?slug=${slug}` : ''}`,
+    //`${getBaseUrl()}/api/categories${slug ? `?slug=${slug}` : ''}`,
+    `${getBaseUrl()}/api/categories/${slug ? slug : ''}`,
   );
 
   if (!res.ok) {
