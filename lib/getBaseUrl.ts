@@ -9,10 +9,10 @@ export const getBaseUrl = cache(() =>
 */
 //test
 
-if (!process.env.API_URL) {
+if (!process.env.NEXT_PUBLIC_API_URL) {
   throw new Error('Missing environment variable API_URL');
 }
 
-export const getBaseUrl = process.env.API_URL
+export const getBaseUrl = process.env.NEXT_PUBLIC_API_URL
   ? `${process.env.NEXT_PUBLIC_API_URL}`
   : `http://localhost:${process.env.PORT ?? 3000}`;
