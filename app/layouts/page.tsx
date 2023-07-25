@@ -21,8 +21,8 @@ export default function Page() {
         <TabNavItem href="/loading">Start Here</TabNavItem>
       </div>
       <p style={{ fontSize: '18px', textAlign: 'center' }}>
-        Ourmada features all of YourDAO -test- activities and empowers Community
-        Members to contribute, colloborate and view the latests.
+        Ourmada features all of YourDAO -test1,2- activities and empowers
+        Community Members to contribute, colloborate and view the latests.
       </p>
     </div>
   );
