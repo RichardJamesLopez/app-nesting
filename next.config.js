@@ -1,4 +1,4 @@
-/* @type {import('next').NextConfig} */
+//@type {import('next').NextConfig}
 /*const nextConfig = {
   reactStrictMode: true, // Recommended for the `pages` directory, default in `app`.
   experimental: {
@@ -13,7 +13,7 @@ module.exports = {
     return [
       {
         // matching all API routes
-        source: '/app/api/(.*)',
+        source: '/api/(.*)',
         headers: [
           { key: 'Access-Control-Allow-Credentials', value: 'true' },
           { key: 'Access-Control-Allow-Origin', value: '*' },

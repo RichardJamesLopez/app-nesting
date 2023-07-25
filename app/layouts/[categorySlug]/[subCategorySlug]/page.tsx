@@ -8,6 +8,30 @@ interface Page extends FormInputData {
   thumbsDown: number;
 }
 
+export default function handler(req, res) {
+  if (req.method === 'OPTIONS') {
+    //Pre-flight request. Reply successfully:
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader(
+      'Access-Control-Allow-Headers',
+      'X-Requested-With, Content-Type, Accept',
+    );
+    res.setHeader('Access-Control-Max-Age', '86400');
+    res.statusCode = 204;
+    res.end();
+    return;
+  }
+
+  // Your existing logic for handling GET, POST, PUT, etc. requests goes here.
+  if (req.method === 'GET') {
+    // Handle GET request
+  } else if (req.method === 'POST') {
+    // Handle POST request
+  }
+  // And so on for other HTTP methods like DELETE, PUT, etc.
+}
+
 export default function Page({
   params,
 }: {
