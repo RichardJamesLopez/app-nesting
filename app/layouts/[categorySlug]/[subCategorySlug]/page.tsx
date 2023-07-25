@@ -8,7 +8,7 @@ interface Page extends FormInputData {
   thumbsDown: number;
 }
 
-export default function handler(req, res) {
+export function handler(req, res) {
   if (req.method === 'OPTIONS') {
     //Pre-flight request. Reply successfully:
     res.setHeader('Access-Control-Allow-Origin', '*');
