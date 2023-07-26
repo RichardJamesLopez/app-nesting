@@ -61,10 +61,4 @@ const data: Category[] = [
   { name: 'Comments', slug: 'comments', count: 5, parent: 'activities' },
   { name: 'Deletions', slug: 'deletions', count: 2, parent: 'activities' },
   { name: 'New', slug: 'new', count: 1, parent: 'activities' },
-  { name: 'Tops', slug: 'tops', count: 3, parent: '...' },
-  { name: 'Shorts', slug: 'shorts', count: 4, parent: '..' },
-  { name: 'Shoes', slug: 'shoes', count: 5, parent: '..' },
-  { name: 'Bad Religion', slug: 'Bad Religion', count: 5, parent: '...' },
-  { name: 'Biography', slug: 'biography', count: 2, parent: '...' },
-  { name: 'Education', slug: 'education', count: 3, parent: '...' },
 ];
