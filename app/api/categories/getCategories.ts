@@ -29,12 +29,16 @@ export async function getCategories({ parent }: { parent?: string } = {}) {
 }
 
 export async function getCategory({ slug }: { slug: string }) {
+  console.log('Slug:', slug); // Log the slug value
+
   const res = await fetch(
-    //`${getBaseUrl()}/api/categories${slug ? `?slug=${slug}` : ''}`,
-    `${getBaseUrl()}/api/categories/${slug ? slug : ''}`,
+    `${getBaseUrl()}/api/categories${slug ? `?slug=${slug}` : ''}`,
   );
 
   if (!res.ok) {
+    // Log additional details about the failed request
+    console.error(`Fetch error: ${res.status} ${res.statusText}`);
+
     // Render the closest `error.js` Error Boundary
     throw new Error('Something went wrong with the Categories slug!');
   }
