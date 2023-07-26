@@ -1,9 +1,9 @@
-'use client';
+//'use client';
 import { getCategories, getCategory } from '#/app/api/categories/getCategories';
 import { ClickCounter } from '#/ui/click-counter';
 import { TabGroup } from '#/ui/tab-group';
 import Form, { FormInputData } from '#/app/components/Form';
-import { useEffect, useState } from 'react';
+//import { useEffect, useState } from 'react';
 
 export default async function Layout({
   children,
@@ -60,49 +60,3 @@ export default async function Layout({
     </div>
   );
 }
-
-/*import { getCategories, getCategory } from '#/app/api/categories/getCategories';
-import { ClickCounter } from '#/ui/click-counter';
-import { TabGroup } from '#/ui/tab-group';
-import Form from "#/app/components/Form";
-
-export default async function Layout({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: { categorySlug: string };
-}) {
-  const category = await getCategory({ slug: params.categorySlug });
-  const categories = await getCategories({ parent: params.categorySlug });
-
-  return (
-    <div className="space-y-9">
-      <div className="flex justify-between">
-        <TabGroup
-          path={`/layouts/${category.slug}`}
-          items={[
-            {
-              text: 'All',
-            },
-            ...categories.map((x) => ({
-              text: x.name,
-              slug: x.slug,
-            })),
-          ]}
-        />
-
-        <div className="self-start">
-          <ClickCounter />
-        </div>
-      </div>
-
-      
-      <Form onSubmit={handlePageSubmit} />
-      <div>{children}</div>
-        
-      </div>
-    
-  );
-}
-*/

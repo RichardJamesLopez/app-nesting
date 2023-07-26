@@ -36,7 +36,7 @@ export async function getCategory({ slug }: { slug: string }) {
 
   if (!res.ok) {
     // Render the closest `error.js` Error Boundary
-    throw new Error('Something went wrong!');
+    throw new Error('Something went wrong with the Categories slug!');
   }
 
   const category = (await res.json()) as Category;

@@ -9,7 +9,7 @@ import type { Review } from './review';
 import 'server-only';
 
 export async function getReviews() {
-  const res = await fetch(`${getBaseUrl}/api/reviews`);
+  const res = await fetch(`${getBaseUrl()}/api/reviews`);
 
   if (!res.ok) {
     // Render the closest `error.js` Error Boundary
