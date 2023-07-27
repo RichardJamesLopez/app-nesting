@@ -1,3 +1,47 @@
+// layout.tsx
+import { getCategories, getCategory } from '#/app/api/categories/getCategories';
+import { ClickCounter } from '#/ui/click-counter';
+import { TabGroup } from '#/ui/tab-group';
+import FormClientComponent from 'app/layouts/formClientComponent';
+
+export default async function Layout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: { categorySlug: string };
+}) {
+  const category = await getCategory({ slug: params.categorySlug });
+  const categories = await getCategories({ parent: params.categorySlug });
+
+  return (
+    <div className="space-y-9">
+      <div className="flex justify-between">
+        <TabGroup
+          path={`/layouts/${category.slug}`}
+          items={[
+            {
+              text: 'All',
+            },
+            ...categories.map((x) => ({
+              text: x.name,
+              slug: x.slug,
+            })),
+          ]}
+        />
+
+        <div className="self-start">
+          <ClickCounter />
+        </div>
+      </div>
+
+      <FormClientComponent />
+      <div>{children}</div>
+    </div>
+  );
+}
+
+/*
 //'use client';
 import { getCategories, getCategory } from '#/app/api/categories/getCategories';
 import { ClickCounter } from '#/ui/click-counter';
@@ -34,6 +78,9 @@ export default async function Layout({
       .catch(error => console.error('Error:', error));
   }, []); // Empty dependency array makes this run once on mount
   */
+
+/*
+  //adjust component architecture here
   return (
     <div className="space-y-9">
       <div className="flex justify-between">
@@ -60,3 +107,4 @@ export default async function Layout({
     </div>
   );
 }
+*/
