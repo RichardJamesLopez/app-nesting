@@ -79,7 +79,7 @@ export default function Page({
       </div>
       <Boundary>
         {pages.map((page) => (
-          <div className="grid">
+          <div>
             <div key={page.id}>
               <input
                 type="text"
