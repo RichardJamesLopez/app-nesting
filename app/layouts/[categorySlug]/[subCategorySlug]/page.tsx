@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import Form, { FormInputData } from '#/app/components/Form';
 import useSWR, { mutate } from 'swr';
+import { inputStyleSubmitted } from 'styles/formStyles';
 
 interface Page extends FormInputData {
   thumbsUp: number;
@@ -61,28 +62,26 @@ export default function Page({
 
   return (
     <div>
-      <div className="lg:grid-cols- grid grid-cols-1 gap-6">
-        <div className="rounded-md bg-gray-100 p-4">
-          {/* Display the API output here */}
-          <h2>API Output:</h2>
-          {error && <div>Error: {error.message}</div>}
-          {!apiData ? (
-            <div>Loading...</div>
-          ) : (
-            <pre>{JSON.stringify(apiData, null, 2)}</pre>
-          )}
+      <Form onSubmit={handlePageSubmit} />
+
+      {pages.map((page) => (
+        <div key={page.id}>
+          <input
+            type="text"
+            placeholder="Title"
+            value={page.title}
+            style={inputStyleSubmitted} // Use the imported inputStyle
+          />
+          <input
+            type="text"
+            placeholder="Content"
+            value={page.content}
+            style={inputStyleSubmitted} // Use the imported inputStyle
+          />
+          <button onClick={() => handleThumbsUp(page.id)}>Thumbs Up</button>
+          <button onClick={() => handleThumbsDown(page.id)}>Thumbs Down</button>
         </div>
-        <Form onSubmit={handlePageSubmit} />
-        {pages.map((page) => (
-          <div key={page.id}>
-            <h3>{page.title}</h3>
-            <button onClick={() => handleThumbsUp(page.id)}>Thumbs Up</button>
-            <button onClick={() => handleThumbsDown(page.id)}>
-              Thumbs Down
-            </button>
-          </div>
-        ))}
-      </div>
+      ))}
     </div>
   );
 }
@@ -209,4 +208,18 @@ export default function Page({
             )}
 
 </div>
+*/
+
+/*
+<div className="lg:grid-cols- grid grid-cols-1 gap-6">
+        <div className="rounded-md bg-gray-100 p-4">
+          {/*Display the API output here}
+          <h2>API Output:</h2>
+          {error && <div>Error: {error.message}</div>}
+          {!apiData ? (
+            <div>Loading...</div>
+          ) : (
+            <pre>{JSON.stringify(apiData, null, 2)}</pre>
+          )}
+        </div>
 */

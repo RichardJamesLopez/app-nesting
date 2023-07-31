@@ -35,11 +35,12 @@ export default async function Layout({
         </div>
       </div>
 
-      <FormClientComponent />
       <div>{children}</div>
     </div>
   );
 }
+
+//<FormClientComponent /> was in line 38 of this file
 
 /*
 //'use client';

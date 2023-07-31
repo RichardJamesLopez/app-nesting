@@ -18,7 +18,7 @@ export default function Page() {
           alignItems: 'center',
         }}
       >
-        <TabNavItem href="/loading">Start Here</TabNavItem>
+        <TabNavItem href="/layouts/activities">Start Here</TabNavItem>
       </div>
       <p style={{ fontSize: '18px', textAlign: 'center' }}>
         Ourmada features all of YourDAO activities and empowers Community
