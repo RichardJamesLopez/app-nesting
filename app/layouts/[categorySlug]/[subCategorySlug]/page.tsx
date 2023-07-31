@@ -79,8 +79,8 @@ export default function Page({
       </div>
       <Boundary>
         {pages.map((page) => (
-          <div>
-            <div key={page.id}>
+          <div key={page.id}>
+            <div>
               <input
                 type="text"
                 placeholder="Title"
