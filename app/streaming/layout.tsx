@@ -2,7 +2,7 @@ import { TabGroup } from '#/ui/tab-group';
 import React from 'react';
 
 export const metadata = {
-  title: 'Streaming',
+  title: 'Relationships',
 };
 
 export default async function Layout({
@@ -19,7 +19,17 @@ export default async function Layout({
             {
               text: 'Home',
             },
-            {
+          ]}
+        />
+      </div>
+
+      <div>{children}</div>
+    </div>
+  );
+}
+
+/*
+ {
               text: 'Edge Runtime',
               slug: 'edge/product/1',
               segment: 'edge',
@@ -29,11 +39,4 @@ export default async function Layout({
               slug: 'node/product/1',
               segment: 'node',
             },
-          ]}
-        />
-      </div>
-
-      <div>{children}</div>
-    </div>
-  );
-}
+*/

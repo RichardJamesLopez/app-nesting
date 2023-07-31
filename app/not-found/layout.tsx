@@ -4,7 +4,7 @@ import { TabGroup } from '#/ui/tab-group';
 import React from 'react';
 
 export const metadata = {
-  title: 'Not Found',
+  title: 'Comments',
 };
 
 export default async function Layout({

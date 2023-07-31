@@ -1,12 +1,17 @@
-import { ExternalLink } from '#/ui/external-link';
-import Link from 'next/link';
+//import { ExternalLink } from '#/ui/external-link';
+//import Link from 'next/link';
 
 export default function Page() {
   return (
     <div className="prose prose-sm prose-invert max-w-none">
-      <h1 className="text-xl font-bold">Not Found</h1>
+      <h1 className="text-xl font-bold">Comments</h1>
+      <p>Under Construction</p>
+    </div>
+  );
+}
 
-      <ul>
+/*
+<ul>
         <li>
           <code>
             <Link href="https://nextjs.org/docs/app/api-reference/file-conventions/not-found">
@@ -49,6 +54,4 @@ export default function Page() {
           Code
         </ExternalLink>
       </div>
-    </div>
-  );
-}
+*/

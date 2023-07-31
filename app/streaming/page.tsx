@@ -3,9 +3,14 @@ import { ExternalLink } from '#/ui/external-link';
 export default async function Page() {
   return (
     <div className="prose prose-sm prose-invert max-w-none">
-      <h1 className="text-xl font-bold">Streaming with Suspense</h1>
+      <h1 className="text-xl font-bold">Relationships</h1>
+      <p>Under Construction</p>
+    </div>
+  );
+}
 
-      <ul>
+/*
+<ul>
         <li>
           Streaming allows you to progressively render and send units of the UI
           from the server to the client.
@@ -33,6 +38,4 @@ export default async function Page() {
           Code
         </ExternalLink>
       </div>
-    </div>
-  );
-}
+*/

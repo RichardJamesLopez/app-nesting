@@ -1,13 +1,16 @@
 import { TabNavItem } from '#/ui/tab-nav-item';
+import Image from 'next/image';
 
 export default function Page() {
   return (
     <div className="prose prose-sm prose-invert max-w-none">
       <h1 className="text-xl font-bold">Welcome to YourDAO</h1>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <img
+        <Image
           src="/logo.png"
           alt="YourDAO Logo"
+          width={300}
+          //height={200}
           style={{ width: '75%', height: 'auto' }} // Set the desired width to 75% and maintain aspect ratio
         />
       </div>

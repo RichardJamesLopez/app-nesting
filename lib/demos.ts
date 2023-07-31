@@ -35,13 +35,8 @@ export const demos: { name: string; items: Item[] }[] = [
       },
       {
         name: 'Comments',
-        slug: 'error-handling',
-        description: 'View the main comments for YourDAO',
-      },
-      {
-        name: 'Not Found',
         slug: 'not-found',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
+        description: 'View the main comments for YourDAO',
       },
     ],
   },
@@ -71,7 +66,7 @@ export const demos: { name: string; items: Item[] }[] = [
       },*/
     ],
   },
-  {
+  /*{
     name: 'Data',
     items: [
       {
@@ -86,6 +81,7 @@ export const demos: { name: string; items: Item[] }[] = [
       },
     ],
   },
+ 
   {
     name: 'Admin',
     items: [
@@ -116,4 +112,5 @@ export const demos: { name: string; items: Item[] }[] = [
       },
     ],
   },
+   */
 ];
