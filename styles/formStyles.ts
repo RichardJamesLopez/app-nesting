@@ -29,7 +29,7 @@ export const inputStyleSubmitted = {
 export const headerStyle: React.CSSProperties = {
   backgroundColor: 'transparent',
   color: 'white',
-  textAlign: 'justify',
+  textAlign: 'center',
   fontWeight: '800',
   width: '100%',
   margin: '4px',
