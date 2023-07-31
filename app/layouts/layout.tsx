@@ -10,7 +10,7 @@ export const metadata = {
 export default async function Layout({
   children,
 }: {
-  //children: React.ReactNode;
+  children: React.ReactNode;
 }) {
   const categories = await getCategories();
 
