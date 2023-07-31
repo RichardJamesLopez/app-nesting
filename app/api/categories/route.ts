@@ -1,6 +1,6 @@
 import type { Category } from './category';
-import NextAuth from 'next-auth';
-import GithubProvider from 'next-auth/providers/github';
+//import NextAuth from 'next-auth';
+//import GithubProvider from 'next-auth/providers/github';
 
 //import { NextApiRequest, NextApiResponse } from 'next';
 //import handleCors from '#/handleCors';
@@ -66,6 +66,7 @@ const data: Category[] = [
   { name: 'New', slug: 'new', count: 1, parent: 'activities' },
 ];
 
+/*
 export const authOptions = {
   // Configure one or more authentication providers
   providers: [
@@ -78,3 +79,4 @@ export const authOptions = {
 };
 
 export default NextAuth(authOptions);
+*/
