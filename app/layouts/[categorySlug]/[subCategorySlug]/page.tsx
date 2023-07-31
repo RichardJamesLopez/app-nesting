@@ -2,7 +2,13 @@
 import React, { useState } from 'react';
 import Form, { FormInputData } from '#/app/components/Form';
 import useSWR, { mutate } from 'swr';
-import { inputStyleSubmitted } from 'styles/formStyles';
+import {
+  headerStyle,
+  inputStyleSubmitted,
+  buttonStyle,
+  thumbsStyle,
+} from 'styles/formStyles';
+import { Boundary } from '#/ui/boundary';
 
 interface Page extends FormInputData {
   thumbsUp: number;
@@ -63,25 +69,54 @@ export default function Page({
   return (
     <div>
       <Form onSubmit={handlePageSubmit} />
-
-      {pages.map((page) => (
-        <div key={page.id}>
-          <input
-            type="text"
-            placeholder="Title"
-            value={page.title}
-            style={inputStyleSubmitted} // Use the imported inputStyle
-          />
-          <input
-            type="text"
-            placeholder="Content"
-            value={page.content}
-            style={inputStyleSubmitted} // Use the imported inputStyle
-          />
-          <button onClick={() => handleThumbsUp(page.id)}>Thumbs Up</button>
-          <button onClick={() => handleThumbsDown(page.id)}>Thumbs Down</button>
-        </div>
-      ))}
+      <div>
+        <h1
+          style={headerStyle} // Use the imported headerStyle
+        >
+          {' '}
+          Updates{' '}
+        </h1>
+      </div>
+      <Boundary>
+        {pages.map((page) => (
+          <div className="grid">
+            <div key={page.id}>
+              <input
+                type="text"
+                placeholder="Title"
+                value={page.title}
+                style={inputStyleSubmitted} // Use the imported inputStyle
+              />
+              <input
+                type="text"
+                placeholder="Content"
+                value={page.content}
+                style={inputStyleSubmitted}
+              />
+              <div className="columns-2">
+                <button
+                  style={thumbsStyle}
+                  onClick={() => handleThumbsUp(page.id)}
+                >
+                  Thumbs Up
+                </button>
+                <button
+                  style={thumbsStyle}
+                  onClick={() => handleThumbsDown(page.id)}
+                >
+                  Thumbs Down
+                </button>
+                <button
+                  style={thumbsStyle} // Use the imported thumbsStyle
+                >
+                  Comment
+                </button>
+                <button style={thumbsStyle}>Add a file</button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </Boundary>
     </div>
   );
 }

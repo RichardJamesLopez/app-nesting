@@ -6,6 +6,15 @@ export const buttonStyle = {
   width: '100%',
   margin: '4px',
 };
+export const thumbsStyle = {
+  backgroundColor: 'transparent',
+  color: 'vercel-pink',
+  fontWeight: '800',
+  borderRadius: '10px',
+  padding: '0.5rem 0.5rem',
+  width: '100%',
+  margin: '2px',
+};
 
 export const inputStyleSubmitted = {
   backgroundColor: 'white',
@@ -15,4 +24,14 @@ export const inputStyleSubmitted = {
   padding: '1.5rem 1rem',
   width: '100%',
   margin: '4px',
+};
+
+export const headerStyle = {
+  backgroundColor: 'transparent',
+  color: 'white',
+  textAlign: 'center',
+  fontWeight: '800',
+  width: '100%',
+  margin: '4px',
+  padding: '1.5rem 1rem',
 };

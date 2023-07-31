@@ -10,7 +10,7 @@ export default function Page() {
           src="/logo.png"
           alt="YourDAO Logo"
           width={300}
-          //height={200}
+          height={200}
           style={{ width: '75%', height: 'auto' }} // Set the desired width to 75% and maintain aspect ratio
         />
       </div>
