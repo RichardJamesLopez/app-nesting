@@ -4,12 +4,15 @@ import Form, { FormInputData } from '#/app/components/Form';
 import useSWR, { mutate } from 'swr';
 import {
   headerStyle,
+  formContainerStyle,
   inputStyleSubmitted,
   contentInputStyleSubmitted,
   thumbsStyle,
+  formHeaderStyle,
 } from 'styles/formStyles';
 import { Boundary } from '#/ui/boundary';
-import SampleForm from '#/app/components/sampleForm';
+import SampleForm from '#/app/@sampleModal/sampleForm';
+import SampleForm2 from '#/app/@sampleModal/sampleForm2';
 
 interface Page extends FormInputData {
   thumbsUp: number;
@@ -66,7 +69,7 @@ export default function Page({
       ),
     );
   };
-
+  //insert modal logic for parallel routing in this page
   return (
     <div>
       <Form onSubmit={handlePageSubmit} />
@@ -81,12 +84,12 @@ export default function Page({
       <Boundary>
         {pages.map((page) => (
           <div key={page.id}>
-            <div>
+            <div style={formContainerStyle}>
               <input
                 type="text"
-                placeholder="Title"
+                placeholder="id"
                 value={page.id}
-                style={headerStyle} // Use the imported inputStyle
+                style={formHeaderStyle} // Use the imported inputStyle
               />
               <input
                 type="text"
@@ -123,8 +126,11 @@ export default function Page({
             </div>
           </div>
         ))}
-        <div>
+        <div style={formContainerStyle}>
           <SampleForm />
+        </div>
+        <div style={formContainerStyle}>
+          <SampleForm2 />
         </div>
       </Boundary>
     </div>

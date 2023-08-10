@@ -57,3 +57,8 @@ export const formHeaderStyle: React.CSSProperties = {
   margin: '4px',
   padding: '0.5rem 1rem',
 };
+
+export const formContainerStyle: React.CSSProperties = {
+  border: '2px solid #0070f3', // Add the border style here
+  padding: '1rem', // Add optional padding to the div
+};

@@ -10,6 +10,7 @@ export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
+  sampleModal: React.ReactNode;
 }) {
   return (
     <html lang="en" className="[color-scheme:dark]">
@@ -34,3 +35,19 @@ export default function RootLayout({
     </html>
   );
 }
+
+/*
+export async function modalLayout({ props }: {
+  props: {
+    // ...
+    sampleModal: React.ReactNode;
+  };
+}) {
+  return (
+    <>
+      {props.children}
+      {props.sampleModal}
+    </>
+  )
+}
+*/
