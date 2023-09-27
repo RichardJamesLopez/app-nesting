@@ -8,7 +8,7 @@ export const buttonStyle = {
 };
 export const thumbsStyle = {
   backgroundColor: 'transparent',
-  textAlign: 'center',
+  //textAlign: 'center',
   color: '#92c5fd',
   fontWeight: '600',
   borderRadius: '10px',

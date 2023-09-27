@@ -51,7 +51,7 @@ Their contact information is {redacted} and {redacted}`;
           Thumbs Down
         </button>
         <button
-        //style={thumbsStyle} // Use the imported thumbsStyle
+          style={thumbsStyle} // Use the imported thumbsStyle
         >
           Comment
         </button>
