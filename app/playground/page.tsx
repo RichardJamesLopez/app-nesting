@@ -51,11 +51,7 @@ export default function PlaygroundPage() {
         {data.map((item) => (
           <Card key={item.category}>
             <Title>{item.category}</Title>
-            <Flex
-              justifyContent="center"
-              alignItems="center"
-              className="space-x-8"
-            ></Flex>
+
             <Metric>{item.stat}</Metric>
           </Card>
         ))}
@@ -64,3 +60,11 @@ export default function PlaygroundPage() {
     </main>
   );
 }
+/*
+<Flex
+              justifyContent="center"
+              alignItems="center"
+              className="space-x-8"
+            ></Flex>
+
+*/
