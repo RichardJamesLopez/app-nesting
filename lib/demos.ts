@@ -26,7 +26,7 @@ export const demos: { name: string; items: Item[] }[] = [
       {
         name: 'Table',
         slug: 'loading',
-        description: 'View the main list of activities for YourDAO',
+        description: 'View the main list of activities for YourCompany',
       },
       {
         name: 'Filters',
@@ -36,7 +36,7 @@ export const demos: { name: string; items: Item[] }[] = [
       {
         name: 'Comments',
         slug: 'not-found',
-        description: 'View the main comments for YourDAO',
+        description: 'View the main comments for YourCompany',
       },
     ],
   },
@@ -88,7 +88,7 @@ export const demos: { name: string; items: Item[] }[] = [
       {
         name: 'Moderator',
         slug: 'context',
-        description: 'Define key parameters for your YourDAO data instance',
+        description: 'Define key parameters for your YourCompany data instance',
       },
     ],
   },
@@ -98,12 +98,12 @@ export const demos: { name: string; items: Item[] }[] = [
       {
         name: 'Misc',
         slug: 'hooks',
-        description: 'Configure your YourDAO instance',
+        description: 'Configure your YourCompany instance',
       },
       {
         name: 'Styling',
         slug: 'styling',
-        description: 'Style your YourDAO instance',
+        description: 'Style your YourCompany instance',
       },
       {
         name: 'Code',

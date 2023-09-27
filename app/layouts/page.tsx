@@ -4,7 +4,7 @@ import Image from 'next/image';
 export default function Page() {
   return (
     <div className="prose prose-sm prose-invert max-w-none">
-      <h1 className="text-xl font-bold">Welcome to YourDAO</h1>
+      <h1 className="text-xl font-bold">Welcome to YourCompany</h1>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Image
           src="/logo.png"
@@ -24,7 +24,7 @@ export default function Page() {
         <TabNavItem href="/layouts/activities">Start Here</TabNavItem>
       </div>
       <p style={{ fontSize: '18px', textAlign: 'center' }}>
-        Ourmada features all of YourDAO activities and empowers Community
+        Ourmada features all of YourCompany activities and empowers Community
         Members to contribute, colloborate and view the latests.
       </p>
     </div>

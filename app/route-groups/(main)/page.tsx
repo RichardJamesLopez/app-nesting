@@ -1,10 +1,17 @@
-//import { ExternalLink } from '#/ui/external-link';
+import PlaygroundPage from '#/app/playground/page';
+import {
+  formHeaderStyle,
+  inputStyleSubmitted,
+  thumbsStyle,
+  contentInputStyleSubmitted,
+} from 'styles/formStyles';
 
 export default function Page() {
   return (
-    <div className="prose prose-sm prose-invert max-w-none">
-      <h1 className="text-xl font-bold">Homepage</h1>
-      <p>Under Construction</p>
+    <div>
+      <h1 style={formHeaderStyle}>Homepage</h1>
+
+      <PlaygroundPage />
     </div>
   );
 }

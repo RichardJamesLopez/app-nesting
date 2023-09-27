@@ -8,6 +8,7 @@ export const buttonStyle = {
 };
 export const thumbsStyle = {
   backgroundColor: 'transparent',
+  textAlign: 'center',
   color: '#92c5fd',
   fontWeight: '600',
   borderRadius: '10px',
@@ -61,4 +62,10 @@ export const formHeaderStyle: React.CSSProperties = {
 export const formContainerStyle: React.CSSProperties = {
   border: '2px solid #0070f3', // Add the border style here
   padding: '1rem', // Add optional padding to the div
+};
+
+export const customBarStyle: React.CSSProperties = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
 };

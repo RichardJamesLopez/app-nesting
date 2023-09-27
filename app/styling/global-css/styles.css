@@ -52,3 +52,10 @@
 .skeleton-line-two {
   width: 66.666667%;
 }
+
+.custom-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* Add any other custom styling here */
+}
