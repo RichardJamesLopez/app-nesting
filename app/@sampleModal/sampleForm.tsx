@@ -50,23 +50,27 @@ export default function SampleForm() {
       />
       <div className="columns-2">
         <button
-          style={thumbsStyle}
-          //onClick={() => handleThumbsUp(page.id)}
+        //style={thumbsStyle}
+        //onClick={() => handleThumbsUp(page.id)}
         >
           Thumbs Up
         </button>
         <button
-          style={thumbsStyle}
-          //onClick={() => handleThumbsDown(page.id)}
+        //style={thumbsStyle}
+        //onClick={() => handleThumbsDown(page.id)}
         >
           Thumbs Down
         </button>
         <button
-          style={thumbsStyle} // Use the imported thumbsStyle
+        //style={thumbsStyle} // Use the imported thumbsStyle
         >
           Comment
         </button>
-        <button style={thumbsStyle}>Add a file</button>
+        <button
+        //style={thumbsStyle}
+        >
+          Add a file
+        </button>
       </div>
     </form>
   );
