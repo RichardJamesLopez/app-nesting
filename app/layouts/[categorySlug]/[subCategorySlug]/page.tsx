@@ -81,7 +81,7 @@ export default function Page({
           Updates{' '}
         </h1>
       </div>
-      <Boundary>
+      <div>
         {pages.map((page) => (
           <div key={page.id}>
             <div style={formContainerStyle}>
@@ -132,7 +132,7 @@ export default function Page({
         <div style={formContainerStyle}>
           <SampleForm2 />
         </div>
-      </Boundary>
+      </div>
     </div>
   );
 }
