@@ -39,13 +39,13 @@ Their contact information is {redacted} and {redacted}`;
       />
       <div className="columns-2">
         <button
-        //style={thumbsStyle}
+        style={thumbsStyle}
         //onClick={() => handleThumbsUp(page.id)}
         >
           Thumbs Up
         </button>
         <button
-        //style={thumbsStyle}
+        style={thumbsStyle}
         //onClick={() => handleThumbsDown(page.id)}
         >
           Thumbs Down
@@ -56,7 +56,7 @@ Their contact information is {redacted} and {redacted}`;
           Comment
         </button>
         <button
-        //style={thumbsStyle}
+        style={thumbsStyle}
         >
           Add a file
         </button>

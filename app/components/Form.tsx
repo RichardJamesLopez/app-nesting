@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-//import styles from '#/styles/globals.css';
+import { useRouter } from 'next/navigation';
+import { contentInputStyleSubmitted } from 'styles/formStyles';
 
 interface FormInputData {
   id: number;
@@ -17,12 +18,10 @@ const Form: React.FC<FormProps> = ({ onSubmit }) => {
   // Modify this line to accept FormProps and destructure onSubmit from it
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-
+  const { push } = useRouter();
   const buttonStyle = {
-    backgroundColor: 'white',
-    color: 'blue',
     borderRadius: '10px',
-    padding: '1.5rem 1.5rem',
+    padding: '1rem',
     width: '100%',
     margin: '4px',
   };
@@ -30,7 +29,7 @@ const Form: React.FC<FormProps> = ({ onSubmit }) => {
     backgroundColor: 'white',
     color: 'black',
     borderRadius: '10px',
-    padding: '1.5rem 1.5rem',
+    padding: '1rem',
     width: '100%',
     margin: '4px',
   };
@@ -43,15 +42,16 @@ const Form: React.FC<FormProps> = ({ onSubmit }) => {
       title: title,
       content: content,
     };
+    console.log('formInputData', formInputData);
 
     onSubmit(formInputData); // Use onSubmit here instead of directly calling the fetch function
 
+    push('/layouts/activities/updates');
     setTitle('');
     setContent('');
   };
 
   return (
-    //...
     <form onSubmit={handleFormSubmit}>
       <input
         type="text"
@@ -60,16 +60,20 @@ const Form: React.FC<FormProps> = ({ onSubmit }) => {
         onChange={(e) => setTitle(e.target.value)}
         style={inputStyle}
       />
-
-      <input
-        type="text"
+      <textarea
         placeholder="Content"
-        value={content} // using state variable
+        defaultValue={content} // using state variable
+        style={contentInputStyleSubmitted}
         onChange={(e) => setContent(e.target.value)}
-        style={inputStyle}
+        rows={10} // Number of visible rows
       />
-      <button type="submit" style={buttonStyle}>
-        add a new update here
+
+      <button
+        type="submit"
+        style={buttonStyle}
+        className="rounded-lg bg-gray-700 px-3 py-1 text-sm text-gray-100 hover:bg-gray-500 hover:text-white"
+      >
+        Add a new update here
       </button>
     </form>
   );

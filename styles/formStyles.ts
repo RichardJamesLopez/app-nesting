@@ -16,7 +16,14 @@ export const thumbsStyle = {
   width: '100%',
   margin: '2px',
 };
-
+export const deleteBtnStyle = {
+  backgroundColor: 'transparent',
+  color: '#ff0000',
+  fontWeight: '600',
+  borderRadius: '10px',
+  padding: '0.5rem 0.5rem',
+  margin: '2px',
+};
 export const inputStyleSubmitted = {
   backgroundColor: 'white',
   color: 'black',
@@ -33,7 +40,7 @@ export const contentInputStyleSubmitted = {
   color: 'black',
   borderRadius: '10px',
   border: '1px solid blue', // Changed the border to a valid CSS string
-  padding: '1.5rem 1rem',
+  padding: '1rem 1rem',
   width: '100%',
   height: '100px', // Set the initial height for the multi-line box
   margin: '4px',
@@ -55,6 +62,16 @@ export const formHeaderStyle: React.CSSProperties = {
   textAlign: 'center',
   fontWeight: '600',
   width: '100%',
+  margin: '4px',
+  padding: '0.5rem 1rem',
+};
+
+export const dateStyle: React.CSSProperties = {
+  backgroundColor: 'transparent',
+  color: 'white',
+  textAlign: 'center',
+  fontWeight: '600',
+  width: '85%',
   margin: '4px',
   padding: '0.5rem 1rem',
 };
