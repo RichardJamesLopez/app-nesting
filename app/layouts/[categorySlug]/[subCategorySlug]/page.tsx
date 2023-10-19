@@ -10,6 +10,7 @@ import {
   thumbsStyle,
   deleteBtnStyle,
   dateStyle,
+  formHeaderStyle
 } from 'styles/formStyles';
 import SampleForm from '#/app/@sampleModal/sampleForm';
 import SampleForm2 from '#/app/@sampleModal/sampleForm2';
@@ -222,14 +223,8 @@ const PageComponent: React.FC<{ params: { subCategorySlug: string } }> = ({
                       type="text"
                       placeholder="id"
                       value={getDate(page.id)}
-                      style={dateStyle}
+                      style={formHeaderStyle}
                     />
-                    <button
-                      style={deleteBtnStyle}
-                      onClick={() => handleDelete(page.id)}
-                    >
-                      Delete
-                    </button>
                     <input
                       type="text"
                       placeholder="Title"
@@ -241,24 +236,7 @@ const PageComponent: React.FC<{ params: { subCategorySlug: string } }> = ({
                       placeholder="Content"
                       value={page.content}
                       style={contentInputStyleSubmitted}
-                    />
-                    <div className="columns-2">
-                      <button
-                        style={thumbsStyle}
-                        onClick={() => handleThumbsUp(page.id)}
-                      >
-                        Thumbs Up
-                      </button>
-                      <button
-                        style={thumbsStyle}
-                        onClick={() => handleThumbsDown(page.id)}
-                      >
-                        Thumbs Down
-                      </button>
-                      <button style={thumbsStyle}>Comment</button>
-
-                      <button style={thumbsStyle}>Add a file</button>
-                    </div>
+                    /> 
                   </div>
                 </div>
               ))}
