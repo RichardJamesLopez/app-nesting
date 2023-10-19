@@ -10,12 +10,14 @@ import {
   thumbsStyle,
   deleteBtnStyle,
   dateStyle,
-  formHeaderStyle
+  formHeaderStyle,
 } from 'styles/formStyles';
 import SampleForm from '#/app/@sampleModal/sampleForm';
 import SampleForm2 from '#/app/@sampleModal/sampleForm2';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+
 interface Page extends FormInputData {
   thumbsUp: number;
   thumbsDown: number;
@@ -169,7 +171,13 @@ const PageComponent: React.FC<{ params: { subCategorySlug: string } }> = ({
                       style={deleteBtnStyle}
                       onClick={() => handleDelete(page.id)}
                     >
-                      Delete
+                      <Image
+                        src="/delete.png"
+                        alt="Delete"
+                        width={20}
+                        height={20}
+                        className="ml-4"
+                      />
                     </button>
                     <input
                       type="text"
@@ -183,21 +191,45 @@ const PageComponent: React.FC<{ params: { subCategorySlug: string } }> = ({
                       value={page.content}
                       style={contentInputStyleSubmitted}
                     />
-                    <div className="columns-2">
+                    <div className="flex columns-2">
                       <button
                         style={thumbsStyle}
                         onClick={() => handleThumbsUp(page.id)}
                       >
-                        Thumbs Up
+                        <Image
+                          src="/thumb-up.png"
+                          alt="Thumb Up"
+                          width={20}
+                          height={20}
+                        />
                       </button>
                       <button
                         style={thumbsStyle}
                         onClick={() => handleThumbsDown(page.id)}
                       >
-                        Thumbs Down
+                        <Image
+                          src="/thumb-down.png"
+                          alt="Thumb Down"
+                          width={20}
+                          height={20}
+                        />
                       </button>
-                      <button style={thumbsStyle}>Comment</button>
-                      <button style={thumbsStyle}>Add a file</button>
+                      <button style={thumbsStyle}>
+                        <Image
+                          src="/comments.png"
+                          alt="Comments"
+                          width={20}
+                          height={20}
+                        />
+                      </button>
+                      <button style={thumbsStyle}>
+                        <Image
+                          src="/upload.png"
+                          alt="Upload"
+                          width={20}
+                          height={20}
+                        />
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -225,6 +257,7 @@ const PageComponent: React.FC<{ params: { subCategorySlug: string } }> = ({
                       value={getDate(page.id)}
                       style={formHeaderStyle}
                     />
+
                     <input
                       type="text"
                       placeholder="Title"
@@ -236,7 +269,7 @@ const PageComponent: React.FC<{ params: { subCategorySlug: string } }> = ({
                       placeholder="Content"
                       value={page.content}
                       style={contentInputStyleSubmitted}
-                    /> 
+                    />
                   </div>
                 </div>
               ))}

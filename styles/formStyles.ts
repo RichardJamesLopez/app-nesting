@@ -12,18 +12,11 @@ export const thumbsStyle = {
   color: '#92c5fd',
   fontWeight: '600',
   borderRadius: '10px',
-  padding: '0.5rem 0.5rem',
+  padding: '0.5rem 3rem',
   width: '100%',
   margin: '2px',
 };
-export const deleteBtnStyle = {
-  backgroundColor: 'transparent',
-  color: '#ff0000',
-  fontWeight: '600',
-  borderRadius: '10px',
-  padding: '0.5rem 0.5rem',
-  margin: '2px',
-};
+export const deleteBtnStyle = {};
 export const inputStyleSubmitted = {
   backgroundColor: 'white',
   color: 'black',
@@ -71,7 +64,7 @@ export const dateStyle: React.CSSProperties = {
   color: 'white',
   textAlign: 'center',
   fontWeight: '600',
-  width: '85%',
+  width: '90%',
   margin: '4px',
   padding: '0.5rem 1rem',
 };

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 import {
   formHeaderStyle,
   inputStyleSubmitted,
@@ -32,41 +33,40 @@ export default function SampleForm() {
     <form>
       <input
         id="0023"
-        value="Proposal-DogeDAO-0001" //hardcoded copy
+        defaultValue="Proposal-DogeDAO-0001" //hardcoded copy
         style={formHeaderStyle}
       />
       <input
         type="text"
         placeholder="Title"
-        value=" Proposal Drafted for RevShare Partnership" //hardcoded copy
+        defaultValue=" Proposal Drafted for RevShare Partnership" //hardcoded copy
         style={inputStyleSubmitted}
       />
 
       <textarea
         placeholder="Content"
-        value={content} // using state variable
+        defaultValue={content} // using state variable
         style={contentInputStyleSubmitted}
         rows={10} // Number of visible rows
       />
-      <div className="columns-2">
-        <button
-          style={thumbsStyle}
-          //onClick={() => handleThumbsUp(page.id)}
-        >
-          Thumbs Up
+      <div className="flex columns-2">
+        <button style={thumbsStyle}>
+          <Image src="/thumb-up.png" alt="Thumb Up" width={20} height={20} />
         </button>
-        <button
-          style={thumbsStyle}
-          //onClick={() => handleThumbsDown(page.id)}
-        >
-          Thumbs Down
+        <button style={thumbsStyle}>
+          <Image
+            src="/thumb-down.png"
+            alt="Thumb Down"
+            width={20}
+            height={20}
+          />
         </button>
-        <button
-          style={thumbsStyle} // Use the imported thumbsStyle
-        >
-          Comment
+        <button style={thumbsStyle}>
+          <Image src="/comments.png" alt="Comments" width={20} height={20} />
         </button>
-        <button style={thumbsStyle}>Add a file</button>
+        <button style={thumbsStyle}>
+          <Image src="/upload.png" alt="Upload" width={20} height={20} />
+        </button>
       </div>
     </form>
   );
