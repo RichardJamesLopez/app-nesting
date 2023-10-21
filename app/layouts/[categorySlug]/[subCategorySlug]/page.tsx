@@ -172,6 +172,7 @@ const PageComponent: React.FC<{
                     type="text"
                     placeholder="id"
                     value={getDate(page.id)}
+                    className="cursor-pointer"
                     style={dateStyle}
                   />
                 </Link>
