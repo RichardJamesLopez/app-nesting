@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from 'react';
+import Link from 'next/link';
 import Form, { FormInputData } from '#/app/components/Form';
 import useSWR, { mutate } from 'swr';
 import {
@@ -14,21 +15,36 @@ import {
 } from 'styles/formStyles';
 import SampleForm from '#/app/@sampleModal/sampleForm';
 import SampleForm2 from '#/app/@sampleModal/sampleForm2';
+import CommentModal from '#/app/components/CommentModal';
+import Post from '#/app/components/Page';
+import ActionButtons from '#/app/components/ActionButtons';
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 
 interface Page extends FormInputData {
+  content: string;
+  id: number;
+  title: string;
   thumbsUp: number;
   thumbsDown: number;
+  comments: [];
 }
 
-const PageComponent: React.FC<{ params: { subCategorySlug: string } }> = ({
-  params,
-}) => {
+const PageComponent: React.FC<{
+  params: { subCategorySlug: string; searchParams: any };
+}> = ({ params }) => {
   const [pages, setPages] = useState<Page[]>([]);
   const [deletions, setDeletions] = useState<Page[]>([]);
-  const { push } = useRouter();
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [page, setPage] = useState<any>({});
+
+  const searchParams = useSearchParams();
+  const commentId = searchParams?.get('id');
+  const commentPage: any = pages.filter(function (page) {
+    return page.id == Number(commentId);
+  })[0];
+
   const apiUrl = process.env.POSTGRES_URL;
 
   const fetcher = (url: string) =>
@@ -55,28 +71,12 @@ const PageComponent: React.FC<{ params: { subCategorySlug: string } }> = ({
     mutate(apiUrl);
   };
 
+  const handlePageCommentSubmit = () => {
+    setShowModal(false);
+  };
+
   const sortPagesByTimestamp = (pagesArray: any) => {
     return [...pagesArray].sort((a, b) => b.id - a.id);
-  };
-
-  const handleThumbsUp = (pageId: number): void => {
-    setPages((prevPages) =>
-      prevPages.map((page) =>
-        page.id === pageId
-          ? { ...page, thumbsUp: (page.thumbsUp || 0) + 1 }
-          : page,
-      ),
-    );
-  };
-
-  const handleThumbsDown = (pageId: number): void => {
-    setPages((prevPages) =>
-      prevPages.map((page) =>
-        page.id === pageId
-          ? { ...page, thumbsDown: (page.thumbsDown || 0) + 1 }
-          : page,
-      ),
-    );
   };
 
   const handleDelete = (pageId: number): void => {
@@ -101,6 +101,11 @@ const PageComponent: React.FC<{ params: { subCategorySlug: string } }> = ({
     ]);
   };
 
+  const handleModal = (page: any): void => {
+    setShowModal(true);
+    setPage(page);
+  };
+
   const getUpperCase = (subCategorySlug: string) => {
     return subCategorySlug.charAt(0).toUpperCase() + subCategorySlug.slice(1);
   };
@@ -117,6 +122,7 @@ const PageComponent: React.FC<{ params: { subCategorySlug: string } }> = ({
     const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     return formattedDate;
   };
+
   useEffect(() => {
     const storedDeletions = localStorage.getItem('deletions') ?? '[]';
 
@@ -147,103 +153,66 @@ const PageComponent: React.FC<{ params: { subCategorySlug: string } }> = ({
 
   return (
     <div>
-      {params.subCategorySlug === 'new' ? (
+      {params.subCategorySlug === 'new' && (
         <div>
           <div>
             <Form onSubmit={handlePageSubmit} />
           </div>
         </div>
-      ) : params.subCategorySlug === 'updates' ? (
+      )}
+
+      {params.subCategorySlug === 'updates' && (
         <div>
           <h1 style={headerStyle}>{getUpperCase(params.subCategorySlug)}</h1>
           <div>
-            <div>
-              {pages.map((page) => (
-                <div key={page.id}>
-                  <div style={formContainerStyle}>
-                    <input
-                      type="text"
-                      placeholder="id"
-                      value={getDate(page.id)}
-                      style={dateStyle}
-                    />
-                    <button
-                      style={deleteBtnStyle}
-                      onClick={() => handleDelete(page.id)}
-                    >
-                      <Image
-                        src="/delete.png"
-                        alt="Delete"
-                        width={20}
-                        height={20}
-                        className="ml-4"
-                      />
-                    </button>
-                    <input
-                      type="text"
-                      placeholder="Title"
-                      value={page.title}
-                      style={inputStyleSubmitted}
-                    />
-                    <input
-                      type="text"
-                      placeholder="Content"
-                      value={page.content}
-                      style={contentInputStyleSubmitted}
-                    />
-                    <div className="flex columns-2">
-                      <button
-                        style={thumbsStyle}
-                        onClick={() => handleThumbsUp(page.id)}
-                      >
-                        <Image
-                          src="/thumb-up.png"
-                          alt="Thumb Up"
-                          width={20}
-                          height={20}
-                        />
-                      </button>
-                      <button
-                        style={thumbsStyle}
-                        onClick={() => handleThumbsDown(page.id)}
-                      >
-                        <Image
-                          src="/thumb-down.png"
-                          alt="Thumb Down"
-                          width={20}
-                          height={20}
-                        />
-                      </button>
-                      <button style={thumbsStyle}>
-                        <Image
-                          src="/comments.png"
-                          alt="Comments"
-                          width={20}
-                          height={20}
-                        />
-                      </button>
-                      <button style={thumbsStyle}>
-                        <Image
-                          src="/upload.png"
-                          alt="Upload"
-                          width={20}
-                          height={20}
-                        />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-              <div style={formContainerStyle}>
-                <SampleForm />
+            {pages.map((page) => (
+              <div key={page.id} style={formContainerStyle}>
+                <Link href={`/layouts/activities/comments?id=${page.id}`}>
+                  <input
+                    type="text"
+                    placeholder="id"
+                    value={getDate(page.id)}
+                    style={dateStyle}
+                  />
+                </Link>
+                <button
+                  style={deleteBtnStyle}
+                  onClick={() => handleDelete(page.id)}
+                >
+                  <Image
+                    src="/delete.png"
+                    alt="Delete"
+                    width={20}
+                    height={20}
+                    className="ml-4"
+                  />
+                </button>
+                <input
+                  type="text"
+                  placeholder="Title"
+                  value={page.title}
+                  style={inputStyleSubmitted}
+                />
+                <input
+                  type="text"
+                  placeholder="Content"
+                  value={page.content}
+                  style={contentInputStyleSubmitted}
+                />
+                <ActionButtons onSubmit={() => handleModal(page)} page={page} />
               </div>
-              <div style={formContainerStyle}>
-                <SampleForm2 />
-              </div>
+            ))}
+            <div style={formContainerStyle}>
+              <SampleForm />
+            </div>
+            <div style={formContainerStyle}>
+              <SampleForm2 />
             </div>
           </div>
         </div>
-      ) : params.subCategorySlug === 'deletions' ? (
+      )}
+
+      {params.subCategorySlug === 'deletions' && (
         <div>
           <div>
             <h1 style={headerStyle}>{getUpperCase(params.subCategorySlug)}</h1>
@@ -251,35 +220,43 @@ const PageComponent: React.FC<{ params: { subCategorySlug: string } }> = ({
               {deletions.map((page) => (
                 <div key={page.id}>
                   <div style={formContainerStyle}>
-                    <input
-                      type="text"
-                      placeholder="id"
-                      value={getDate(page.id)}
-                      style={formHeaderStyle}
-                    />
-
-                    <input
-                      type="text"
-                      placeholder="Title"
-                      value={page.title}
-                      style={inputStyleSubmitted}
-                    />
-                    <input
-                      type="text"
-                      placeholder="Content"
-                      value={page.content}
-                      style={contentInputStyleSubmitted}
-                    />
+                    <Post page={page} />
                   </div>
                 </div>
               ))}
             </div>
           </div>
         </div>
-      ) : (
+      )}
+
+      {params.subCategorySlug === 'comments' && (
         <div>
           <h1 style={headerStyle}>{getUpperCase(params.subCategorySlug)}</h1>
+          <div>
+            <Post page={commentPage} />
+            <ActionButtons
+              onSubmit={() => handleModal(commentPage)}
+              page={commentPage}
+            />
+          </div>
+          {commentPage?.comments?.length
+            ? commentPage?.comments.map((comment: any) => (
+                <div key={page.id}>
+                  <div className="flex columns-2">
+                    <textarea
+                      placeholder="Content"
+                      value={comment.content} // using state variable
+                      style={contentInputStyleSubmitted}
+                      rows={10} // Number of visible rows
+                    />
+                  </div>
+                </div>
+              ))
+            : ''}
         </div>
+      )}
+      {showModal && (
+        <CommentModal page={page} onSubmit={handlePageCommentSubmit} />
       )}
     </div>
   );
