@@ -1,14 +1,19 @@
+import Header from '#/ui/header';
+import { GlobalNav } from '#/ui/global-nav';
 export default function DashboardLayout({
-  children, // will be a page or nested layout
+  children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <section>
-      {/* Include shared UI here e.g. a header or sidebar */}
-      <nav></nav>
-
-      {children}
-    </section>
+    <div className="overflow-y-scroll bg-slate-200 bg-[url('/grid.svg')] shadow  shadow-blue-500/40">
+      <GlobalNav />
+      <div className="mx-auto  h-screen bg-slate-200 py-20 pl-0 lg:py-0 lg:pl-64">
+        <div className="rounded-lg">
+          <Header />
+        </div>
+        <div className="p-4">{children}</div>
+      </div>
+    </div>
   );
 }

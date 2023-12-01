@@ -7,14 +7,13 @@ import { MenuAlt2Icon, XIcon } from '@heroicons/react/solid';
 import clsx from 'clsx';
 import { useState } from 'react';
 import { useRouter, useSelectedLayoutSegment } from 'next/navigation';
-import Byline from './byline';
 
 export function GlobalNav() {
   const [isOpen, setIsOpen] = useState(false);
   const close = () => setIsOpen(false);
 
   return (
-    <div className="fixed top-0 z-10 flex w-full flex-col border-b border-gray-800 bg-black lg:bottom-0 lg:z-auto lg:w-72 lg:border-b-0 lg:border-r lg:border-gray-800">
+    <div className="fixed top-0 z-10 flex w-full flex-col bg-white lg:bottom-0 lg:z-auto lg:w-64">
       <div className="flex h-14 items-center px-4 py-4 lg:h-auto">
         <Link
           href="/"
@@ -68,7 +67,6 @@ export function GlobalNav() {
             );
           })}
         </nav>
-        <Byline className="absolute hidden sm:block" />
       </div>
     </div>
   );

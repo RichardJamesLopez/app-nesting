@@ -79,3 +79,35 @@ export const customBarStyle: React.CSSProperties = {
   justifyContent: 'space-between',
   alignItems: 'center',
 };
+
+export const loginStyle: React.CSSProperties = {
+  backgroundImage: `url('background.svg')`,
+  height: '100vh',
+  backgroundSize: 'cover',
+  backgroundPosition: 'center center',
+  // display: 'flex',
+  justifyContent: 'space-between',
+  padding: '30px',
+};
+
+export const sloganContainer: React.CSSProperties = {
+  backgroundImage: `url('slogan-bk.png')`,
+  height: '180px',
+  backgroundSize: 'cover',
+  backgroundPosition: 'center center',
+  justifyContent: 'space-between',
+  borderRadius: '4px',
+  display: 'flex',
+  alignItems: 'center',
+  padding: '30px',
+};
+
+export const summaryContainer: React.CSSProperties = {
+  backgroundSize: 'cover',
+  backgroundPosition: 'center center',
+  justifyContent: 'space-between',
+  borderRadius: '4px',
+  display: 'flex',
+  alignItems: 'center',
+  padding: '30px 0',
+};
