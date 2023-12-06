@@ -33,7 +33,7 @@ const wagmiConfig = createConfig({
       chains,
       options: { projectId, showQrModal: false, metadata },
     }),
-    new EIP6963Connector({ chains }),
+    //new EIP6963Connector({ chains }),
     new InjectedConnector({ chains, options: { shimDisconnect: true } }),
     new CoinbaseWalletConnector({
       chains,
@@ -49,3 +49,6 @@ createWeb3Modal({ wagmiConfig, projectId, chains });
 export function Web3Modal({ children }: any) {
   return <WagmiConfig config={wagmiConfig}>{children}</WagmiConfig>;
 }
+
+
+//Web3Modal config is not properly set up. install new additions and make sure #private type is expected

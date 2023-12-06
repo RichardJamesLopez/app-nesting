@@ -3,6 +3,7 @@
 import clsx from 'clsx';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useMemo } from 'react';
+import { URLSearchParams } from 'url';
 
 export default function Client({
   options,
@@ -16,10 +17,11 @@ export default function Client({
   const searchParams = useSearchParams()!;
   const pathname = usePathname();
   const router = useRouter();
+  
 
   const selectedOptions = useMemo<URLSearchParams>(() => {
     // Get the initial selected options from the URL's searchParams
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(searchParams.toString());
 
     // Preselect the first value of each option if its not
     // included in the current searchParams
