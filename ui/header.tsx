@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 import { useWeb3Modal } from '@web3modal/wagmi/react';
+import { useEnsName } from 'wagmi';
 
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
@@ -36,29 +37,6 @@ const Search = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('sm')]: {
     marginLeft: theme.spacing(3),
     width: 'auto',
-  },
-}));
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
-    },
   },
 }));
 
@@ -163,10 +141,26 @@ export default function Header() {
   const [localAddress, setLocalAddress] = useState<string | undefined>(
     undefined,
   );
+  const [greetingsValue, setGreetingsValue] = useState<string>();
+  const { data, isError, isLoading } = useEnsName({
+    address: address,
+  });
 
   const shortenedAddress = (address: string) => {
     return address.slice(0, 4) + '...' + address.slice(-6);
   };
+
+  useEffect(() => {
+    if (!isError) {
+      if (data !== null) setGreetingsValue(data);
+      else {
+        const walletAddress = localAddress
+          ? shortenedAddress(localAddress)
+          : '';
+        setGreetingsValue(walletAddress);
+      }
+    }
+  }, [address, data, isError, localAddress]);
 
   useEffect(() => {
     if (address) {
@@ -187,7 +181,7 @@ export default function Header() {
             component="div"
             sx={{ display: { xs: 'none', sm: 'block' }, color: 'black' }}
           >
-            Hi, Rich!
+            Hi, {greetingsValue}
           </Typography>
           <div className="relative mx-auto ml-6 w-full max-w-md">
             <div className="flex items-center">
