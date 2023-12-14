@@ -6,7 +6,7 @@ export default function Slogan() {
     <div style={sloganContainer}>
       <div>
         <div className="text-left text-4xl font-bold text-white">
-          Welcome, Rich Cuellar Lope
+          Welcome!
         </div>
         <div className="text-md text-left font-bold text-white">
           You are viewing the Pocket DAO dashbaord

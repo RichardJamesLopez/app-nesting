@@ -9,8 +9,8 @@ export default function Page() {
         <Image
           src="/logo.png"
           alt="YourDAO Logo"
-          width={300}
-          height={200}
+          width={150}
+          height={100}
           style={{ width: '75%', height: 'auto' }} // Set the desired width to 75% and maintain aspect ratio
         />
       </div>
@@ -21,7 +21,7 @@ export default function Page() {
           alignItems: 'center',
         }}
       >
-        <TabNavItem href="/layouts/activities">Start Here</TabNavItem>
+        <TabNavItem href="/layouts/activities">Click Here</TabNavItem>
       </div>
       <p style={{ fontSize: '18px', textAlign: 'center' }}>
         Ourmada features all of YourCompany activities and empowers Community

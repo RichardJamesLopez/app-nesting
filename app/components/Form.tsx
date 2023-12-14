@@ -71,7 +71,7 @@ const Form: React.FC<FormProps> = ({ onSubmit }) => {
       <button
         type="submit"
         style={buttonStyle}
-        className="rounded-lg bg-gray-700 px-3 py-1 text-sm text-gray-100 hover:bg-gray-500 hover:text-white"
+        className="rounded-lg bg-vercel-blue px-3 py-1 text-sm text-gray-100 hover:bg-gray-500 hover:text-white"
       >
         Add a new update here
       </button>
