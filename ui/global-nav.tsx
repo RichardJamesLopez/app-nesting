@@ -13,7 +13,7 @@ export function GlobalNav() {
   const close = () => setIsOpen(false);
 
   return (
-    <div className="fixed top-0 z-10 flex w-full flex-col bg-white lg:bottom-0 lg:z-auto lg:w-64">
+    <div className="fixed top-0 z-10 flex w-full flex-col bg-white shadow-lg shadow-cyan-500/50 lg:bottom-0 lg:z-auto lg:w-56">
       <div className="flex h-14 items-center px-4 py-4 lg:h-auto">
         <Link
           href="/"
@@ -24,7 +24,7 @@ export function GlobalNav() {
             <Logo />
           </div>
 
-          <h3 className="font-semibold tracking-wide text-blue-700 group-hover:text-gray-50">
+          <h3 className="font-semibold tracking-wide text-blue-700 group-hover:text-blue-800">
             Ourmada
           </h3>
         </Link>
@@ -87,9 +87,9 @@ function GlobalNavItem({
       onClick={close}
       href={`/${item.slug}`}
       className={clsx(
-        'block rounded-md px-3 py-2 text-sm font-medium hover:text-blue-400',
+        'block rounded-md px-3 py-2 text-sm font-medium hover:text-black',
         {
-          'text-blue-400 hover:bg-gray-800': !isActive,
+          'text-blue-400 hover:bg-gray-300': !isActive,
           'text-blue': isActive,
         },
       )}

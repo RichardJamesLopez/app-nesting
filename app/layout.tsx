@@ -14,10 +14,8 @@ export default function RootLayout({
 }) {
   const [categories, setCategories] = useState([]);
 
- 
-
   return (
-    <html lang="en" className="[color-scheme:light]">
+    <html lang="en" className="bg-slate-200 [color-scheme:light]">
       <body className="overflow-y-scroll  pb-36">
         <Web3Modal>{children}</Web3Modal>
       </body>

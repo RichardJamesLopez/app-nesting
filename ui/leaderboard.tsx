@@ -98,7 +98,7 @@ export default function Leaderboard() {
         </div>
       </div>
       {data.map((item, index) => (
-        <div className="mt-6 flex justify-between" key={index}>
+        <div className="mt-5 flex justify-between" key={index}>
           <div className="w-44 text-left">
             <StyledBadge
               badgeContent={item.badgetNumber}

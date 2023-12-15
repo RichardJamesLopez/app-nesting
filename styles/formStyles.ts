@@ -58,7 +58,6 @@ export const formHeaderStyle: React.CSSProperties = {
   width: '100%',
   margin: '4px',
   padding: '0.5rem 1rem',
-  
 };
 
 export const dateStyle: React.CSSProperties = {
@@ -111,5 +110,5 @@ export const summaryContainer: React.CSSProperties = {
   borderRadius: '4px',
   display: 'flex',
   alignItems: 'center',
-  padding: '30px 0',
+  padding: '14px 0',
 };

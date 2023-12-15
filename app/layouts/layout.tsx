@@ -17,26 +17,18 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  const categories = await getCategories();
-
   return (
-    <html lang="en" className="[color-scheme:light]">
-      <body className= "overflow-y-scroll">
-        <GlobalNav />
-        
-        <div className="lg:pl-72">
-          <div className="mx-auto max-w-4xl space-y-8 px-2 pt-20 lg:px-8 lg:py-8">
-            <div className= "rounded-lg p-px shadow-lg">
-              
-            </div>
+    <>
+      <GlobalNav />
 
-            <div className=" rounded-lg  p-px shadow-lg">
-              <div className="rounded-lg p-3.5 lg:p-6">{children}</div>
-            </div>
-            <Byline className="fixed sm:hidden" />
+      <div className="lg:pl-56">
+        <div className="mx-auto max-w-4xl space-y-8 px-2 pt-20 lg:px-8 lg:py-24">
+          <div className=" rounded-lg  p-px shadow-lg">
+            <div className="rounded-lg bg-white p-3.5 lg:p-6">{children}</div>
           </div>
+          <Byline className="fixed sm:hidden" />
         </div>
-      </body>
-    </html>
+      </div>
+    </>
   );
-  }
+}

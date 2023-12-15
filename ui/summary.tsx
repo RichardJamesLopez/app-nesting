@@ -59,11 +59,11 @@ export default function Summary() {
       <Box sx={{ flexGrow: 1 }}>
         <Grid
           container
-          spacing={{ xs: 3, md: 4 }}
+          spacing={{ xs: 1, md: 2 }}
           columns={{ xs: 3, sm: 8, md: 12 }}
         >
           {data.map((item, index) => (
-            <Grid item xs={2} sm={3} md={3} key={index}>
+            <Grid item xs={2} sm={4} md={3} key={index}>
               <Item>
                 <div className="text-left">{item.icon}</div>
                 <div className="my-2 text-left font-bold">{item.text}</div>
