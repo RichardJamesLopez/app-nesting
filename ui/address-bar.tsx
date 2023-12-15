@@ -7,7 +7,7 @@ function Params() {
   const searchParams = useSearchParams()!;
 
   return searchParams.toString().length !== 0 ? (
-    <div className="px-2 text-gray-500">
+    <div className="px-2 text-gray-300">
       <span>?</span>
       {Array.from(searchParams.entries()).map(([key, value], index) => {
         return (
@@ -16,14 +16,14 @@ function Params() {
             <span className="px-1">
               <span
                 key={key}
-                className="animate-[highlight_1s_ease-in-out_1] text-gray-100"
+                className="animate-[highlight_1s_ease-in-out_1] text-gray-500"
               >
                 {key}
               </span>
               <span>=</span>
               <span
                 key={value}
-                className="animate-[highlight_1s_ease-in-out_1] text-gray-100"
+                className="animate-[highlight_1s_ease-in-out_1] text-gray-500"
               >
                 {value}
               </span>
@@ -56,11 +56,11 @@ export function AddressBar() {
       </div>
       <div className="flex gap-x-1 text-sm font-medium">
         <div>
-          <span className="px-2 text-gray-400">YourCompany</span>
+          <span className="px-2 text-gray-500">YourCompany</span>
         </div>
         {pathname ? (
           <>
-            <span className="text-gray-600">/</span>
+            <span className="text-gray-500">/</span>
             {pathname
               .split('/')
               .slice(2)
@@ -70,7 +70,7 @@ export function AddressBar() {
                     <span>
                       <span
                         key={segment}
-                        className="animate-[highlight_1s_ease-in-out_1] rounded-full px-1.5 py-0.5 text-gray-100"
+                        className="animate-[highlight_1s_ease-in-out_1] rounded-full px-1.5 py-0.5 text-gray-500"
                       >
                         {segment}
                       </span>

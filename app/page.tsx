@@ -64,7 +64,7 @@ export default function ConnectButton() {
               />
             </div>
             <p className="m-auto mt-4 w-6/12 text-center text-white">
-              Ourdada is a modular platform for the web3 tools you need. All
+              Ourmada is a modular platform for the web3 tools you need. All
               updates, feedback and community member activities are
               transparently displayed in each of the DAO instances.
             </p>
