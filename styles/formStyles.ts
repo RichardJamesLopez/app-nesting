@@ -41,22 +41,24 @@ export const contentInputStyleSubmitted = {
 
 export const headerStyle: React.CSSProperties = {
   backgroundColor: 'transparent',
-  color: 'white',
+  color: '#1c4ed8',
   textAlign: 'center',
   fontWeight: '800',
   width: '100%',
   margin: '4px',
   padding: '1.5rem 1rem',
+  fontSize: '2rem',
 };
 
 export const formHeaderStyle: React.CSSProperties = {
   backgroundColor: 'transparent',
-  color: 'white',
+  color: 'black ',
   textAlign: 'center',
-  fontWeight: '600',
+  fontWeight: '800',
   width: '100%',
   margin: '4px',
   padding: '0.5rem 1rem',
+  
 };
 
 export const dateStyle: React.CSSProperties = {

@@ -7,8 +7,8 @@ import React from 'react';
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="mx-auto max-w-4xl space-y-8 px-2 pt-20 lg:px-8 lg:py-8">
-      <div className="bg-vc-border-gradient rounded-lg p-px shadow-lg shadow-black/20">
-        <div className="rounded-lg bg-black p-3.5 lg:p-6">
+      <div className=" rounded-lg p-px shadow-lg bg-gray-300">
+        <div className="rounded-lg bg-gray-300 p-3.5 lg:p-6">
           <div className="space-y-12 lg:space-y-16">
             <div className="flex items-center justify-between space-x-3 rounded-lg bg-gray-800 px-3 py-3 lg:px-5 lg:py-4">
               <div className="flex space-x-3">

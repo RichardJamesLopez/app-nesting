@@ -24,7 +24,7 @@ export function GlobalNav() {
             <Logo />
           </div>
 
-          <h3 className="font-semibold tracking-wide text-blue-200 group-hover:text-gray-50">
+          <h3 className="font-semibold tracking-wide text-blue-700 group-hover:text-gray-50">
             Ourmada
           </h3>
         </Link>
@@ -38,7 +38,7 @@ export function GlobalNav() {
           Menu
         </div>
         {isOpen ? (
-          <XIcon className="block w-6 text-gray-400" />
+          <XIcon className="block w-6 text-blue-700" />
         ) : (
           <MenuAlt2Icon className="block w-6 text-gray-400" />
         )}
@@ -54,7 +54,7 @@ export function GlobalNav() {
           {demos.map((section) => {
             return (
               <div key={section.name}>
-                <div className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-blue-400/80">
+                <div className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-blue-700/80">
                   <div>{section.name}</div>
                 </div>
 
@@ -87,9 +87,9 @@ function GlobalNavItem({
       onClick={close}
       href={`/${item.slug}`}
       className={clsx(
-        'block rounded-md px-3 py-2 text-sm font-medium hover:text-blue-300',
+        'block rounded-md px-3 py-2 text-sm font-medium hover:text-blue-400',
         {
-          'text-black-400 hover:bg-gray-800': !isActive,
+          'text-blue-400 hover:bg-gray-800': !isActive,
           'text-blue': isActive,
         },
       )}

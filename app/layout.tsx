@@ -19,8 +19,6 @@ export default function RootLayout({
   return (
     <html lang="en" className="[color-scheme:light]">
       <body className="overflow-y-scroll  pb-36">
-      <GlobalNav />
-      
         <Web3Modal>{children}</Web3Modal>
       </body>
     </html>
