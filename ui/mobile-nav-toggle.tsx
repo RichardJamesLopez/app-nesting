@@ -41,7 +41,7 @@ export function MobileNavToggle({ children }: { children: React.ReactNode }) {
         className="group absolute right-0 top-0 flex h-14 items-center gap-x-2 px-4 lg:hidden"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <div className="font-medium text-gray-100 group-hover:text-gray-400">
+        <div className="font-medium text-slate-500 group-hover:text-slate-800">
           Menu
         </div>
         {isOpen ? (

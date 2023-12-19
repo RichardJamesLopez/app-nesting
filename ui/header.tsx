@@ -128,7 +128,7 @@ export default function Header() {
     >
       <MenuItem>
         <IconButton size="large" aria-label="settings" color="inherit">
-          <Badge badgeContent={4} color="error">
+          <Badge badgeContent={2} color="error">
             <NotificationsNoneOutlinedIcon style={{ color: 'black' }} />
           </Badge>
         </IconButton>
@@ -143,15 +143,16 @@ export default function Header() {
         <p>Settings</p>
       </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
+        <Image
+          src="/avatar.png"
+          alt="avatar"
+          width={40}
+          height={40}
+          style={{
+            borderRadius: '50%',
+            marginRight: '10px',
+          }}
+        />
         <p>Profile</p>
       </MenuItem>
     </Menu>
@@ -244,6 +245,7 @@ export default function Header() {
                 height={50}
                 style={{
                   borderRadius: '50%',
+                  width: '50px',
                 }}
               />
               <HoverOverlay className="hover-overlay"></HoverOverlay>
@@ -270,7 +272,7 @@ export default function Header() {
               aria-controls={mobileMenuId}
               aria-haspopup="true"
               onClick={handleMobileMenuOpen}
-              color="inherit"
+              color="info"
             >
               <MoreIcon />
             </IconButton>
