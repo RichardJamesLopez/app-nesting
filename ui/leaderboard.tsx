@@ -34,35 +34,35 @@ export default function Leaderboard() {
   const data = [
     {
       photo: <InsertPhotoRoundedIcon />,
-      badgetNumber: 2,
+      rating: 1,
       profileImg: <AccountCircle />,
       userName: 'jane_Wagmi',
       amount: '5932 pts',
     },
     {
       photo: <InsertPhotoRoundedIcon />,
-      badgetNumber: 1,
+      rating: 2,
       profileImg: <AccountCircle />,
       userName: '0xSomething',
       amount: '4263 pts',
     },
     {
       photo: <InsertPhotoRoundedIcon />,
-      badgetNumber: 4,
+      rating: 3,
       profileImg: <AccountCircle />,
       userName: 'big JON',
       amount: '3642 pts',
     },
     {
       photo: <InsertPhotoRoundedIcon />,
-      badgetNumber: 2,
+      rating: 4,
       profileImg: <AccountCircle />,
       userName: 'Rebecca Moore',
       amount: '2542 pts',
     },
     {
       photo: <InsertPhotoRoundedIcon />,
-      badgetNumber: 3,
+      rating: 5,
       profileImg: <AccountCircle />,
       userName: 'Jane Doe',
       amount: '1832 pts',
@@ -101,7 +101,7 @@ export default function Leaderboard() {
         <div className="mt-5 flex justify-between" key={index}>
           <div className="w-44 text-left">
             <StyledBadge
-              badgeContent={item.badgetNumber}
+              badgeContent={item.rating}
               color="success"
               anchorOrigin={{
                 vertical: 'bottom',
