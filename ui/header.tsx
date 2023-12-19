@@ -7,6 +7,7 @@ import { useWeb3Modal } from '@web3modal/wagmi/react';
 import { useEnsName } from 'wagmi';
 
 import * as React from 'react';
+import Image from 'next/image';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -23,6 +24,26 @@ import MoreIcon from '@mui/icons-material/MoreVert';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import SettingsIcon from '@mui/icons-material/Settings';
+
+const ImageContainer = styled('div')(({ theme }) => ({
+  position: 'relative',
+  display: 'inline-block',
+  cursor: 'pointer',
+  '&:hover .hover-overlay': {
+    display: 'block',
+  },
+}));
+
+const HoverOverlay = styled('div')(({ theme }) => ({
+  position: 'absolute',
+  top: '0',
+  left: '0',
+  right: '0',
+  bottom: '0',
+  background: 'rgba(0, 0, 0, 0.1)',
+  display: 'none',
+  borderRadius: '50%',
+}));
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -174,7 +195,7 @@ export default function Header() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ bgcolor: 'white', boxShadow: 'none' }}>
-        <Toolbar>
+        <Toolbar style={{ minHeight: '80px' }}>
           <Typography
             variant="h6"
             noWrap
@@ -215,6 +236,18 @@ export default function Header() {
                 <SettingsIcon style={{ color: 'black' }} />
               </Badge>
             </IconButton>
+            <ImageContainer onClick={() => open()}>
+              <Image
+                src="/avatar.png"
+                alt="avatar"
+                width={50}
+                height={50}
+                style={{
+                  borderRadius: '50%',
+                }}
+              />
+              <HoverOverlay className="hover-overlay"></HoverOverlay>
+            </ImageContainer>
             <IconButton
               size="large"
               edge="end"
@@ -223,8 +256,8 @@ export default function Header() {
               aria-haspopup="true"
               color="inherit"
               onClick={() => open()}
+              sx={{ borderRadius: '5px' }}
             >
-              <AccountCircle style={{ color: 'black' }} />
               <p className="w-20 text-sm text-black">
                 {localAddress ? shortenedAddress(localAddress) : ''}
               </p>
