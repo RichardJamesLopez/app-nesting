@@ -1,287 +1,100 @@
 'use client';
 
-import { redirect } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
-import { useWeb3Modal } from '@web3modal/wagmi/react';
-import { useEnsName } from 'wagmi';
+import { demos, type Item } from '#/lib/demos';
+import Logo from '#/ui/logo';
+import Link from 'next/link';
+import { MenuAlt2Icon, XIcon } from '@heroicons/react/solid';
+import clsx from 'clsx';
+import { useState } from 'react';
+import { useRouter, useSelectedLayoutSegment } from 'next/navigation';
 
-import * as React from 'react';
-import Image from 'next/image';
-import { styled, alpha } from '@mui/material/styles';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
-import Badge from '@mui/material/Badge';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import MoreIcon from '@mui/icons-material/MoreVert';
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
-import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
-import SettingsIcon from '@mui/icons-material/Settings';
-
-const ImageContainer = styled('div')(({ theme }) => ({
-  position: 'relative',
-  display: 'inline-block',
-  cursor: 'pointer',
-  '&:hover .hover-overlay': {
-    display: 'block',
-  },
-}));
-
-const HoverOverlay = styled('div')(({ theme }) => ({
-  position: 'absolute',
-  top: '0',
-  left: '0',
-  right: '0',
-  bottom: '0',
-  background: 'rgba(0, 0, 0, 0.1)',
-  display: 'none',
-  borderRadius: '50%',
-}));
-
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(3),
-    width: 'auto',
-  },
-}));
-
-export default function Header() {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
-    React.useState<null | HTMLElement>(null);
-
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
-  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  };
-
-  const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setMobileMoreAnchorEl(event.currentTarget);
-  };
-
-  const menuId = 'primary-search-account-menu';
-
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Edit Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
-    </Menu>
-  );
-
-  const mobileMenuId = 'primary-search-account-menu-mobile';
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem>
-        <IconButton size="large" aria-label="settings" color="inherit">
-          <Badge badgeContent={2} color="error">
-            <NotificationsNoneOutlinedIcon style={{ color: 'black' }} />
-          </Badge>
-        </IconButton>
-        <p>Notification</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton size="large" aria-label="settings" color="inherit">
-          <Badge badgeContent={0} color="error">
-            <SettingsIcon />
-          </Badge>
-        </IconButton>
-        <p>Settings</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <Image
-          src="/avatar.png"
-          alt="avatar"
-          width={40}
-          height={40}
-          style={{
-            borderRadius: '50%',
-            marginRight: '10px',
-          }}
-        />
-        <p>Profile</p>
-      </MenuItem>
-    </Menu>
-  );
-
-  const { address, isConnecting, isDisconnected } = useAccount();
-  const { open } = useWeb3Modal();
-  const [localAddress, setLocalAddress] = useState<string | undefined>(
-    undefined,
-  );
-  const [greetingsValue, setGreetingsValue] = useState<string>();
-  const { data, isError, isLoading } = useEnsName({
-    address: address,
-  });
-
-  const shortenedAddress = (address: string) => {
-    return address.slice(0, 4) + '...' + address.slice(-6);
-  };
-
-  useEffect(() => {
-    if (!isError) {
-      if (data !== null) setGreetingsValue(data);
-      else {
-        const walletAddress = localAddress
-          ? shortenedAddress(localAddress)
-          : '';
-        setGreetingsValue(walletAddress);
-      }
-    }
-  }, [address, data, isError, localAddress]);
-
-  useEffect(() => {
-    if (address) {
-      setLocalAddress(address);
-    } else {
-      redirect('/');
-      setLocalAddress('');
-    }
-  }, [address]);
+export function GlobalNav() {
+  const [isOpen, setIsOpen] = useState(false);
+  const close = () => setIsOpen(false);
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{ bgcolor: 'white', boxShadow: 'none' }}>
-        <Toolbar style={{ minHeight: '80px' }}>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: 'none', sm: 'block' }, color: 'black' }}
-          >
-            Hi, {greetingsValue}
-          </Typography>
-          <div className="relative mx-auto ml-6 w-full max-w-md">
-            <div className="flex items-center">
-              <input
-                type="text"
-                className="h-10 w-full rounded-md border border-gray-300 pl-10 pr-4 focus:border-blue-500 focus:outline-none"
-                placeholder="Global search"
-              />
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <SearchIcon sx={{ color: '#404040' }} />
-              </div>
-            </div>
+    <div className="fixed top-0 z-10 flex w-full flex-col bg-white shadow-lg shadow-cyan-500/50 lg:bottom-0 lg:z-auto lg:w-56">
+      <div className="flex h-14 items-center px-4 py-4 lg:h-auto">
+        <Link
+          href="/"
+          className="group flex w-full items-center gap-x-2.5"
+          onClick={close}
+        >
+          <div className="h-10 w-10 rounded-full border border-white/30 group-hover:border-white/50">
+            <Logo />
           </div>
-          <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton
-              size="large"
-              aria-label="show 2 new notifications"
-              color="inherit"
-            >
-              <Badge badgeContent={2} color="error">
-                <NotificationsNoneIcon style={{ color: 'black' }} />
-              </Badge>
-            </IconButton>
-            <IconButton
-              size="large"
-              aria-label="settings"
-              color="inherit"
-              onClick={handleProfileMenuOpen}
-            >
-              <Badge badgeContent={0} color="error">
-                <SettingsIcon style={{ color: 'black' }} />
-              </Badge>
-            </IconButton>
-            <ImageContainer onClick={() => open()}>
-              <Image
-                src="/avatar.png"
-                alt="avatar"
-                width={50}
-                height={50}
-                style={{
-                  borderRadius: '50%',
-                  width: '50px',
-                }}
-              />
-              <HoverOverlay className="hover-overlay"></HoverOverlay>
-            </ImageContainer>
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              color="inherit"
-              onClick={() => open()}
-              sx={{ borderRadius: '5px' }}
-            >
-              <p className="w-20 text-sm text-black">
-                {localAddress ? shortenedAddress(localAddress) : ''}
-              </p>
-            </IconButton>
-          </Box>
-          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="info"
-            >
-              <MoreIcon />
-            </IconButton>
-          </Box>
-        </Toolbar>
-      </AppBar>
-      {renderMobileMenu}
-      {renderMenu}
-    </Box>
+
+          <h3 className="text-2xl font-semibold tracking-wide text-blue-700 group-hover:text-blue-800">
+            Ourmada
+          </h3>
+        </Link>
+      </div>
+      <button
+        type="button"
+        className="group absolute right-0 top-0 flex h-14 items-center gap-x-2 px-4 lg:hidden"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <div className="font-medium text-slate-500 group-hover:text-slate-800">
+          Menu
+        </div>
+        {isOpen ? (
+          <XIcon className="block w-6 text-blue-700" />
+        ) : (
+          <MenuAlt2Icon className="block w-6 text-gray-400" />
+        )}
+      </button>
+
+      <div
+        className={clsx('overflow-y-auto lg:static lg:block', {
+          'fixed inset-x-0 bottom-0 top-14 mt-px bg-black': isOpen,
+          hidden: !isOpen,
+        })}
+      >
+        <nav className="space-y-6 px-2 py-5">
+          {demos.map((section) => {
+            return (
+              <div key={section.name}>
+                <div className="mb-2 px-3 text-base font-semibold uppercase tracking-wider text-blue-700/80">
+                  <div>{section.name}</div>
+                </div>
+
+                <div className="space-y-1">
+                  {section.items.map((item) => (
+                    <GlobalNavItem key={item.slug} item={item} close={close} />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </nav>
+      </div>
+    </div>
+  );
+}
+
+function GlobalNavItem({
+  item,
+  close,
+}: {
+  item: Item;
+  close: () => false | void;
+}) {
+  const segment = useSelectedLayoutSegment();
+  const isActive = item.slug === segment;
+
+  return (
+    <Link
+      onClick={close}
+      href={`/${item.slug}`}
+      className={clsx(
+        'block rounded-md px-3 py-2 text-base font-medium hover:text-black',
+        {
+          'text-blue-400 hover:bg-gray-300': !isActive,
+          'text-blue': isActive,
+        },
+      )}
+    >
+      {item.name}
+    </Link>
   );
 }
