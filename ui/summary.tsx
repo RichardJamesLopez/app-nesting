@@ -23,6 +23,14 @@ const AmountWrapper = styled.div`
   } ;
 `;
 
+const Card = styled.div`
+  border-radius: 4px;
+  background: white;
+  color: rgba(0, 0, 0, 0.6);
+  padding: 26px;
+  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
+    0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+`;
 const CardTitle = styled.div`
   font-size: 17px;
   @media (max-width: 1700px) {
@@ -97,7 +105,7 @@ export default function Summary() {
         >
           {data.map((item, index) => (
             <Grid item xs={6} sm={4} md={3} key={index}>
-              <div className="bg-slate-100 p-5 text-gray-500">
+              <Card>
                 <div className="text-left">{item.icon}</div>
                 <CardTitle className="md:10   my-2 h-3 text-left font-bold leading-4   lg:h-5  ">
                   {item.text}
@@ -121,7 +129,7 @@ export default function Summary() {
                     </span>
                   </div>
                 </AmountWrapper>
-              </div>
+              </Card>
             </Grid>
           ))}
         </Grid>
