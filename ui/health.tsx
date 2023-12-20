@@ -4,12 +4,20 @@ import React from 'react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import FormControl from '@mui/material/FormControl';
-import MenuItem from '@mui/material/MenuItem';
+import { SelectChangeEvent } from '@mui/material/Select';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
-
+import styles from 'styled-components';
+const HeaderContainer = styles.div`
+  display: flex;
+   
+  @media (max-width: 1500px) {
+    display: block; 
+  }
+  @media (max-width: 768px) {
+    display: flex; 
+  } ;
+`;
 export default function Health() {
   const [age, setAge] = React.useState('');
 
@@ -46,32 +54,25 @@ export default function Health() {
 
   return (
     <>
-      <div className="flex justify-between">
+      <HeaderContainer className="block justify-between lg:flex">
         <div className="flex">
-          <div className="flex items-center">Health</div>
+          <div className="mr-1 flex items-center text-lg font-bold">Health</div>
           <div className="flex items-center">
             <InfoOutlinedIcon sx={{ color: 'rgb(99 102 241)' }} />
           </div>
         </div>
-        <div className="flex">
-          <div className="flex items-center">Time Period</div>
-          <FormControl
-            sx={{ minWidth: 120, padding: '1px', marginLeft: '6px' }}
+        <div className="flex justify-between">
+          <div className="flex w-36 items-center font-bold">Time Period</div>
+          <select
+            id="countries"
+            className="block w-2/3 rounded-lg border border-gray-300 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
           >
-            <Select
-              value={age}
-              onChange={handleChange}
-              displayEmpty
-              inputProps={{ 'aria-label': 'Without label' }}
-              sx={{ padding: '1px' }}
-            >
-              <MenuItem value="">This month</MenuItem>
-              <MenuItem value={0}>This week</MenuItem>
-              <MenuItem value={20}>Today</MenuItem>
-            </Select>
-          </FormControl>
+            <option selected>This month</option>
+            <option value="1">This week</option>
+            <option value="2">Today</option>
+          </select>
         </div>
-      </div>
+      </HeaderContainer>
       <Doughnut data={data} />
     </>
   );

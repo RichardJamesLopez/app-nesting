@@ -1,15 +1,35 @@
 'use client';
 import React from 'react';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { SelectChangeEvent } from '@mui/material/Select';
 import Badge from '@mui/material/Badge';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import StarBorderRoundedIcon from '@mui/icons-material/StarBorderRounded';
 import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
 import InsertPhotoRoundedIcon from '@mui/icons-material/InsertPhotoRounded';
 import { styled } from '@mui/material/styles';
+import styles from 'styled-components';
+const HeaderContainer = styles.div`
+  display: flex;
+   
+  @media (max-width: 1400px) {
+    display: block; 
+  }
+  @media (max-width: 768px) {
+    display: flex; 
+  } ;
+`;
+
+const List = styles.div`
+  display: flex;
+   
+  @media (max-width: 1350px) {
+    display: block; 
+  }
+  @media (max-width: 768px) {
+    display: flex; 
+  } ;
+`;
 
 const StyledBadge = styled(Badge)({
   '.MuiBadge-dot': {
@@ -71,34 +91,29 @@ export default function Leaderboard() {
 
   return (
     <div>
-      <div className="flex justify-between">
+      <HeaderContainer className="block justify-between lg:flex">
         <div className="flex">
-          <div className="flex items-center">Loeaderboard</div>
+          <div className="mr-1 flex items-center text-lg font-bold">
+            Loeaderboard
+          </div>
           <div className="flex items-center">
             <InfoOutlinedIcon sx={{ color: 'rgb(99 102 241)' }} />
           </div>
         </div>
-        <div className="flex">
-          <div className="flex items-center">Time Period</div>
-          <FormControl
-            sx={{ minWidth: 120, padding: '1px', marginLeft: '6px' }}
+        <div className="flex justify-between">
+          <div className="flex w-36 items-center font-bold">Time Period</div>
+          <select
+            id="countries"
+            className="block w-full rounded-lg border border-gray-300 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
           >
-            <Select
-              value={age}
-              onChange={handleChange}
-              displayEmpty
-              inputProps={{ 'aria-label': 'Without label' }}
-              sx={{ padding: '1px' }}
-            >
-              <MenuItem value="">This month</MenuItem>
-              <MenuItem value={0}>This week</MenuItem>
-              <MenuItem value={20}>Today</MenuItem>
-            </Select>
-          </FormControl>
+            <option selected>This month</option>
+            <option value="1">This week</option>
+            <option value="2">Today</option>
+          </select>
         </div>
-      </div>
+      </HeaderContainer>
       {data.map((item, index) => (
-        <div className="mt-5 flex justify-between" key={index}>
+        <List className="mt-6 block justify-between" key={index}>
           <div className="w-44 text-left">
             <StyledBadge
               badgeContent={item.rating}
@@ -113,14 +128,16 @@ export default function Leaderboard() {
             <AccountCircle sx={{ marginLeft: '10px' }} />
             <span className="font-bold">{item.userName}</span>
           </div>
-          <div>
-            <StarBorderRoundedIcon sx={{ color: 'yellow' }} />
-            <span className="ml-2 font-bold">{item.amount}</span>
+          <div className="flex justify-between md:mt-2 lg:w-1/2">
+            <div className="block lg:flex">
+              <StarBorderRoundedIcon sx={{ color: 'yellow' }} />
+              <span className="ml-2 font-bold">{item.amount}</span>
+            </div>
+            <div>
+              <LinkRoundedIcon />
+            </div>
           </div>
-          <div>
-            <LinkRoundedIcon />
-          </div>
-        </div>
+        </List>
       ))}
     </div>
   );
