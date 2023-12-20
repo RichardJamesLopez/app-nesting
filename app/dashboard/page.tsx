@@ -35,7 +35,7 @@ export default function Page() {
               <Summary />
             </Grid>
           </Grid>
-          <Grid item xs={12} sm={12} md={4} spacing={2}>
+          <Grid item xs={12} sm={12} md={4}>
             <Grid>
               <Item>
                 <Leaderboard />
@@ -58,7 +58,7 @@ export default function Page() {
               </Item>
             </Grid>
           </Grid>
-          <Grid item xs={12} sm={12} md={4} spacing={2}>
+          <Grid item xs={12} sm={12} md={4}>
             <Grid>
               <Item>
                 <Health />

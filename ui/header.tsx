@@ -228,12 +228,13 @@ export default function Header() {
                 <NotificationsNoneIcon style={{ color: 'black' }} />
               </Badge>
             </IconButton>
-            <IconButton size="large" aria-label="settings" color="inherit">
-              <Badge
-                badgeContent={0}
-                color="error"
-                onClick={handleProfileMenuOpen}
-              >
+            <IconButton
+              size="large"
+              aria-label="settings"
+              color="inherit"
+              onClick={handleProfileMenuOpen}
+            >
+              <Badge badgeContent={0} color="error">
                 <SettingsIcon style={{ color: 'black' }} />
               </Badge>
             </IconButton>
