@@ -7,10 +7,12 @@ import { useEffect, useState } from 'react';
 import { redirect } from 'next/navigation';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
-
+import { useRouter } from 'next/navigation';
+import { getBaseUrl } from '#/lib/getBaseUrl';
 export default function ConnectButton() {
   const { open } = useWeb3Modal();
   const { address, isConnecting, isDisconnected } = useAccount();
+  const router = useRouter();
 
   const StyledButton = styled(Button)(({ theme }) => ({
     '&:hover': {
@@ -22,10 +24,33 @@ export default function ConnectButton() {
   }));
 
   useEffect(() => {
-    if (address) {
-      redirect('/dashboard');
-    }
-  }, [address]);
+    const registerUser = async () => {
+      if (address) {
+        try {
+          const response = await fetch(
+            `${getBaseUrl()}/api/api/users/registration`,
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                address: address,
+              }),
+            },
+          );
+          const data = await response.json();
+          if (response.ok) {
+            router.push('/dashboard');
+          } else {
+            console.log(data.error);
+          }
+        } catch (error) {
+          console.error('Signup Failed!', error);
+        }
+      }
+    };
+
+    registerUser();
+  }, [address, router]);
 
   return (
     <div>
