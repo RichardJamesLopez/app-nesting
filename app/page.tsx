@@ -28,7 +28,7 @@ export default function ConnectButton() {
       if (address) {
         try {
           const response = await fetch(
-            `${getBaseUrl()}/api/api/users/registration`,
+            `https://app-nesting.vercel.app/api/users/registration`,
             {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
