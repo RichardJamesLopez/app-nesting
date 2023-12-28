@@ -4,67 +4,36 @@ export type Item = {
   description?: string;
 };
 
-export const demos: { name: string; items: Item[] }[] = [
+export const demos: { name: string; slug: string; icon: string }[] = [
   {
-    name: 'Dashboards',
-    items: [
-      {
-        name: 'Welcome',
-        slug: 'layouts',
-        description: '',
-      },
-      {
-        name: 'Home',
-        slug: 'route-groups',
-        description: '',
-      },
-    ],
+    name: 'Dashboard',
+    slug: 'dashboard',
+    icon: '/dashboard.svg',
   },
   {
     name: 'Activities',
-    items: [
-      {
-        name: 'Table',
-        slug: 'loading',
-        description: 'View the main list of activities for YourCompany',
-      },
-      {
-        name: 'Filters',
-        slug: 'error-handling',
-        description: 'Create specific filters to get you the info you need',
-      },
-      {
-        name: 'Comments',
-        slug: 'not-found',
-        description: 'View the main comments for YourCompany',
-      },
-    ],
+    slug: 'activities',
+    icon: '/activities.svg',
   },
   {
     name: 'Kanban',
-    items: [
-      {
-        name: 'Relationships',
-        slug: 'streaming',
-        description:
-          'Streaming data fetching from the server with React Suspense',
-      },
-      /*{
-        name: 'Funnel',
-        slug: 'ssg',
-        description: 'View activities within a custom funnel',
-      },
-      {
-        name: 'Team',
-        slug: 'ssr',
-        description: 'View activities within your Teams structure',
-      },
-      {
-        name: 'Custom',
-        slug: 'isr',
-        description: 'Create a custom view of activities',
-      },*/
-    ],
+    slug: 'kanban',
+    icon: '/kanban.svg',
+  },
+  {
+    name: 'Data',
+    slug: 'data',
+    icon: '/data.svg',
+  },
+  {
+    name: 'Settings',
+    slug: 'settings',
+    icon: '/settings.svg',
+  },
+  {
+    name: 'Help',
+    slug: 'help',
+    icon: '/help.svg',
   },
   /*{
     name: 'Data',

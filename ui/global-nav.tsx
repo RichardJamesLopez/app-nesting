@@ -6,12 +6,17 @@ import Link from 'next/link';
 import { MenuAlt2Icon, XIcon } from '@heroicons/react/solid';
 import clsx from 'clsx';
 import { useState } from 'react';
-import { useRouter, useSelectedLayoutSegment } from 'next/navigation';
+import {
+  useRouter,
+  useSelectedLayoutSegment,
+  usePathname,
+} from 'next/navigation';
+import Image from 'next/image';
 
 export function GlobalNav() {
   const [isOpen, setIsOpen] = useState(false);
   const close = () => setIsOpen(false);
-
+  const pathname = usePathname();
   return (
     <div className="fixed top-0 z-10 flex w-full flex-col bg-white shadow-lg shadow-cyan-500/50 lg:bottom-0 lg:z-auto lg:w-56">
       <div className="flex h-14 items-center px-4 py-4 lg:h-auto">
@@ -24,7 +29,7 @@ export function GlobalNav() {
             <Logo />
           </div>
 
-          <h3 className="text-2xl font-semibold tracking-wide text-blue-700 group-hover:text-blue-800">
+          <h3 className="text-2xl	font-bold tracking-wide text-slate-800 group-hover:text-blue-800">
             Ourmada
           </h3>
         </Link>
@@ -50,19 +55,23 @@ export function GlobalNav() {
           hidden: !isOpen,
         })}
       >
-        <nav className="space-y-6 px-2 py-5">
+        <nav className="space-y-1 py-5 pl-2">
           {demos.map((section) => {
             return (
-              <div key={section.name}>
-                <div className="mb-2 px-3 text-base font-semibold uppercase tracking-wider text-blue-700/80">
-                  <div>{section.name}</div>
+              <div key={section.name} className="flex justify-between">
+                <div className="w-[93%] space-y-1">
+                  <GlobalNavItem
+                    key={section.slug}
+                    section={section}
+                    close={close}
+                  />
                 </div>
-
-                <div className="space-y-1">
-                  {section.items.map((item) => (
-                    <GlobalNavItem key={item.slug} item={item} close={close} />
-                  ))}
-                </div>
+                <div
+                  className={clsx({
+                    'w-[3%] rounded-lg bg-[#F2994A]':
+                      section.slug === pathname?.substring(1),
+                  })}
+                ></div>
               </div>
             );
           })}
@@ -73,28 +82,41 @@ export function GlobalNav() {
 }
 
 function GlobalNavItem({
-  item,
+  section,
   close,
 }: {
-  item: Item;
+  section: Item;
   close: () => false | void;
 }) {
   const segment = useSelectedLayoutSegment();
-  const isActive = item.slug === segment;
+  const pathname = usePathname();
+  const isActive = section.slug === pathname?.substring(1);
+
+  const selected = isActive === true ? '-selected' : '';
+
+  console.log('pathname', pathname);
+  console.log('section.slug', section.slug);
+  console.log('isActive', isActive);
 
   return (
     <Link
       onClick={close}
-      href={`/${item.slug}`}
+      href={`/${section.slug}`}
       className={clsx(
-        'block rounded-md px-3 py-2 text-base font-medium hover:text-black',
+        'flex rounded-md px-3 py-4 text-base font-medium hover:text-white',
         {
-          'text-blue-400 hover:bg-gray-300': !isActive,
-          'text-blue': isActive,
+          'text-slate-900 hover:bg-blue-400': !isActive,
+          'bg-blue-500 text-white': isActive,
         },
       )}
     >
-      {item.name}
+      <Image
+        src={`/${section.slug + selected}.svg`}
+        alt={`${section.slug}-icon`}
+        width={24}
+        height={24}
+      />
+      <span className="pl-2">{section.name}</span>
     </Link>
   );
 }
