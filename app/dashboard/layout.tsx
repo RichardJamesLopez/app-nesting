@@ -4,10 +4,6 @@ import Header from '#/ui/header';
 import { GlobalNav } from '#/ui/global-nav';
 import Image from 'next/image';
 
-export const metadata = {
-  title: 'Dashboard',
-};
-
 export default function DashboardLayout({
   children,
 }: {
