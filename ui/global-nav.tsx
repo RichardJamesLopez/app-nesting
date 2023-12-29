@@ -1,6 +1,6 @@
 'use client';
 
-import { demos, type Item } from '#/lib/demos';
+import { menus, type Item } from '#/lib/menus';
 import Logo from '#/ui/logo';
 import Link from 'next/link';
 import { MenuAlt2Icon, XIcon } from '@heroicons/react/solid';
@@ -56,7 +56,7 @@ export function GlobalNav() {
         })}
       >
         <nav className="space-y-1 py-5 pl-2">
-          {demos.map((section) => {
+          {menus.map((section) => {
             return (
               <div key={section.name} className="flex justify-between">
                 <div className="w-[93%] space-y-1">
@@ -88,27 +88,18 @@ function GlobalNavItem({
   section: Item;
   close: () => false | void;
 }) {
-  const segment = useSelectedLayoutSegment();
   const pathname = usePathname();
   const isActive = section.slug === pathname?.substring(1);
-
   const selected = isActive === true ? '-selected' : '';
-
-  console.log('pathname', pathname);
-  console.log('section.slug', section.slug);
-  console.log('isActive', isActive);
 
   return (
     <Link
       onClick={close}
       href={`/${section.slug}`}
-      className={clsx(
-        'flex rounded-md px-3 py-4 text-base font-medium hover:text-white',
-        {
-          'text-slate-900 hover:bg-blue-400': !isActive,
-          'bg-blue-500 text-white': isActive,
-        },
-      )}
+      className={clsx('flex rounded-md px-3 py-4 text-base font-medium ', {
+        'text-slate-900 hover:bg-blue-400': !isActive,
+        'bg-blue-500 text-white': isActive,
+      })}
     >
       <Image
         src={`/${section.slug + selected}.svg`}

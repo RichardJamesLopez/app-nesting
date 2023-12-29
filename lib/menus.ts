@@ -4,7 +4,7 @@ export type Item = {
   description?: string;
 };
 
-export const demos: { name: string; slug: string; icon: string }[] = [
+export const menus: { name: string; slug: string; icon: string }[] = [
   {
     name: 'Dashboard',
     slug: 'dashboard',
@@ -82,4 +82,27 @@ export const demos: { name: string; slug: string; icon: string }[] = [
     ],
   },
    */
+];
+
+export const tabs: { name: string; slug: string }[] = [
+  {
+    name: 'Edit Profile',
+    slug: 'edit-profile',
+  },
+  {
+    name: 'Notifications',
+    slug: 'notifications',
+  },
+  {
+    name: 'Connected Addresses',
+    slug: 'connected-addresses',
+  },
+  {
+    name: 'Invite',
+    slug: 'invite',
+  },
+  {
+    name: 'Log Out',
+    slug: 'logout',
+  },
 ];
