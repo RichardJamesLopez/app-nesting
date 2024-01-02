@@ -155,6 +155,7 @@ const PageComponent: React.FC<{
     <div>
       {params.subCategorySlug === 'new' && (
         <div>
+          <h1 style={headerStyle}>{getUpperCase(params.subCategorySlug)}</h1>
           <div>
             <Form onSubmit={handlePageSubmit} />
           </div>

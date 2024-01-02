@@ -61,9 +61,10 @@ export async function GET(request: Request) {
 const data: Category[] = [
   { name: 'Activities', slug: 'activities', count: 1, parent: null },
   { name: 'Updates', slug: 'updates', count: 4, parent: 'activities' },
+  { name: 'New', slug: 'new', count: 1, parent: 'activities' },
   { name: 'Comments', slug: 'comments', count: 5, parent: 'activities' },
   { name: 'Deletions', slug: 'deletions', count: 2, parent: 'activities' },
-  { name: 'New', slug: 'new', count: 1, parent: 'activities' },
+  
 ];
 
 /*

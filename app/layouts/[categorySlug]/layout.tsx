@@ -1,8 +1,8 @@
 // layout.tsx
 import { getCategories, getCategory } from '#/app/api/categories/getCategories';
-import { ClickCounter } from '#/ui/click-counter';
 import { TabGroup } from '#/ui/tab-group';
 import FormClientComponent from 'app/layouts/formClientComponent';
+import { GlobalNav } from '#/ui/global-nav';
 
 export default async function Layout({
   children,
@@ -15,14 +15,13 @@ export default async function Layout({
   const categories = await getCategories({ parent: params.categorySlug });
 
   return (
+    //<GlobalNav />
     <div className="space-y-9">
       <div className="flex justify-between">
         <TabGroup
           path={`/layouts/${category.slug}`}
           items={[
-            {
-              text: 'All',
-            },
+            
             ...categories.map((x) => ({
               text: x.name,
               slug: x.slug,

@@ -2,7 +2,6 @@
 
 import { createWeb3Modal } from '@web3modal/wagmi/react';
 import { walletConnectProvider, EIP6963Connector } from '@web3modal/wagmi';
-
 import { WagmiConfig, configureChains, createConfig } from 'wagmi';
 import { publicProvider } from 'wagmi/providers/public';
 import { mainnet } from 'viem/chains';
