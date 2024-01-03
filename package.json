@@ -23,6 +23,7 @@
     "@heroicons/react": "1.0.6",
     "@mui/icons-material": "5.14.18",
     "@mui/material": "5.14.18",
+    "@notionhq/client": "2.2.14",
     "@tremor/react": "^3.11.1",
     "@vercel/postgres": "0.4.0",
     "@web3modal/wagmi": "3.5.0",
