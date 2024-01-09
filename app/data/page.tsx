@@ -1,4 +1,5 @@
 'use client';
+import { FormatItalicSharp } from '@mui/icons-material';
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { formHeaderStyle } from 'styles/formStyles';
@@ -52,9 +53,20 @@ type DataType = {
   };
 };
 
+type SortConfigType = {
+  key: string;
+  direction: 'ascending' | 'descending';
+};
+
 export default function Page() {
   const [data, setData] = useState<DataType[] | null>(null);
   const [allData, setAllData] = useState<DataType[] | null>(null); // Add this line
+
+  const [selectedOption, setSelectedOption] = useState('Total');
+
+  const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedOption(event.target.value);
+  };
 
   const containerStyle: React.CSSProperties = {
     display: 'flex',
@@ -63,6 +75,7 @@ export default function Page() {
     alignItems: 'flex-start',
     gap: '20px'
   };
+  
 
   useEffect(() => {
     fetch('/api/getPages')
@@ -87,16 +100,61 @@ export default function Page() {
   const totalCount = allData ? allData.length : 0;
   const totalDealValue = allData ? allData.reduce((sum, row) => sum + (row.properties['Deal Value'] ? row.properties['Deal Value'].number : 0), 0) : 0;
   const formattedTotalDealValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(totalDealValue);
+  const [sortConfig, setSortConfig] = useState<SortConfigType>({ key: '', direction: 'ascending' }); // Add this line
+
+  const handleHeaderClick = (key: string) => {
+    let direction = 'ascending';
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction: direction as 'ascending' | 'descending' });
+  
+    // Sort the data array
+    setData(prevData => {
+      if (!prevData) return null;
+      return [...prevData].sort((a, b) => {
+        let aValue: string | number;
+        let bValue: string | number;
+        switch (key) {
+          case 'dealName':
+            aValue = a.properties.Name.title[0].text.content;
+            bValue = b.properties.Name.title[0].text.content;
+            break;
+          case 'dealValue':
+            aValue = a.properties['Deal Value'] ? a.properties['Deal Value'].number : 0;
+            bValue = b.properties['Deal Value'] ? b.properties['Deal Value'].number : 0;
+            break;
+          case 'status':
+            aValue = a.properties.Status.status.name;
+            bValue = b.properties.Status.status.name;
+            break;
+          default:
+            return 0;
+        }
+        if (aValue < bValue) {
+          return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (aValue > bValue) {
+          return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+      });
+    });
+  };
+
 
   return (
     <div style={containerStyle}>
-      <h1 style={formHeaderStyle}>Data</h1>
+      
+      <h1 style={formHeaderStyle}>Selected Deal Details</h1>
+      <p> The following activity are selected deals that are visible to the community. </p>
+      <p>Click on the column headers to sort the data.</p>
       <table>
         <thead>
           <tr>
-            <th>Deal Name</th>
-            <th>Estimated Value</th>
-            <th>Pipeline Status</th>
+          <th onClick={() => handleHeaderClick('dealName')}>Deal Name</th>
+          <th onClick={() => handleHeaderClick('dealValue')}>Estimated Value</th>
+          <th onClick={() => handleHeaderClick('status')}>Pipeline Status</th>
           </tr>
         </thead>
         <tbody>
@@ -115,7 +173,15 @@ export default function Page() {
         </tbody>
       </table>
       <h1 style={formHeaderStyle}>Pipeline Summary</h1>
-      <table>
+      <p> The following activitiy are all deals in an anonymized fashion.</p>
+      <div>
+        <strong><h2>Filter</h2></strong>
+        <input type="radio" value="Total" checked={selectedOption === 'Total'} onChange={handleOptionChange} /> Total
+        <input type="radio" value="Status" checked={selectedOption === 'Status'} onChange={handleOptionChange} /> Status
+        <input type="radio" value="Visibility" checked={selectedOption === 'Visibility'} onChange={handleOptionChange} /> Visibility
+      </div>
+      
+      {selectedOption === 'Total' && (<table>
         <thead>
           <tr>
             <th>Total Count</th>
@@ -129,6 +195,61 @@ export default function Page() {
           </tr>
         </tbody>
       </table>
-    </div>
-  );
+      )}
+    
+    {selectedOption === 'Status' && (
+      <table>
+        <thead>
+          <tr>
+            <th>Status</th>
+            <th>Count</th>
+            <th>Total Deal Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          {allData && Array.from(new Set(allData.map(row => row.properties.Status.status.name))).map(status => {
+            const rowsWithStatus = allData.filter(row => row.properties.Status.status.name === status);
+            const count = rowsWithStatus.length;
+            const totalDealValue = rowsWithStatus.reduce((sum, row) => sum + (row.properties['Deal Value'] ? row.properties['Deal Value'].number : 0), 0);
+            const formattedTotalDealValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(totalDealValue);
+            return (
+              <tr key={status}>
+                <td>{status}</td>
+                <td>{count}</td>
+                <td>{formattedTotalDealValue}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    )}
+    
+    {selectedOption === 'Visibility' && (
+      <table>
+        <thead>
+          <tr>
+            <th>Visibility</th>
+            <th>Count</th>
+            <th>Total Deal Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          {allData && Array.from(new Set(allData.map(row => row.properties.Visibility.select.name))).map(visibility => {
+            const rowsWithVisibility = allData.filter(row => row.properties.Visibility.select.name === visibility);
+            const count = rowsWithVisibility.length;
+            const totalDealValue = rowsWithVisibility.reduce((sum, row) => sum + (row.properties['Deal Value'] ? row.properties['Deal Value'].number : 0), 0);
+            const formattedTotalDealValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(totalDealValue);
+            return (
+              <tr key={visibility}>
+                <td>{visibility}</td>
+                <td>{count}</td>
+                <td>{formattedTotalDealValue}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+      )}
+      </div>
+  )
   }
