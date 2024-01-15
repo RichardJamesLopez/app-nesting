@@ -28,7 +28,6 @@ import ActionButtons from '#/app/components/ActionButtons';
 import { useEffect } from 'react';
 import { redirect, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
-import { atom, useAtom } from 'jotai';
 import Notiflix from 'notiflix';
 
 interface Page extends FormInputData {
