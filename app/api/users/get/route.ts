@@ -4,7 +4,7 @@ import User from '#/app/models/userModel';
 
 connect();
 
-export const GET = async (req: { url: string | URL }) => {
+export const GET = async (req: any) => {
   const { searchParams } = new URL(req.url);
   const param = searchParams.get('timePeriod');
   console.log(param);

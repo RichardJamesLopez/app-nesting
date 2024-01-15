@@ -4,7 +4,7 @@ import Post from '#/app/models/postModel';
 
 connect();
 
-export const GET = async (req: { url: string | URL }) => {
+export const GET = async (req: any) => {
   const { searchParams } = new URL(req.url);
   const param = searchParams.get('timePeriod');
   try {
