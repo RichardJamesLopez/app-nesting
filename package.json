@@ -9,7 +9,7 @@
     "prettier": "prettier --write --ignore-unknown .",
     "prettier:check": "prettier --check --ignore-unknown .",
     "start": "next start",
-    "test": "pnpm prettier:check && pnpm lint"
+    "test": "yarn prettier:check && yarn lint"
   },
   "git": {
     "pre-commit": "lint-staged"
@@ -23,7 +23,6 @@
     "@heroicons/react": "1.0.6",
     "@mui/icons-material": "5.14.18",
     "@mui/material": "5.14.18",
-    "@notionhq/client": "2.2.14",
     "@tremor/react": "^3.11.1",
     "@vercel/postgres": "0.4.0",
     "@web3modal/wagmi": "3.5.0",
@@ -34,9 +33,9 @@
     "dotenv": "16.3.1",
     "mongoose": "8.0.3",
     "ms": "3.0.0-canary.1",
-    "next": "14.0.4",
+    "next": "13.4.10-canary.2",
     "next-auth": "4.22.3",
-    "node.js": "0.0.1-security",
+    "notiflix": "3.2.7",
     "react": "18.2.0",
     "react-chartjs-2": "5.2.0",
     "react-dom": "18.2.0",

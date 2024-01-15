@@ -6,6 +6,12 @@ const userSchema = new Schema({
     required: [true, 'Please provide an address'],
     unique: true,
   },
+  active: {
+    type: Boolean,
+  },
+  date: {
+    type: Number,
+  },
 });
 
 const User = models.User || model('User', userSchema);

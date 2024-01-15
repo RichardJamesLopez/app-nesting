@@ -2,10 +2,7 @@ import mongoose from 'mongoose';
 
 export const connect = async () => {
   try {
-    // mongoose.connect(process.env.NEXT_PUBLIC_MONGODB_URI!);
-    mongoose.connect(
-      'mongodb+srv://emrichmichaelperrier:bahdyI0zXILn5P4c@cluster0.hfcfk5g.mongodb.net/',
-    );
+    mongoose.connect(process.env.NEXT_PUBLIC_MONGODB_URI!);
     const connection = mongoose.connection;
     connection.on('connected', () => {
       console.log('MongoDB connected successfully!');
@@ -17,7 +14,6 @@ export const connect = async () => {
       process.exit();
     });
   } catch (error) {
-    console.log('Something went wrong!');
     console.log(error);
   }
 };

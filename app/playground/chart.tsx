@@ -29,7 +29,7 @@ const data = [
 export default function Chart() {
   return (
     <Card className="mt-8">
-      <Title style={thumbsStyle}>Treasury Performance</Title>
+      <Title className="text-lg text-slate-800">Treasury Performance</Title>
 
       <AreaChart
         className="mt-8 h-80"

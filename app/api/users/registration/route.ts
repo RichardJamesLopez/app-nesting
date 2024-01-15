@@ -7,10 +7,10 @@ connect();
 export const POST = async (request: NextRequest) => {
   try {
     const reqBody = await request.json();
-    console.log(reqBody);
     const { address } = await reqBody;
 
     const user = await User.findOne({ address });
+
     if (user) {
       return NextResponse.json({
         message: 'Logged in Successfully!',

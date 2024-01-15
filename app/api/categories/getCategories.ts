@@ -29,8 +29,6 @@ export async function getCategories({ parent }: { parent?: string } = {}) {
 }
 
 export async function getCategory({ slug }: { slug: string }) {
-  console.log('Slug:', slug); // Log the slug value
-
   const res = await fetch(
     `${getBaseUrl()}/api/categories${slug ? `?slug=${slug}` : ''}`,
   );

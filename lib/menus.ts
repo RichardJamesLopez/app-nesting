@@ -13,7 +13,7 @@ export const menus: { name: string; slug: string; icon: string }[] = [
   {
     name: 'Activities',
     slug: 'activities',
-    icon: '/activities.svg',
+    icon: '/layouts.svg',
   },
   {
     name: 'Kanban',

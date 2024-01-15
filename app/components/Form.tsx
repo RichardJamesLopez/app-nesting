@@ -2,12 +2,14 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { contentInputStyleSubmitted } from 'styles/formStyles';
+import { contentInput } from 'styles/formStyles';
+import Notiflix from 'notiflix';
 
 interface FormInputData {
-  id: number;
+  userAddress: string;
   title: string;
   content: string;
+  date: number;
 }
 
 interface FormProps {
@@ -23,7 +25,6 @@ const Form: React.FC<FormProps> = ({ onSubmit }) => {
     borderRadius: '10px',
     padding: '1rem',
     width: '100%',
-    margin: '4px',
   };
   const inputStyle = {
     backgroundColor: 'white',
@@ -31,22 +32,46 @@ const Form: React.FC<FormProps> = ({ onSubmit }) => {
     borderRadius: '10px',
     padding: '1rem',
     width: '100%',
-    margin: '4px',
+    marginBottom: '4px',
+  };
+  const createComment = async (newPost: any) => {
+    newPost.deletion = false;
+    newPost.thumbsUp = [];
+    newPost.thumbsDown = [];
+    newPost.comments = [];
+    try {
+      const response = await fetch(`http://localhost:3000/api/posts/create`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newPost),
+      });
+      const data = await response.json();
+
+      Notiflix.Notify.init({
+        position: 'right-bottom',
+      });
+      Notiflix.Notify.success(data.message);
+
+      return data;
+    } catch (error) {
+      console.error('Create comment Failed!', error);
+    }
   };
 
-  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const userAddress = localStorage.getItem('userAddress') ?? '';
 
     const formInputData: FormInputData = {
-      id: Date.now(),
+      userAddress: userAddress,
       title: title,
       content: content,
+      date: Date.now(),
     };
-    console.log('formInputData', formInputData);
+    const response = createComment(formInputData);
+    onSubmit(await response);
 
-    onSubmit(formInputData); // Use onSubmit here instead of directly calling the fetch function
-
-    push('/layouts/activities/updates');
+    push('/activities/activities/updates');
     setTitle('');
     setContent('');
   };
@@ -63,7 +88,7 @@ const Form: React.FC<FormProps> = ({ onSubmit }) => {
       <textarea
         placeholder="Content"
         defaultValue={content} // using state variable
-        style={contentInputStyleSubmitted}
+        style={contentInput}
         onChange={(e) => setContent(e.target.value)}
         rows={10} // Number of visible rows
       />
@@ -71,7 +96,7 @@ const Form: React.FC<FormProps> = ({ onSubmit }) => {
       <button
         type="submit"
         style={buttonStyle}
-        className="rounded-lg bg-vercel-blue px-3 py-1 text-sm text-gray-100 hover:bg-gray-500 hover:text-white"
+        className="bg-vercel-blue rounded-lg px-3 py-1 text-sm text-gray-100 hover:bg-gray-500 hover:text-white"
       >
         Add a new update here
       </button>

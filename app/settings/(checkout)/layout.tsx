@@ -12,7 +12,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="space-y-9">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-x-4">
-            <TabNavItem href="/activities">Back</TabNavItem>
+            <TabNavItem href="/layouts">Back</TabNavItem>
           </div>
         </div>
 

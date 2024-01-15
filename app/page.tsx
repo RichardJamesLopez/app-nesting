@@ -28,7 +28,7 @@ export default function ConnectButton() {
       if (address) {
         try {
           const response = await fetch(
-            `https://app-nesting.vercel.app/api/users/registration`,
+            `http://localhost:3000/api/users/registration`,
             {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -38,6 +38,7 @@ export default function ConnectButton() {
             },
           );
           const data = await response.json();
+          localStorage.setItem('userAddress', data.user.address);
           if (response.ok) {
             router.push('/dashboard');
           } else {

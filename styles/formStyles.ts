@@ -9,12 +9,13 @@ export const buttonStyle = {
 export const thumbsStyle = {
   backgroundColor: 'transparent',
   //textAlign: 'center',
-  color: '#92c5fd',
+  color: '#708090',
   fontWeight: '600',
   borderRadius: '10px',
   padding: '0.5rem 3rem',
   width: '100%',
   margin: '2px',
+  display: 'flex',
 };
 export const deleteBtnStyle = {};
 export const inputStyleSubmitted = {
@@ -22,21 +23,48 @@ export const inputStyleSubmitted = {
   color: 'black',
   borderRadius: '10px',
   fontWeight: 'bold',
-  border: '1px solid blue', // Changed the border to a valid CSS string
-  padding: '1.5rem 1rem',
+  border: 'none',
+  padding: '1rem 3rem',
   width: '100%',
-  height: '50px', // Set the initial height for the multi-line box
-  margin: '4px',
+  // height: '50px', // Set the initial height for the multi-line box
 };
 export const contentInputStyleSubmitted = {
   backgroundColor: 'white',
   color: 'black',
   borderRadius: '10px',
-  border: '1px solid blue', // Changed the border to a valid CSS string
-  padding: '1rem 1rem',
+  border: 'none',
   width: '100%',
-  height: '100px', // Set the initial height for the multi-line box
-  margin: '4px',
+  padding: '1rem 1rem',
+  margin: '2rem 0 0 0',
+  minHeight: '20px', // Set the initial height for the multi-line box
+};
+export const commentTextArea = {
+  backgroundColor: 'white',
+  color: 'black',
+  borderRadius: '10px',
+  border: 'none',
+  width: '100%',
+  margin: '2rem 0 0 0',
+  minHeight: '20px', // Set the initial height for the multi-line box
+};
+
+export const contentStyleSubmitted = {
+  backgroundColor: 'white',
+  color: 'black',
+  borderRadius: '10px',
+  border: 'none',
+  width: '100%',
+  padding: '1rem 3rem',
+  minHeight: '20px', // Set the initial height for the multi-line box
+};
+
+export const contentInput = {
+  backgroundColor: 'white',
+  color: 'black',
+  borderRadius: '10px',
+  border: 'solid 1px #708090',
+  width: '100%',
+  // minHeight: '20px', // Set the initial height for the multi-line box
 };
 
 export const headerStyle: React.CSSProperties = {
@@ -62,7 +90,7 @@ export const formHeaderStyle: React.CSSProperties = {
 
 export const dateStyle: React.CSSProperties = {
   backgroundColor: 'transparent',
-  color: 'white',
+  color: '#708090',
   textAlign: 'center',
   fontWeight: '600',
   width: '90%',
@@ -71,8 +99,9 @@ export const dateStyle: React.CSSProperties = {
 };
 
 export const formContainerStyle: React.CSSProperties = {
-  border: '2px solid #0070f3', // Add the border style here
+  border: '1px solid #708090', // Add the border style here
   padding: '1rem', // Add optional padding to the div
+  borderTop: 'none',
 };
 
 export const customBarStyle: React.CSSProperties = {

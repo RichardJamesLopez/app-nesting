@@ -68,8 +68,9 @@ export function GlobalNav() {
                 </div>
                 <div
                   className={clsx({
-                    'w-[3%] rounded-lg bg-[#F2994A]':
-                      section.slug === pathname?.substring(1),
+                    'w-[3%] rounded-lg bg-[#F2994A]': pathname?.includes(
+                      section.slug,
+                    ),
                   })}
                 ></div>
               </div>

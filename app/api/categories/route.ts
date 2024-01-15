@@ -1,26 +1,4 @@
 import type { Category } from './category';
-//import NextAuth from 'next-auth';
-//import GithubProvider from 'next-auth/providers/github';
-
-//import { NextApiRequest, NextApiResponse } from 'next';
-//import handleCors from '#/handleCors';
-
-/*
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (handleCors(req, res)) {
-    // If it was an OPTIONS request, we're done.
-    return;
-  }
-
-  // Your existing logic for handling GET, POST, PUT, etc. requests goes here.
-  if (req.method === 'GET') {
-    // Handle GET request
-  } else if (req.method === 'POST') {
-    // Handle POST request
-  }
-  // And so on for other HTTP methods like DELETE, PUT, etc.
-}
-*/
 
 export const runtime = 'edge';
 export async function GET(request: Request) {
@@ -61,10 +39,9 @@ export async function GET(request: Request) {
 const data: Category[] = [
   { name: 'Activities', slug: 'activities', count: 1, parent: null },
   { name: 'Updates', slug: 'updates', count: 4, parent: 'activities' },
-  { name: 'New', slug: 'new', count: 1, parent: 'activities' },
   { name: 'Comments', slug: 'comments', count: 5, parent: 'activities' },
   { name: 'Deletions', slug: 'deletions', count: 2, parent: 'activities' },
-  
+  { name: 'New', slug: 'new', count: 1, parent: 'activities' },
 ];
 
 /*
