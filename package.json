@@ -36,6 +36,7 @@
     "ms": "3.0.0-canary.1",
     "next": "14.0.4",
     "next-auth": "4.22.3",
+    "notiflix": "3.2.7",
     "node.js": "0.0.1-security",
     "react": "18.2.0",
     "react-chartjs-2": "5.2.0",
