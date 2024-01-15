@@ -37,7 +37,7 @@ const thumbsUpDown = async (
 ) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/posts/thumbsupdown`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/posts/thumbsupdown`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

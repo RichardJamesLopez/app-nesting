@@ -75,7 +75,7 @@ const CommentModal: React.FC<CommentModalProps> = ({ onSubmit, page }) => {
   const addComment = async (id: string, comments: any) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/comments/create`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/comments/create`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

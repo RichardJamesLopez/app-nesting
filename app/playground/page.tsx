@@ -49,7 +49,7 @@ export default function PlaygroundPage() {
   const getUsers = async (timePeriod: number) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/users/get?timePeriod=${timePeriod}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/users/get?timePeriod=${timePeriod}`,
         {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
@@ -73,7 +73,7 @@ export default function PlaygroundPage() {
   const getPosts = async (timePeriod: number) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/posts/get?timePeriod=${timePeriod}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/posts/get?timePeriod=${timePeriod}`,
         {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },

@@ -28,7 +28,7 @@ export default function ConnectButton() {
       if (address) {
         try {
           const response = await fetch(
-            `http://localhost:3000/api/users/registration`,
+           `${process.env.NEXT_PUBLIC_API_URL}/api/users/registration`,
             {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },

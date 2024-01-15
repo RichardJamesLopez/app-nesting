@@ -40,7 +40,7 @@ const Form: React.FC<FormProps> = ({ onSubmit }) => {
     newPost.thumbsDown = [];
     newPost.comments = [];
     try {
-      const response = await fetch(`http://localhost:3000/api/posts/create`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newPost),
