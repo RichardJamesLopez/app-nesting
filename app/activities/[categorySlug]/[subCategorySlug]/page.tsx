@@ -63,7 +63,7 @@ const PageComponent: React.FC<{
   const getPosts = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts/get`, {
+      const response = await fetch(`http://localhost:3000/api/posts/get`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -72,7 +72,6 @@ const PageComponent: React.FC<{
       const deletedPosts = data.deletedPosts;
       setPages(activePosts);
       setDeletions(deletedPosts);
-      const textAtom = atom(activePosts);
 
       setLoading(false);
       return data;
@@ -91,7 +90,7 @@ const PageComponent: React.FC<{
 
   const deletePost = async (id: string) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts/delete`, {
+      const response = await fetch(`http://localhost:3000/api/posts/delete`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
