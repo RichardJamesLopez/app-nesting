@@ -2,6 +2,7 @@ import { Layout } from '#/ui/page-directory/layout';
 import { Inter } from 'next/font/google';
 import { AppProps } from 'next/app';
 import 'styles/globals.css';
+//import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 require('dotenv').config();
 
 // Using next/font instead of a manual setup, we get:
@@ -14,12 +15,16 @@ const primaryFont = Inter({
   variable: '--primary-font',
 });
 
+
+
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <main className={`${primaryFont.variable} font-sans`}>
+      
       <Layout>
         <Component {...pageProps} />
       </Layout>
+      
     </main>
   );
 }

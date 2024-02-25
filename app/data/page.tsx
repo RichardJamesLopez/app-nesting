@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { formHeaderStyle } from 'styles/formStyles';
 
 
+
 type DataType = {
   properties: {
     Name: {
@@ -30,7 +31,7 @@ type DataType = {
     };
     'Deal Value': {
       id: string;
-      type: string;
+      type: number;
       number: number;
     };
     'Visibility': {
@@ -48,6 +49,19 @@ type DataType = {
         name: string;
         color: string;
       };
+    };
+    'Last Edited Time': {
+      id: string;
+      type: string;
+      date: string;
+    };
+    'Owner': {
+      id: string;
+      type: string;
+      text: {
+        content: string;
+        link: null | string;
+      }[];
     };
     // Add more properties as needed
   };
@@ -75,7 +89,39 @@ export default function Page() {
     alignItems: 'flex-start',
     gap: '20px'
   };
+  const tableStyle: React.CSSProperties = {
+    borderCollapse: 'collapse',
+    width: '100%',
+    marginTop: '20px',
+  };
   
+  const thStyle: React.CSSProperties = {
+    border: '1px solid #ddd',
+    padding: '8px',
+    textAlign: 'left',
+    backgroundColor: '#f2f2f2',
+    cursor: 'pointer',
+  };
+  
+  const tdStyle: React.CSSProperties = {
+    border: '1px solid #ddd',
+    padding: '8px',
+    textAlign: 'left',
+  };
+  
+  const h1Style: React.CSSProperties = {
+    fontSize: '1.5em',
+  };
+  
+  const radioButtonContainerStyle: React.CSSProperties = {
+    
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '100%',
+  };
+  const radioButtonStyle: React.CSSProperties = {
+    marginLeft: '10px', // Adjust this value as needed
+  };
 
   useEffect(() => {
     fetch('/api/getPages')
@@ -142,19 +188,18 @@ export default function Page() {
     });
   };
 
-
   return (
     <div style={containerStyle}>
-      
-      <h1 style={formHeaderStyle}>Selected Deal Details</h1>
+      <h1 style={{...formHeaderStyle, ...h1Style}}>Selected Deal Details</h1>
       <p> The following activity are selected deals that are visible to the community. </p>
       <p>Click on the column headers to sort the data.</p>
-      <table>
+      <table style={tableStyle}>
         <thead>
           <tr>
-          <th onClick={() => handleHeaderClick('dealName')}>Deal Name</th>
-          <th onClick={() => handleHeaderClick('dealValue')}>Estimated Value</th>
-          <th onClick={() => handleHeaderClick('status')}>Pipeline Status</th>
+            <th style={thStyle} onClick={() => handleHeaderClick('dealName')}>Deal Name</th>
+            <th style={thStyle} onClick={() => handleHeaderClick('dealValue')}>Estimated Value</th>
+            <th style={thStyle} onClick={() => handleHeaderClick('status')}>Pipeline Status</th>
+            <th style={thStyle} onClick={() => handleHeaderClick('Owner')}>Owner</th>
           </tr>
         </thead>
         <tbody>
@@ -162,94 +207,107 @@ export default function Page() {
           const dealValue = row.properties && row.properties['Deal Value'] ? row.properties['Deal Value'].number : null;
           const formattedDealValue = dealValue !== null ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(dealValue) : '-';
           const dealName = row.properties && row.properties.Visibility && row.properties.Visibility.select.name === 'Custom Visibility' ? '---' : (row.properties.Name && row.properties.Name.title[0] ? row.properties.Name.title[0].text.content : '-');
+          const Last_Edited_Time= row.properties && row.properties['Last Edited Time'] ? row.properties['Last Edited Time'].date : null;
           return (
             <tr key={index}>
-              <td>{dealName}</td>    
-              <td>{formattedDealValue}</td>
-              <td>{row.properties && row.properties.Status ? row.properties.Status.status.name : '-'}</td>    
+              <td style={tdStyle}>{dealName}</td>    
+              <td style={tdStyle}>{formattedDealValue}</td>
+              <td style={tdStyle}>{row.properties && row.properties.Status ? row.properties.Status.status.name : '-'}</td>    
+              <td style={tdStyle}> {row.properties['Owner'] && row.properties['Owner'].text ? row.properties['Owner'].text.map(block => block.content).join(' ') : 'No owner assigned'}</td> 
+              
             </tr>
           );
         })}
         </tbody>
       </table>
-      <h1 style={formHeaderStyle}>Pipeline Summary</h1>
+      <h1 style={{...formHeaderStyle, ...h1Style}}>Pipeline Summary</h1>
       <p> The following activitiy are all deals in an anonymized fashion.</p>
-      <div>
-        <strong><h2>Filter</h2></strong>
-        <input type="radio" value="Total" checked={selectedOption === 'Total'} onChange={handleOptionChange} /> Total
-        <input type="radio" value="Status" checked={selectedOption === 'Status'} onChange={handleOptionChange} /> Status
-        <input type="radio" value="Visibility" checked={selectedOption === 'Visibility'} onChange={handleOptionChange} /> Visibility
+     
+      <div style={radioButtonContainerStyle}>
+        <div> Total<input style={radioButtonStyle} type="radio" value="Total" checked={selectedOption === 'Total'} onChange={handleOptionChange} /> 
+        </div>
+        <div>Status<input style={radioButtonStyle} type="radio" value="Status" checked={selectedOption === 'Status'} onChange={handleOptionChange} /> 
+        </div>
+        <div>Visibility<input style={radioButtonStyle} type="radio" value="Visibility" checked={selectedOption === 'Visibility'} onChange={handleOptionChange} /> 
+        </div>
       </div>
+      {selectedOption === 'Total' && (
+        <table style={tableStyle}>
+          <thead>
+            <tr>
+              <th style={thStyle}>Total Count</th>
+              <th style={thStyle}>Total Deal Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style={tdStyle}>{totalCount}</td>
+              <td style={tdStyle}>{formattedTotalDealValue}</td>
+            </tr>
+          </tbody>
+        </table>
+      )}
+  
+      {selectedOption === 'Status' && (
+        <table style={tableStyle}>
+          <thead>
+            <tr>
+              <th style={thStyle}>Status</th>
+              <th style={thStyle}>Count</th>
+              <th style={thStyle}>Total Deal Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            {allData && Array.from(new Set(allData.map(row => row.properties.Status.status.name))).map(status => {
+              const rowsWithStatus = allData.filter(row => row.properties.Status.status.name === status);
+              const count = rowsWithStatus.length;
+              const totalDealValue = rowsWithStatus.reduce((sum, row) => sum + (row.properties['Deal Value'] ? row.properties['Deal Value'].number : 0), 0);
+              const formattedTotalDealValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(totalDealValue);
+              return (
+                <tr key={status}>
+                  <td style={tdStyle}>{status}</td>
+                  <td style={tdStyle}>{count}</td>
+                  <td style={tdStyle}>{formattedTotalDealValue}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      )}
       
-      {selectedOption === 'Total' && (<table>
-        <thead>
-          <tr>
-            <th>Total Count</th>
-            <th>Total Deal Value</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{totalCount}</td>
-            <td>{formattedTotalDealValue}</td>
-          </tr>
-        </tbody>
-      </table>
+      {selectedOption === 'Visibility' && (
+        <table style={tableStyle}>
+          <thead>
+            <tr>
+              <th style={thStyle}>Visibility</th>
+              <th style={thStyle}>Count</th>
+              <th style={thStyle}>Total Deal Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            {allData && Array.from(new Set(allData.map(row => row.properties.Visibility.select.name))).map(visibility => {
+              const rowsWithVisibility = allData.filter(row => row.properties.Visibility.select.name === visibility);
+              const count = rowsWithVisibility.length;
+              const totalDealValue = rowsWithVisibility.reduce((sum, row) => sum + (row.properties['Deal Value'] ? row.properties['Deal Value'].number : 0), 0);
+              const formattedTotalDealValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(totalDealValue);
+              return (
+                <tr key={visibility}>
+                  <td style={tdStyle}>{visibility}</td>
+                  <td style={tdStyle}>{count}</td>
+                  <td style={tdStyle}>{formattedTotalDealValue}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       )}
-    
-    {selectedOption === 'Status' && (
-      <table>
-        <thead>
-          <tr>
-            <th>Status</th>
-            <th>Count</th>
-            <th>Total Deal Value</th>
-          </tr>
-        </thead>
-        <tbody>
-          {allData && Array.from(new Set(allData.map(row => row.properties.Status.status.name))).map(status => {
-            const rowsWithStatus = allData.filter(row => row.properties.Status.status.name === status);
-            const count = rowsWithStatus.length;
-            const totalDealValue = rowsWithStatus.reduce((sum, row) => sum + (row.properties['Deal Value'] ? row.properties['Deal Value'].number : 0), 0);
-            const formattedTotalDealValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(totalDealValue);
-            return (
-              <tr key={status}>
-                <td>{status}</td>
-                <td>{count}</td>
-                <td>{formattedTotalDealValue}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    )}
-    
-    {selectedOption === 'Visibility' && (
-      <table>
-        <thead>
-          <tr>
-            <th>Visibility</th>
-            <th>Count</th>
-            <th>Total Deal Value</th>
-          </tr>
-        </thead>
-        <tbody>
-          {allData && Array.from(new Set(allData.map(row => row.properties.Visibility.select.name))).map(visibility => {
-            const rowsWithVisibility = allData.filter(row => row.properties.Visibility.select.name === visibility);
-            const count = rowsWithVisibility.length;
-            const totalDealValue = rowsWithVisibility.reduce((sum, row) => sum + (row.properties['Deal Value'] ? row.properties['Deal Value'].number : 0), 0);
-            const formattedTotalDealValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(totalDealValue);
-            return (
-              <tr key={visibility}>
-                <td>{visibility}</td>
-                <td>{count}</td>
-                <td>{formattedTotalDealValue}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-      )}
-      </div>
+    </div>
   )
   }
+
+
+  /*
+<td style={tdStyle}>{Last_Edited_Time}</td> 
+<th style={thStyle} onClick={() => handleHeaderClick('lastEditedTime')}>Last Edited Time</th> 
+
+  */

@@ -164,14 +164,17 @@ export default function Header() {
     undefined,
   );
   const [greetingsValue, setGreetingsValue] = useState<string>();
+  /*
   const { data, isError, isLoading } = useEnsName({
     address: address,
   });
+  */
 
   const shortenedAddress = (address: string) => {
     return address.slice(0, 4) + '...' + address.slice(-6);
   };
 
+  /*
   useEffect(() => {
     if (!isError) {
       if (data !== null) setGreetingsValue(data);
@@ -183,7 +186,7 @@ export default function Header() {
       }
     }
   }, [address, data, isError, localAddress]);
-
+*/
   useEffect(() => {
     if (address) {
       setLocalAddress(address);
