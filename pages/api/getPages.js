@@ -2,7 +2,7 @@
 
 import { Client } from "@notionhq/client";
 
-const notion = new Client({ auth: process.env.NOTION_API_KEY });
+const notion = new Client({ auth: process.env.NOTION_TOKEN });
 
 export default async (req, res) => {
   try {

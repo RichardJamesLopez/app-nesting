@@ -35,7 +35,6 @@ const fieldStyle = {
   fontWeight: '700',
   lineHeight: '24px',
   letterSpacing: '-0.16px',
-  width: '100%',
 };
 const inactive = 1;
 
@@ -89,7 +88,7 @@ export default function Post() {
               <div className='flex flex-col gap-[8px]'>
                 <label style={labelStyle}>Tasks</label>
                 <div className='flex flex-col gap-[10px]'>
-                  <div className={`bg-[#E5FDF0] rounded-[5px] p-[10px] flex gap-[10px] w-full ${inactive ? 'filter blur-[5px] pointer-events-none' : ''}`}>
+                  <div className={`bg-[#E5FDF0] rounded-[5px] p-[10px] flex gap-[10px] ${inactive ? 'filter blur-[5px] pointer-events-none' : ''}`}>
                     <StraightIcon className='text-[#EB5757]' />
                     <div className='flex flex-col flex-1 text-[#4F4F4F] text-[15px] leading-[20px] tracking-[0.44px] font-bold'>
                       <div>Call</div>
@@ -97,7 +96,7 @@ export default function Post() {
                     </div>
                     <MoreVertIcon className='cursor-pointer' />
                   </div>
-                  <div className='bg-[#E5FDF0] rounded-[5px] p-[10px] flex gap-[10px] w-full'>
+                  <div className='bg-[#E5FDF0] rounded-[5px] p-[10px] flex gap-[10px]'>
                     <StraightIcon className='text-[#9B51E0]' />
                     <div className='flex flex-col flex-1 text-[#4F4F4F] text-[15px] leading-[20px] tracking-[0.44px] font-bold'>
                       <div>Message</div>
@@ -105,7 +104,7 @@ export default function Post() {
                     </div>
                     <MoreVertIcon className='cursor-pointer' />
                   </div>
-                  <div className='bg-[#E5FDF0] rounded-[5px] p-[10px] flex gap-[10px] w-full'>
+                  <div className='bg-[#E5FDF0] rounded-[5px] p-[10px] flex gap-[10px]'>
                     <StraightIcon className='text-[#9B51E0]' />
                     <div className='flex flex-col flex-1 text-[#4F4F4F] text-[15px] leading-[20px] tracking-[0.44px] font-bold'>
                       <div>Message</div>
@@ -124,7 +123,7 @@ export default function Post() {
               <div className='flex flex-col gap-[8px]'>
                 <label style={labelStyle}>Previous Notes</label>
                 <div className='flex flex-col gap-[10px]'>
-                  <div className='bg-[#E5FDF0] rounded-[5px] p-[10px] flex gap-[10px] w-full'>
+                  <div className='bg-[#E5FDF0] rounded-[5px] p-[10px] flex gap-[10px]'>
                     <StraightIcon className='text-[#EB5757]' />
                     <div className='flex flex-col flex-1 text-[#4F4F4F] text-[15px] leading-[20px] tracking-[0.44px] font-bold'>
                       <div>Call</div>
@@ -132,7 +131,7 @@ export default function Post() {
                     </div>
                     <MoreVertIcon className='cursor-pointer' />
                   </div>
-                  <div className='bg-[#E5FDF0] rounded-[5px] p-[10px] flex gap-[10px] w-full'>
+                  <div className='bg-[#E5FDF0] rounded-[5px] p-[10px] flex gap-[10px]'>
                     <StraightIcon className='text-[#9B51E0]' />
                     <div className='flex flex-col flex-1 text-[#4F4F4F] text-[15px] leading-[20px] tracking-[0.44px] font-bold'>
                       <div>Message</div>
@@ -140,7 +139,7 @@ export default function Post() {
                     </div>
                     <MoreVertIcon className='cursor-pointer' />
                   </div>
-                  <div className='bg-[#E5FDF0] rounded-[5px] p-[10px] flex gap-[10px] w-full'>
+                  <div className='bg-[#E5FDF0] rounded-[5px] p-[10px] flex gap-[10px]'>
                     <StraightIcon className='text-[#9B51E0]' />
                     <div className='flex flex-col flex-1 text-[#4F4F4F] text-[15px] leading-[20px] tracking-[0.44px] font-bold'>
                       <div>Message</div>
