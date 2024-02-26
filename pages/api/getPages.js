@@ -21,7 +21,7 @@ export default async (req, res) => {
       hasMore = response.has_more;
       startCursor = response.next_cursor;
     }
-
+    console.log('Page IDs:', allData.map(page => page.id));
     res.status(200).json(allData);
   } catch (error) {
     res.status(500).json({ error: error.message });
