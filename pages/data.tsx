@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 
 
 export type DataType = {
+  id: string; 
   properties: {
     Name: {
       id: string;
