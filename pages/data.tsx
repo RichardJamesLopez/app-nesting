@@ -1,12 +1,13 @@
-'use client';
+//'use client';
 import { FormatItalicSharp } from '@mui/icons-material';
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { formHeaderStyle } from 'styles/formStyles';
+import { useRouter } from 'next/router';
 
 
-
-type DataType = {
+export type DataType = {
+  id: string; 
   properties: {
     Name: {
       id: string;
@@ -63,7 +64,14 @@ type DataType = {
         link: null | string;
       }[];
     };
-    // Add more properties as needed
+    'Notes': {
+      id: string;
+      type: string;
+      text: {
+        content: string;
+        link: null | string;
+      }[];
+    };// Add more properties as needed
   };
 };
 
@@ -72,10 +80,25 @@ type SortConfigType = {
   direction: 'ascending' | 'descending';
 };
 
-export default function Page() {
-  const [data, setData] = useState<DataType[] | null>(null);
-  const [allData, setAllData] = useState<DataType[] | null>(null); // Add this line
+export const tableStyle: React.CSSProperties = {
+  borderCollapse: 'collapse',
+  width: '100%',
+  marginTop: '20px',
+};
 
+export const thStyle: React.CSSProperties = {
+  border: '1px solid #ddd',
+  padding: '8px',
+  textAlign: 'left',
+  backgroundColor: '#f2f2f2',
+  cursor: 'pointer',
+};
+
+export default function Page() {
+  const router = useRouter();
+  const { id } = router.query;
+  const [deal, setDeal] = useState<DataType | null>(null);
+  const [allData, setAllData] = useState<DataType[]>([]);
   const [selectedOption, setSelectedOption] = useState('Total');
 
   const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,20 +112,7 @@ export default function Page() {
     alignItems: 'flex-start',
     gap: '20px'
   };
-  const tableStyle: React.CSSProperties = {
-    borderCollapse: 'collapse',
-    width: '100%',
-    marginTop: '20px',
-  };
-  
-  const thStyle: React.CSSProperties = {
-    border: '1px solid #ddd',
-    padding: '8px',
-    textAlign: 'left',
-    backgroundColor: '#f2f2f2',
-    cursor: 'pointer',
-  };
-  
+ 
   const tdStyle: React.CSSProperties = {
     border: '1px solid #ddd',
     padding: '8px',
@@ -122,78 +132,87 @@ export default function Page() {
   const radioButtonStyle: React.CSSProperties = {
     marginLeft: '10px', // Adjust this value as needed
   };
+// Add the constants here
+
+const [sortConfig, setSortConfig] = useState<SortConfigType>({ key: '', direction: 'ascending' }); // Add this line
+  
+const handleHeaderClick = (key: string) => {
+  let direction = 'ascending';
+  if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+    direction = 'descending';
+  }
+  setSortConfig({ key, direction: direction as 'ascending' | 'descending' });
+
+}
 
   useEffect(() => {
-    fetch('/api/getPages')
+    fetch(`/api/getPages`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         return response.json();
       })
-      .then((data: DataType[]) => {
-        console.log(data); // Log the data to the console
-        setAllData(data); // Add this line
-        const filteredData = data.filter(row => row.properties.Visibility.select.name !== 'Hide');
-        setData(filteredData);
+      .then((allData: DataType[]) => {
+        setAllData(allData);
+        console.log(allData); 
+        console.log(deal);
+        //console.log(row);
       })
       .catch(error => {
         console.error('There has been a problem with your fetch operation:', error);
       });
   }, []);
-
-  // Add the constants here
-  const totalCount = allData ? allData.length : 0;
-  const totalDealValue = allData ? allData.reduce((sum, row) => sum + (row.properties['Deal Value'] ? row.properties['Deal Value'].number : 0), 0) : 0;
-  const formattedTotalDealValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(totalDealValue);
-  const [sortConfig, setSortConfig] = useState<SortConfigType>({ key: '', direction: 'ascending' }); // Add this line
-
-  const handleHeaderClick = (key: string) => {
-    let direction = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
-    }
-    setSortConfig({ key, direction: direction as 'ascending' | 'descending' });
-  
-    // Sort the data array
-    setData(prevData => {
-      if (!prevData) return null;
-      return [...prevData].sort((a, b) => {
-        let aValue: string | number;
-        let bValue: string | number;
-        switch (key) {
-          case 'dealName':
-            aValue = a.properties.Name.title[0].text.content;
-            bValue = b.properties.Name.title[0].text.content;
-            break;
-          case 'dealValue':
-            aValue = a.properties['Deal Value'] ? a.properties['Deal Value'].number : 0;
-            bValue = b.properties['Deal Value'] ? b.properties['Deal Value'].number : 0;
-            break;
-          case 'status':
-            aValue = a.properties.Status.status.name;
-            bValue = b.properties.Status.status.name;
-            break;
-          default:
-            return 0;
-        }
-        if (aValue < bValue) {
-          return sortConfig.direction === 'ascending' ? -1 : 1;
-        }
-        if (aValue > bValue) {
-          return sortConfig.direction === 'ascending' ? 1 : -1;
-        }
-        return 0;
+/*
+    // Add the constants here
+    const totalCount = allData ? allData.length : 0;
+    const totalDealValue = allData ? allData.reduce((sum, row) => sum + (row.properties['Deal Value'] ? row.properties['Deal Value'].number : 0), 0) : 0;
+    const formattedTotalDealValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(totalDealValue);
+    
+    
+      // Sort the data array
+       
+      setData(prevData => {
+        if (!prevData) return null;
+        return [...prevData].sort((a, b) => {
+          let aValue: string | number;
+          let bValue: string | number;
+          switch (key) {
+            case 'dealName':
+              aValue = a.properties.Name.title[0].text.content;
+              bValue = b.properties.Name.title[0].text.content;
+              break;
+            case 'dealValue':
+              aValue = a.properties['Deal Value'] ? a.properties['Deal Value'].number : 0;
+              bValue = b.properties['Deal Value'] ? b.properties['Deal Value'].number : 0;
+              break;
+            case 'status':
+              aValue = a.properties.Status.status.name;
+              bValue = b.properties.Status.status.name;
+              break;
+            default:
+              return 0;
+          }
+          if (aValue < bValue) {
+            return sortConfig.direction === 'ascending' ? -1 : 1;
+          }
+          if (aValue > bValue) {
+            return sortConfig.direction === 'ascending' ? 1 : -1;
+          }
+          return 0;
+        });
       });
-    });
-  };
-
+    };
+    */
   return (
     <div style={containerStyle}>
+      
+      <p>{deal?.properties['Deal Value'].number}</p>
       <h1 style={{...formHeaderStyle, ...h1Style}}>Selected Deal Details</h1>
       <p> The following activity are selected deals that are visible to the community. </p>
       <p>Click on the column headers to sort the data.</p>
       <table style={tableStyle}>
+  
         <thead>
           <tr>
             <th style={thStyle} onClick={() => handleHeaderClick('dealName')}>Deal Name</th>
@@ -203,21 +222,21 @@ export default function Page() {
           </tr>
         </thead>
         <tbody>
-        {Array.isArray(data) && data.map((row: DataType, index: number) => {
-          const dealValue = row.properties && row.properties['Deal Value'] ? row.properties['Deal Value'].number : null;
-          const formattedDealValue = dealValue !== null ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(dealValue) : '-';
-          const dealName = row.properties && row.properties.Visibility && row.properties.Visibility.select.name === 'Custom Visibility' ? '---' : (row.properties.Name && row.properties.Name.title[0] ? row.properties.Name.title[0].text.content : '-');
-          const Last_Edited_Time= row.properties && row.properties['Last Edited Time'] ? row.properties['Last Edited Time'].date : null;
-          return (
-            <tr key={index}>
-              <td style={tdStyle}>{dealName}</td>    
-              <td style={tdStyle}>{formattedDealValue}</td>
-              <td style={tdStyle}>{row.properties && row.properties.Status ? row.properties.Status.status.name : '-'}</td>    
-              <td style={tdStyle}> {row.properties['Owner'] && row.properties['Owner'].text ? row.properties['Owner'].text.map(block => block.content).join(' ') : 'No owner assigned'}</td> 
-              
-            </tr>
-          );
-        })}
+            {Array.isArray(allData) && allData.map((row: DataType, index: number) => {
+              const totalCount = allData ? allData.length : 0;
+              const dealValue = row.properties && row.properties['Deal Value'] ? row.properties['Deal Value'].number : null;
+              const formattedDealValue = dealValue !== null ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(dealValue) : '-';
+              const dealName = row.properties && row.properties.Visibility && row.properties.Visibility.select.name === 'Custom Visibility' ? '---' : (row.properties.Name && row.properties.Name.title[0] ? row.properties.Name.title[0].text.content : '-');
+              const Last_Edited_Time= row.properties && row.properties['Last Edited Time'] ? row.properties['Last Edited Time'].date : null;
+              return (
+                <tr key={index}>
+                  <td style={tdStyle} onClick={() => router.push(`/row/${row.id}`)}>{dealName}</td>   
+                  <td style={tdStyle}>{formattedDealValue}</td>
+                  <td style={tdStyle}>{row.properties && row.properties.Status ? row.properties.Status.status.name : '-'}</td>    
+                  <td style={tdStyle}> {row.properties['Owner'] && row.properties['Owner'].text ? row.properties['Owner'].text.map(block => block.content).join(' ') : 'No owner assigned'}</td> 
+                </tr>
+              );
+            })}
         </tbody>
       </table>
       <h1 style={{...formHeaderStyle, ...h1Style}}>Pipeline Summary</h1>
@@ -239,12 +258,7 @@ export default function Page() {
               <th style={thStyle}>Total Deal Value</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td style={tdStyle}>{totalCount}</td>
-              <td style={tdStyle}>{formattedTotalDealValue}</td>
-            </tr>
-          </tbody>
+          
         </table>
       )}
   
@@ -286,11 +300,13 @@ export default function Page() {
           </thead>
           <tbody>
             {allData && Array.from(new Set(allData.map(row => row.properties.Visibility.select.name))).map(visibility => {
+              const totalCount = allData ? allData.length : 0;
               const rowsWithVisibility = allData.filter(row => row.properties.Visibility.select.name === visibility);
               const count = rowsWithVisibility.length;
               const totalDealValue = rowsWithVisibility.reduce((sum, row) => sum + (row.properties['Deal Value'] ? row.properties['Deal Value'].number : 0), 0);
               const formattedTotalDealValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(totalDealValue);
               return (
+                 
                 <tr key={visibility}>
                   <td style={tdStyle}>{visibility}</td>
                   <td style={tdStyle}>{count}</td>
@@ -302,12 +318,31 @@ export default function Page() {
         </table>
       )}
     </div>
+    
   )
   }
 
 
-  /*
-<td style={tdStyle}>{Last_Edited_Time}</td> 
-<th style={thStyle} onClick={() => handleHeaderClick('lastEditedTime')}>Last Edited Time</th> 
+/*
+// this is the column with the property of last updated time in Notion that I can't get the dataType set on
+  <td style={tdStyle}>{Last_Edited_Time}</td> 
+  <th style={thStyle} onClick={() => handleHeaderClick('lastEditedTime')}>Last Edited Time</th> 
 
+// this is the title that is supposed to read the id but can't resolve it
+  <h1>{deal && deal.properties && deal.properties.Name ? deal.properties.Name.title[0].plain_text : 'Loading...'}</h1>      
+
+//this is because these const are pulling from allData instead of the API call
+  <tr>
+                <td style={tdStyle}>{totalCount}</td>
+                <td style={tdStyle}>{formattedTotalDealValue}</td>
+              </tr>
+
+
+              <tbody>
+          <tr>
+                <td style={tdStyle}>{totalCount}</td>
+                <td style={tdStyle}>{formattedTotalDealValue}</td>
+              </tr>
+
+          </tbody>
   */
