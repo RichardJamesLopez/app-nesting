@@ -1,6 +1,6 @@
 // pages/row/[id].tsx
 import { GetServerSideProps } from 'next';
-import { DataType, tableStyle, thStyle, tdStyle } from '../data';
+import { DataType, tableStyle, thStyle} from '../data';
 import type { Review } from '#/app/api/reviews/review';
 import { TabNavItem } from '#/ui/tab-nav-item';
 import { Reviews } from '#/ui/page-directory/reviews';
@@ -30,10 +30,10 @@ export default function DealPage({ deal, comments }: DealProps) {
         </thead>
         <tbody>
           <tr>
-            <td style={tdStyle}>{dealName}</td>
-            <td style={tdStyle}>{formattedDealValue}</td>
-            <td style={tdStyle}>{deal.properties && deal.properties.Status ? deal.properties.Status.status.name : '-'}</td>    
-            <td style={tdStyle}>{deal.properties['Owner'] && deal.properties['Owner'].text ? deal.properties['Owner'].text.map(block => block.content).join(' ') : 'No owner assigned'}</td> 
+            <th style={thStyle}>{dealName}</th>
+            <th style={thStyle}>{formattedDealValue}</th>
+            <th style={thStyle}>{deal.properties && deal.properties.Status ? deal.properties.Status.status.name : '-'}</th>    
+            <th style={thStyle}>{deal.properties['Owner'] && deal.properties['Owner'].text ? deal.properties['Owner'].text.map(block => block.content).join(' ') : 'No owner assigned'}</th> 
           </tr>
         </tbody>
       </table>
