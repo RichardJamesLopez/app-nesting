@@ -10,12 +10,12 @@ interface CommentProps {
   }
   
 
-function Comment({ comment }) {
+function Comment({ comment }: CommentProps)  {
     return (
       <div>
         <h4>{comment.author}</h4>
         <p>{comment.content}</p>
-        <p>{comment.timestamp}</p>
+        <p>{comment.timestamp.toLocaleString()}</p>
         {/* Add functionality for replying, upvoting/downvoting, etc. */}
       </div>
     );

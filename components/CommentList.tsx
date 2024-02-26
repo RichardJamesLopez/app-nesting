@@ -15,14 +15,14 @@ interface CommentType {
   interface CommentListProps {
     comments: CommentType[];
   }
-
-
-function CommentList({ comments }) {
+  
+function CommentList({ comments }: CommentListProps) {
   const [newComment, setNewComment] = useState('');
 
   const handleAddComment = () => {
     // Add a new comment to your MongoDB database
   };
+
   if (!comments) {
     return (
         <div>Loading Comments...</div>
