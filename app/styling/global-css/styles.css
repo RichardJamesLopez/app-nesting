@@ -13,7 +13,7 @@
 .skeleton {
   padding: 1rem /* 16px */;
   border-radius: 1rem /* 16px */;
-  background-color: rgb(24 24 27 / 0.8);
+  background-color: #e2e8f0;
 }
 
 .skeleton-img,

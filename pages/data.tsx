@@ -4,6 +4,10 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { formHeaderStyle } from 'styles/formStyles';
 import { useRouter } from 'next/router';
+import Slogan from '#/ui/slogan';
+import { GlobalNav } from '#/ui/global-nav';
+import Header from '#/ui/header';
+import { WagmiProvider } from 'wagmi';
 
 
 export type DataType = {
@@ -90,7 +94,8 @@ export const thStyle: React.CSSProperties = {
   border: '1px solid #ddd',
   padding: '8px',
   textAlign: 'left',
-  backgroundColor: '#f2f2f2',
+  backgroundColor: '#e2e8f0',
+  //backgroundColor: '#f2f2f2',
   cursor: 'pointer',
 };
 
@@ -104,7 +109,6 @@ export default function Page() {
   const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedOption(event.target.value);
   };
-
   const containerStyle: React.CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
@@ -112,7 +116,6 @@ export default function Page() {
     alignItems: 'flex-start',
     gap: '20px'
   };
- 
   const tdStyle: React.CSSProperties = {
     border: '1px solid #ddd',
     padding: '8px',
@@ -132,10 +135,7 @@ export default function Page() {
   const radioButtonStyle: React.CSSProperties = {
     marginLeft: '10px', // Adjust this value as needed
   };
-// Add the constants here
-
 const [sortConfig, setSortConfig] = useState<SortConfigType>({ key: '', direction: 'ascending' }); // Add this line
-  
 const handleHeaderClick = (key: string) => {
   let direction = 'ascending';
   if (sortConfig.key === key && sortConfig.direction === 'ascending') {
@@ -204,9 +204,9 @@ const handleHeaderClick = (key: string) => {
       });
     };
     */
-  return (
-    <div style={containerStyle}>
-      
+    
+    {return (
+    <> 
       <p>{deal?.properties['Deal Value'].number}</p>
       <h1 style={{...formHeaderStyle, ...h1Style}}>Selected Deal Details</h1>
       <p> The following activity are selected deals that are visible to the community. </p>
@@ -317,10 +317,12 @@ const handleHeaderClick = (key: string) => {
           </tbody>
         </table>
       )}
-    </div>
-    
-  )
-  }
+      
+      
+      </>
+      );
+          }
+        }
 
 
 /*
@@ -345,4 +347,10 @@ const handleHeaderClick = (key: string) => {
               </tr>
 
           </tbody>
-  */
+
+
+
+    <div style={containerStyle}>
+    </div>
+    
+    */
