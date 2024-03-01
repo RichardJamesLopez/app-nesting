@@ -75,7 +75,7 @@ const data = [
   {
     icon: <CurrencyExchangeIcon />,
     text: 'New Daily Activity ($)',
-    amount: '+3,420',
+    amount: '3,420',
     updown: (
       <ArrowDownwardIcon style={{ fontSize: '18px', marginBottom: '2px' }} />
     ),
