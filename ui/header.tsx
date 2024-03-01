@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 import { useWeb3Modal } from '@web3modal/wagmi/react';
 import { useEnsName } from 'wagmi';
-
 import * as React from 'react';
 import Image from 'next/image';
 import { styled, alpha } from '@mui/material/styles';
