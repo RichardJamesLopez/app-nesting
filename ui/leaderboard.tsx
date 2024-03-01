@@ -94,7 +94,7 @@ export default function Leaderboard() {
       <HeaderContainer className="block justify-between lg:flex">
         <div className="flex">
           <div className="mr-1 flex items-center text-lg font-bold">
-            Loeaderboard
+            Leaderboard
           </div>
           <div className="flex items-center">
             <InfoOutlinedIcon sx={{ color: 'rgb(99 102 241)' }} />

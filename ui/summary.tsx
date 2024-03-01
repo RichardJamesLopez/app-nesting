@@ -54,7 +54,7 @@ const CardAmount = styled.div`
 const data = [
   {
     icon: <CurrencyExchangeIcon />,
-    text: 'Total Week Income',
+    text: 'Total Week Income ($)',
     amount: '13,420.37',
     updown: (
       <ArrowUpwardIcon style={{ fontSize: '18px', marginBottom: '2px' }} />
@@ -64,17 +64,17 @@ const data = [
   },
   {
     icon: <CurrencyExchangeIcon />,
-    text: "Today's Productivity",
-    amount: '98%',
+    text: "Inflation rate (%)",
+    amount: '0.5',
     updown: (
-      <ArrowUpwardIcon style={{ fontSize: '18px', marginBottom: '2px' }} />
+      <ArrowDownwardIcon style={{ fontSize: '18px', marginBottom: '2px' }} />
     ),
-    percent: 5.6,
-    status: 1,
+    percent: 1.6,
+    status: -1,
   },
   {
     icon: <CurrencyExchangeIcon />,
-    text: 'New Clients',
+    text: 'New Daily Activity ($)',
     amount: '+3,420',
     updown: (
       <ArrowDownwardIcon style={{ fontSize: '18px', marginBottom: '2px' }} />
@@ -84,12 +84,12 @@ const data = [
   },
   {
     icon: <CurrencyExchangeIcon />,
-    text: "Today's Money",
-    amount: '43,420.37',
+    text: "Weekly Active Users (#)",
+    amount: '583',
     updown: (
       <ArrowUpwardIcon style={{ fontSize: '18px', marginBottom: '2px' }} />
     ),
-    percent: 5.6,
+    percent: 2.3,
     status: 1,
   },
 ];
@@ -112,7 +112,7 @@ export default function Summary() {
                 </CardTitle>
                 <AmountWrapper className="flex">
                   <CardAmount className="mr-2 text-left font-bold text-gray-500  ">
-                    ${item.amount}
+                    {item.amount}
                   </CardAmount>
                   <div className="flex items-end text-left text-xl">
                     {item.updown}
