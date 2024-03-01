@@ -15,11 +15,12 @@ export const menus: { name: string; slug: string; icon: string }[] = [
     slug: 'activities',
     icon: '/activities.svg',
   },
-  {
+  /*{
     name: 'Kanban',
     slug: 'kanban',
     icon: '/kanban.svg',
-  },
+  },*/
+
   {
     name: 'Data',
     slug: 'data',

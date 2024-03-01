@@ -1,19 +1,8 @@
-'use client';
-import * as React from 'react';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Filler,
-  Legend,
-} from 'chart.js';
-import { Line } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
+import { Chart, BarController, BarElement, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Filler, Legend, ChartOptions } from 'chart.js';
+import styles from 'styled-components';
 
-ChartJS.register(
+Chart.register(
   CategoryScale,
   LinearScale,
   PointElement,
@@ -22,54 +11,84 @@ ChartJS.register(
   Tooltip,
   Filler,
   Legend,
+  BarController,
+  BarElement
 );
 
-export const options = {
+export const options: ChartOptions<'bar'> = {
   responsive: true,
   plugins: {
     legend: {
-      position: 'top' as const,
-    },
-    title: {
-      display: true,
-      text: 'Activities',
+      position: 'top',
     },
   },
   scales: {
+    x: {
+      stacked: true,
+    },
     y: {
       beginAtZero: true,
-      stepSize: 50,
-      max: 200, // Set an appropriate max value
-      min: 0, // Set an appropriate min value
-    },
-  },
-  elements: {
-    line: {
-      tension: 0.4,
+      stacked: true,
     },
   },
 };
 
-const labels = ['1 Dec', '8 Dec', '15 Dec', '22 Dec', '29 Dec'];
+const getPast30Days = () => {
+  const result = [];
+  for (let i = 0; i < 30; i++) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    result.unshift(`${d.getMonth() + 1} ${d.getDate()}`);
+  }
+  return result;
+};
+
+const labels = getPast30Days();
+
+const HeaderContainer = styles.div`
+  display: flex;
+   
+  @media (max-width: 1500px) {
+    display: block; 
+  }
+  @media (max-width: 768px) {
+    display: flex; 
+  } ;
+`;
 
 export const data = {
   labels,
   datasets: [
     {
-      fill: true,
-      label: 'Tasks',
-      data: [50, 150, 45, 55, 180],
-      borderColor: 'rgb(53, 162, 235)',
+      label: 'Updates',
+      data: Array(30).fill(null).map(() => Math.floor(Math.random() * 100)),
       backgroundColor: 'rgba(53, 162, 235, 0.5)',
-      borderWidth: 1,
+    },
+    {
+      label: 'Comments',
+      data: Array(30).fill(null).map(() => Math.floor(Math.random() * 100)),
+      backgroundColor: 'rgba(75, 192, 192, 0.5)',
+    },
+    {
+      label: 'Shares',
+      data: Array(30).fill(null).map(() => Math.floor(Math.random() * 100)),
+      backgroundColor: 'rgba(255, 206, 86, 0.5)',
     },
   ],
 };
 
 export default function Leaderboard() {
   return (
-    <div className="mt-8">
-      <Line options={options} data={data} />
+    <div>
+      <HeaderContainer className="block justify-between lg:flex">
+        <div className="flex">
+          <div className="mr-1 flex items-center text-lg font-bold">
+            Activities
+          </div>
+        </div>
+      </HeaderContainer>
+
+      <Bar options={options} data={data} />
     </div>
   );
 }

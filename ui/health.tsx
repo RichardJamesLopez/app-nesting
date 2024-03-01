@@ -1,12 +1,10 @@
-'use client';
-
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import { SelectChangeEvent } from '@mui/material/Select';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
+
 import styles from 'styled-components';
 const HeaderContainer = styles.div`
   display: flex;
@@ -18,31 +16,28 @@ const HeaderContainer = styles.div`
     display: flex; 
   } ;
 `;
-export default function Health() {
-  const [age, setAge] = React.useState('');
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value);
-  };
+export default function Health() {
+  const chartRef = useRef<any>(null);
 
   const data = {
-    labels: ['Active', 'Completed', 'Ended'],
+    labels: ['Active', 'Returned', 'Inactive'],
     datasets: [
       {
-        label: 'Health',
-        data: [80, 20],
+        label: '% of Users',
+        data: [16, 14,60],
         backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(255, 206, 86, 0.2)',
+          'rgba(171,223,223)',
+          'rgba(255,230,174)',
+          'rgba(255, 166, 166)',
           'rgba(75, 192, 192, 0.2)',
           'rgba(153, 102, 255, 0.2)',
           'rgba(255, 159, 64, 0.2)',
         ],
         borderColor: [
-          'rgba(255, 99, 132, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
+          'rgba(171,223,223)',
+          'rgba(255,230,174)',
+          'rgba(255, 166, 166)',
           'rgba(75, 192, 192, 1)',
           'rgba(153, 102, 255, 1)',
           'rgba(255, 159, 64, 1)',
@@ -52,11 +47,23 @@ export default function Health() {
     ],
   };
 
+  useEffect(() => {
+    if (chartRef.current && chartRef.current.chartInstance && chartRef.current.chartInstance.options) { 
+      const chartInstance = chartRef.current.chartInstance;
+      const total = data.datasets[0].data.reduce((acc, cur) => acc + cur, 0);
+      const active = data.datasets[0].data[0];
+      const percentage = ((active / total) * 100).toFixed(2);
+
+      chartInstance.options.plugins.title.text = `${percentage}%`;
+      chartInstance.update();
+    }
+  }, [data]);
+
   return (
     <>
       <HeaderContainer className="block justify-between lg:flex">
         <div className="flex">
-          <div className="mr-1 flex items-center text-lg font-bold">Health</div>
+          <div className="mr-1 flex items-center text-lg font-bold">Community Health</div>
           <div className="flex items-center">
             <InfoOutlinedIcon sx={{ color: 'rgb(99 102 241)' }} />
           </div>
@@ -73,7 +80,8 @@ export default function Health() {
           </select>
         </div>
       </HeaderContainer>
-      <Doughnut data={data} />
+      <Doughnut ref={chartRef} data={data} options={{ plugins: { title: { display: true, text: '', font: { size: 20 } } } }} />
     </>
   );
 }
+
