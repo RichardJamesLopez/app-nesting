@@ -4,11 +4,6 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { formHeaderStyle } from 'styles/formStyles';
 import { useRouter } from 'next/router';
-import Slogan from '#/ui/slogan';
-import { GlobalNav } from '#/ui/global-nav';
-import Header from '#/ui/header';
-import { WagmiProvider } from 'wagmi';
-
 
 export type DataType = {
   id: string; 
@@ -94,9 +89,15 @@ export const thStyle: React.CSSProperties = {
   border: '1px solid #ddd',
   padding: '8px',
   textAlign: 'left',
-  backgroundColor: '#e2e8f0',
-  //backgroundColor: '#f2f2f2',
+  //backgroundColor: '#e2e8f0',
+  backgroundColor: '#f2f2f2',
   cursor: 'pointer',
+};
+
+export const trStyle: React.CSSProperties = {
+  padding: '8px',
+  textAlign: 'left',
+  fontWeight: 'normal'
 };
 
 export default function Page() {
@@ -127,7 +128,6 @@ export default function Page() {
   };
   
   const radioButtonContainerStyle: React.CSSProperties = {
-    
     display: 'flex',
     justifyContent: 'space-between',
     width: '100%',
@@ -163,47 +163,46 @@ const handleHeaderClick = (key: string) => {
         console.error('There has been a problem with your fetch operation:', error);
       });
   }, []);
-/*
+
     // Add the constants here
     const totalCount = allData ? allData.length : 0;
     const totalDealValue = allData ? allData.reduce((sum, row) => sum + (row.properties['Deal Value'] ? row.properties['Deal Value'].number : 0), 0) : 0;
     const formattedTotalDealValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(totalDealValue);
     
-    
-      // Sort the data array
-       
-      setData(prevData => {
-        if (!prevData) return null;
-        return [...prevData].sort((a, b) => {
-          let aValue: string | number;
-          let bValue: string | number;
-          switch (key) {
-            case 'dealName':
-              aValue = a.properties.Name.title[0].text.content;
-              bValue = b.properties.Name.title[0].text.content;
-              break;
-            case 'dealValue':
-              aValue = a.properties['Deal Value'] ? a.properties['Deal Value'].number : 0;
-              bValue = b.properties['Deal Value'] ? b.properties['Deal Value'].number : 0;
-              break;
-            case 'status':
-              aValue = a.properties.Status.status.name;
-              bValue = b.properties.Status.status.name;
-              break;
-            default:
-              return 0;
-          }
-          if (aValue < bValue) {
-            return sortConfig.direction === 'ascending' ? -1 : 1;
-          }
-          if (aValue > bValue) {
-            return sortConfig.direction === 'ascending' ? 1 : -1;
-          }
-          return 0;
-        });
+  /*
+  // Sort the data array
+  function sortData(key: string) {
+    setData((prevData: Deal[]) => {
+      if (!prevData) return null;
+  
+      return [...prevData].sort((a, b) => {
+        let aValue: string | number;
+        let bValue: string | number;
+  
+        switch (key) {
+          case 'dealName':
+            aValue = a.properties.Name.title[0].text.content;
+            bValue = b.properties.Name.title[0].text.content;
+            break;
+          case 'dealValue':
+            aValue = a.properties['Deal Value'] ? a.properties['Deal Value'].number : 0;
+            bValue = b.properties['Deal Value'] ? b.properties['Deal Value'].number : 0;
+            break;
+          case 'status':
+            aValue = a.properties.Status.status.name;
+            bValue = b.properties.Status.status.name;
+            break;
+          default:
+            return 0;
+        }
+  
+        if (aValue < bValue) return sortDirection === 'ascending' ? -1 : 1;
+        if (aValue > bValue) return sortDirection === 'ascending' ? 1 : -1;
+        return 0;
       });
-    };
-    */
+    });
+  }
+   */
     
     {return (
     <> 
@@ -240,7 +239,8 @@ const handleHeaderClick = (key: string) => {
         </tbody>
       </table>
       <h1 style={{...formHeaderStyle, ...h1Style}}>Pipeline Summary</h1>
-      <p> The following activitiy are all deals in an anonymized fashion.</p>
+      <p> The following summaries are all deals aggregated and in an anonymized fashion.</p>
+      <br></br>
      
       <div style={radioButtonContainerStyle}>
         <div> Total<input style={radioButtonStyle} type="radio" value="Total" checked={selectedOption === 'Total'} onChange={handleOptionChange} /> 
@@ -258,7 +258,19 @@ const handleHeaderClick = (key: string) => {
               <th style={thStyle}>Total Deal Value</th>
             </tr>
           </thead>
-          
+          <tbody>
+          {allData && (() => {
+        const totalCount = allData.length;
+        const totalDealValue = allData.reduce((sum, row) => sum + (row.properties['Deal Value'] ? row.properties['Deal Value'].number : 0), 0);
+        const formattedTotalDealValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(totalDealValue);
+        return (
+          <tr>
+            <td style={tdStyle}>{totalCount}</td>
+            <td style={tdStyle}>{formattedTotalDealValue}</td>
+          </tr>
+        );
+      })()}
+          </tbody>
         </table>
       )}
   
@@ -326,6 +338,12 @@ const handleHeaderClick = (key: string) => {
 
 
 /*
+import { GlobalNav } from '#/ui/global-nav';
+import Header from '#/ui/header';
+import { WagmiProvider } from 'wagmi';
+
+
+
 // this is the column with the property of last updated time in Notion that I can't get the dataType set on
   <td style={tdStyle}>{Last_Edited_Time}</td> 
   <th style={thStyle} onClick={() => handleHeaderClick('lastEditedTime')}>Last Edited Time</th> 

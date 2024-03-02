@@ -6,33 +6,28 @@ import Header from '#/ui/header';
 import { GlobalNav } from '#/ui/global-nav';
 import Image from 'next/image';
 //import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import React from 'react';
 require('dotenv').config();
 
-
-// Using next/font instead of a manual setup, we get:
-// - significantly easier setup
-// - automatic best font practices
-// - reduced layout shift
-// - no network requests from the browser
 const primaryFont = Inter({
   subsets: ['latin'],
   variable: '--primary-font',
 });
 
-
-
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <main className={`${primaryFont.variable} font-sans`}>
-      <div className="flex h-full items-center justify-center">
-    
+      <GlobalNav />
+      <div className="mx-auto h-full bg-slate-200 py-20 pl-0 lg:py-0 lg:pl-56">
+      <div className="rounded-lg">
+          
     </div>
       
-      <div className="bg-slate-200 bg-[url('/grid.svg')]">
-        <GlobalNav />
-        <div className="mx-auto bg-white h-full white py-20 pl-0 lg:py-2 lg:pl-56">
-          <div className="rounded-lg m-10" >
-          <Component {...pageProps} />
+      <div className="mx-auto max-w-4xl space-y-2 px-2 pt-20 lg:px-8 lg:py-8">
+      <div className="rounded-lg p-px shadow-lg">
+            <div className="rounded-lg bg-white p-3.5 lg:p-10">
+            <Component  {...pageProps} />
+            </div>
           </div>
         </div>
       </div>
