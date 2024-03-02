@@ -12,7 +12,15 @@ export default async function Layout({
   const categories = await getCategories();
 
   return (
-    <div className="space-y-9">
+    <div>
+
+      {children}
+      </div>
+  );
+}
+/*
+
+<div className="space-y-9">
       <div className="flex justify-between">
         <TabGroup
           path="/layouts"
@@ -27,12 +35,9 @@ export default async function Layout({
           ]}
         />
       </div>
+</div>
 
-      {children}
-    </div>
-  );
-}
-/*
+
  <div className="space-y-9">
         <div className="flex justify-between">
           <TabGroup

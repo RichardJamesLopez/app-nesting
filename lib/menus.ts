@@ -10,12 +10,13 @@ export const menus: { name: string; slug: string; icon: string }[] = [
     slug: 'dashboard',
     icon: '/dashboard.svg',
   },
+  /*{
   {
     name: 'Activities',
     slug: 'activities',
     icon: '/activities.svg',
   },
-  /*{
+  
     name: 'Kanban',
     slug: 'kanban',
     icon: '/kanban.svg',
@@ -99,8 +100,8 @@ export const tabs: { name: string; slug: string }[] = [
     slug: 'connected-addresses',
   },
   {
-    name: 'Invite',
-    slug: 'invite',
+    name: 'Invite Codes',
+    slug: 'invite-codes',
   },
   {
     name: 'Log Out',
