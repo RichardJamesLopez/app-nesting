@@ -1,7 +1,8 @@
 'use client';
 
-import { Card, Metric, Title, Flex, Grid } from '@tremor/react';
+import { Card, Metric, Title, Flex, Grid, Divider } from '@tremor/react';
 import Chart from './chart';
+import { thumbsStyle } from 'styles/formStyles';
 
 const activities = [
   { name: '/home', value: 1230 },
@@ -47,12 +48,12 @@ const data = [
 export default function PlaygroundPage() {
   return (
     <main className="max-w-3m  mx-auto p-4">
-      <Grid numItemsSm={2} numItemsLg={3} className="gap-6">
+      <Divider style={thumbsStyle}>All Time Statistics</Divider>
+      <Grid numItemsSm={2} numItemsLg={3} className="gap-6 mb-4">
         {data.map((item) => (
           <Card key={item.category}>
-            <Title>{item.category}</Title>
-
-            <Metric>{item.stat}</Metric>
+            <Title className="text-center">{item.category}</Title>
+            <Metric className="text-center">{item.stat}</Metric>
           </Card>
         ))}
       </Grid>
@@ -60,11 +61,3 @@ export default function PlaygroundPage() {
     </main>
   );
 }
-/*
-<Flex
-              justifyContent="center"
-              alignItems="center"
-              className="space-x-8"
-            ></Flex>
-
-*/

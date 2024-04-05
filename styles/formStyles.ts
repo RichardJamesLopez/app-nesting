@@ -9,7 +9,7 @@ export const buttonStyle = {
 export const thumbsStyle = {
   backgroundColor: 'transparent',
   //textAlign: 'center',
-  color: '#92c5fd',
+  color: '#316cf8',
   fontWeight: '600',
   borderRadius: '10px',
   padding: '0.5rem 3rem',
@@ -63,7 +63,6 @@ export const formHeaderStyle: React.CSSProperties = {
 export const dateStyle: React.CSSProperties = {
   backgroundColor: 'transparent',
   color: 'white',
-  textAlign: 'center',
   fontWeight: '600',
   width: '90%',
   margin: '4px',
