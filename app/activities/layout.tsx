@@ -3,7 +3,7 @@ import Header from '#/ui/header';
 import React from 'react';
 
 export const metadata = {
-  title: 'Activities',
+  title: 'Analytics',
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {

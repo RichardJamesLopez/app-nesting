@@ -1,17 +1,13 @@
 import PlaygroundPage from '#/app/playground/page';
-import {
-  formHeaderStyle,
-  inputStyleSubmitted,
-  thumbsStyle,
-  contentInputStyleSubmitted,
-} from 'styles/formStyles';
+import { formHeaderStyle } from '#/styles/formStyles';
+import { Card} from '@tremor/react';
 
 export default function Page() {
   return (
-    <div>
-      <h1 style={formHeaderStyle}>Homepage</h1>
-
+    
+    <Card>
+      <header style={formHeaderStyle}>Analytics</header>
       <PlaygroundPage />
-    </div>
+    </Card>
   );
 }

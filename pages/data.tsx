@@ -50,10 +50,10 @@ export type DataType = {
         color: string;
       };
     };
-    'Last Edited Time': {
+    'Last edited time': {
       id: string;
       type: string;
-      date: string;
+      last_edited_time: string;
     };
     'Owner': {
       id: string;
@@ -157,6 +157,7 @@ const handleHeaderClick = (key: string) => {
         setAllData(allData);
         console.log(allData); 
         console.log(deal);
+        //console.log('Last edited time');
         //console.log(row);
       })
       .catch(error => {
@@ -217,7 +218,7 @@ const handleHeaderClick = (key: string) => {
             <th style={thStyle} onClick={() => handleHeaderClick('dealName')}>Deal Name</th>
             <th style={thStyle} onClick={() => handleHeaderClick('dealValue')}>Estimated Value</th>
             <th style={thStyle} onClick={() => handleHeaderClick('status')}>Pipeline Status</th>
-            <th style={thStyle} onClick={() => handleHeaderClick('Owner')}>Owner</th>
+            <th style={thStyle} onClick={() => handleHeaderClick('Owner')}>Last Edited</th>
           </tr>
         </thead>
         <tbody>
@@ -226,13 +227,16 @@ const handleHeaderClick = (key: string) => {
               const dealValue = row.properties && row.properties['Deal Value'] ? row.properties['Deal Value'].number : null;
               const formattedDealValue = dealValue !== null ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(dealValue) : '-';
               const dealName = row.properties && row.properties.Visibility && row.properties.Visibility.select.name === 'Custom Visibility' ? '---' : (row.properties.Name && row.properties.Name.title[0] ? row.properties.Name.title[0].text.content : '-');
-              const Last_Edited_Time= row.properties && row.properties['Last Edited Time'] ? row.properties['Last Edited Time'].date : null;
+              //const Last_Edited_Time= row.properties && row.properties['Last edited time'] ? row.properties['Last edited time'].last_edited_time : null;
+              const date = new Date(row.properties['Last edited time'].last_edited_time);
+              const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', };
+              //const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date);
               return (
                 <tr key={index}>
                   <td style={tdStyle} onClick={() => router.push(`/row/${row.id}`)}>{dealName}</td>   
                   <td style={tdStyle}>{formattedDealValue}</td>
                   <td style={tdStyle}>{row.properties && row.properties.Status ? row.properties.Status.status.name : '-'}</td>    
-                  <td style={tdStyle}> {row.properties['Owner'] && row.properties['Owner'].text ? row.properties['Owner'].text.map(block => block.content).join(' ') : 'No owner assigned'}</td> 
+                  <td style={tdStyle}> {row.properties['Last edited time'] ? new Date(row.properties['Last edited time'].last_edited_time).toLocaleString() : '---'}</td> 
                 </tr>
               );
             })}
@@ -243,12 +247,10 @@ const handleHeaderClick = (key: string) => {
       <br></br>
      
       <div style={radioButtonContainerStyle}>
-        <div> Total<input style={radioButtonStyle} type="radio" value="Total" checked={selectedOption === 'Total'} onChange={handleOptionChange} /> 
-        </div>
-        <div>Status<input style={radioButtonStyle} type="radio" value="Status" checked={selectedOption === 'Status'} onChange={handleOptionChange} /> 
-        </div>
-        <div>Visibility<input style={radioButtonStyle} type="radio" value="Visibility" checked={selectedOption === 'Visibility'} onChange={handleOptionChange} /> 
-        </div>
+        <div> Total<input style={radioButtonStyle} type="radio" value="Total" checked={selectedOption === 'Total'} onChange={handleOptionChange} /> </div>
+        <div>Status<input style={radioButtonStyle} type="radio" value="Status" checked={selectedOption === 'Status'} onChange={handleOptionChange} /> </div>
+        <div>Visibility<input style={radioButtonStyle} type="radio" value="Visibility" checked={selectedOption === 'Visibility'} onChange={handleOptionChange} /> </div>
+        
       </div>
       {selectedOption === 'Total' && (
         <table style={tableStyle}>

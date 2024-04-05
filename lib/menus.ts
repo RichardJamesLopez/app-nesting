@@ -10,23 +10,19 @@ export const menus: { name: string; slug: string; icon: string }[] = [
     slug: 'dashboard',
     icon: '/dashboard.svg',
   },
-  /*{
-  {
-    name: 'Activities',
-    slug: 'activities',
-    icon: '/activities.svg',
-  },
-  
-    name: 'Kanban',
-    slug: 'kanban',
-    icon: '/kanban.svg',
-  },*/
-
   {
     name: 'Data',
     slug: 'data',
     icon: '/data.svg',
   },
+  {
+    name: 'Analytics',
+    slug: 'activities',
+    icon: '/activities.svg',
+  },
+  
+
+  
   {
     name: 'Settings',
     slug: 'settings',
@@ -45,6 +41,11 @@ export const menus: { name: string; slug: string; icon: string }[] = [
         slug: 'context',
         description: 'Export your data in JSON format',
       },
+      {
+    name: 'Kanban',
+    slug: 'kanban',
+    icon: '/kanban.svg',
+  },
       {
         name: 'XML',
         slug: 'context',
