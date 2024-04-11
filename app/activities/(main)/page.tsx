@@ -1,12 +1,14 @@
 import PlaygroundPage from '#/app/playground/page';
-import { formHeaderStyle } from '#/styles/formStyles';
+import { formHeaderStyle, sloganContainer } from '#/styles/formStyles';
 import { Card} from '@tremor/react';
 
 export default function Page() {
   return (
     
     <Card>
-      <header style={formHeaderStyle}>Analytics</header>
+        <div style={sloganContainer}>
+          <header className="text-left text-4xl font-bold text-white">Analytics</header>
+        </div>
       <PlaygroundPage />
     </Card>
   );

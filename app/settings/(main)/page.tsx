@@ -5,13 +5,14 @@ import {
   thumbsStyle,
   contentInputStyleSubmitted,
 } from 'styles/formStyles';
+import Link from 'next/link';
 
 export default function Page() {
   return (
     <div>
-      <h1 style={formHeaderStyle}>Homepage 2</h1>
+      
 
-      {/* <PlaygroundPage /> */}
+      
     </div>
   );
 }

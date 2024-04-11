@@ -2,7 +2,7 @@
 import { FormatItalicSharp } from '@mui/icons-material';
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { formHeaderStyle } from 'styles/formStyles';
+import { formHeaderStyle, sloganContainer } from 'styles/formStyles';
 import { useRouter } from 'next/router';
 
 export type DataType = {
@@ -154,8 +154,11 @@ const handleHeaderClick = (key: string) => {
         return response.json();
       })
       .then((allData: DataType[]) => {
-        setAllData(allData);
-        console.log(allData); 
+        const filteredData = allData.filter((row: DataType) => {
+          return !(row.properties && row.properties.Visibility && row.properties.Visibility.select.name === 'Hide');
+        });
+        setAllData(filteredData);
+        console.log(filteredData); 
         console.log(deal);
         //console.log('Last edited time');
         //console.log(row);
@@ -208,7 +211,10 @@ const handleHeaderClick = (key: string) => {
     {return (
     <> 
       <p>{deal?.properties['Deal Value'].number}</p>
-      <h1 style={{...formHeaderStyle, ...h1Style}}>Selected Deal Details</h1>
+      <div style={sloganContainer} className="mb-4"> 
+        <div className="text-left text-4xl font-bold text-white">Selected Deals
+          </div>
+        </div>
       <p> The following activity are selected deals that are visible to the community. </p>
       <p>Click on the column headers to sort the data.</p>
       <table style={tableStyle}>
@@ -224,8 +230,10 @@ const handleHeaderClick = (key: string) => {
         <tbody>
             {Array.isArray(allData) && allData.map((row: DataType, index: number) => {
               const totalCount = allData ? allData.length : 0;
+              //allData = allData.filter((row: DataType);
               const dealValue = row.properties && row.properties['Deal Value'] ? row.properties['Deal Value'].number : null;
               const formattedDealValue = dealValue !== null ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(dealValue) : '-';
+              //const dealNameHidden = row.properties && row.properties.Visibility && row.properties.Visibility.select.name === 'Hidden' ? '*' : (row.properties.Name && row.properties.Name.title[0] ? row.properties.Name.title[0].text.content : '-');
               const dealName = row.properties && row.properties.Visibility && row.properties.Visibility.select.name === 'Custom Visibility' ? '---' : (row.properties.Name && row.properties.Name.title[0] ? row.properties.Name.title[0].text.content : '-');
               //const Last_Edited_Time= row.properties && row.properties['Last edited time'] ? row.properties['Last edited time'].last_edited_time : null;
               const date = new Date(row.properties['Last edited time'].last_edited_time);
