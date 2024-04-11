@@ -2,6 +2,7 @@ import { GlobalNav } from '#/ui/global-nav';
 import Header from '#/ui/header';
 import React from 'react';
 
+
 export const metadata = {
   title: 'Settings',
 };
@@ -15,9 +16,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <Header />
         </div>
 
-        <div className="mx-auto max-w-4xl space-y-2 px-2 pt-20 lg:px-8 lg:py-8">
-          <div className=" rounded-lg  p-px shadow-lg">
-            <div className="rounded-lg bg-white p-3.5 lg:p-1">{children}</div>
+        <div className="mx-auto max-w-4xl space-y-0 px-2 pt-20 lg:px-8 lg:py-8">
+          <div className=" rounded-lg  p-0px shadow-lg">
+            <div className="rounded-lg bg-white p-0 lg:p-0">{children}</div>
           </div>
         </div>
       </div>

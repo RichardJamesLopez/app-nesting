@@ -53,38 +53,38 @@ export default function Leaderboard() {
 
   const data = [
     {
-      photo: <InsertPhotoRoundedIcon />,
+      photo: <img src="/leaderboard/1-akashi.jpg" alt="Jane Wagmi" width="50" height="50"/>,
       rating: 1,
       profileImg: <AccountCircle />,
       userName: 'jane_Wagmi',
       amount: '5932 pts',
     },
     {
-      photo: <InsertPhotoRoundedIcon />,
+      photo: <img src="/leaderboard/2-juan.jpg" alt="0xSomething" width="50" height="50"/>,
       rating: 2,
       profileImg: <AccountCircle />,
       userName: '0xSomething',
       amount: '4263 pts',
     },
     {
-      photo: <InsertPhotoRoundedIcon />,
+      photo: <img src="/leaderboard/3-sydney.jpg" alt="big JON" width="50" height="50"/>,
       rating: 3,
       profileImg: <AccountCircle />,
       userName: 'big JON',
       amount: '3642 pts',
     },
     {
-      photo: <InsertPhotoRoundedIcon />,
+      photo: <img src="/leaderboard/4-milady.jpg" alt="R. U. Moore" width="50" height="50" />,
       rating: 4,
       profileImg: <AccountCircle />,
-      userName: 'Rebecca Moore',
+      userName: 'R. U. Moore',
       amount: '2542 pts',
     },
     {
-      photo: <InsertPhotoRoundedIcon />,
+      photo: <img src="/leaderboard/5-samurai.jpg" alt="Joe Doe" width="50" height="50" />,
       rating: 5,
       profileImg: <AccountCircle />,
-      userName: 'Jane Doe',
+      userName: 'Joe Doe',
       amount: '1832 pts',
     },
   ];
@@ -114,7 +114,7 @@ export default function Leaderboard() {
       </HeaderContainer>
       {data.map((item, index) => (
         <List className="mt-6 block justify-between" key={index}>
-          <div className="w-44 text-left">
+          <div className="w-44 text-left" >
             <StyledBadge
               badgeContent={item.rating}
               color="success"
@@ -123,10 +123,12 @@ export default function Leaderboard() {
                 horizontal: 'right',
               }}
             >
-              <InsertPhotoRoundedIcon sx={{ color: 'black' }} />
+              {item.photo}
             </StyledBadge>
-            <AccountCircle sx={{ marginLeft: '10px' }} />
-            <span className="font-bold">{item.userName}</span>
+              
+              <span className="font-bold" style={{ paddingLeft: '10px' }}>{item.userName}</span>
+           
+            
           </div>
           <div className="flex justify-between md:mt-2 lg:w-1/2">
             <div className="block lg:flex">

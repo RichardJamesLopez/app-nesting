@@ -33,6 +33,19 @@ export const menus: { name: string; slug: string; icon: string }[] = [
     slug: 'help',
     icon: '/help.svg',
   },
+  /*
+    {
+      name: 'Settings',
+      slug: 'settings',
+      icon: '/settings.svg',
+    },
+    {
+      name: 'Help',
+      slug: 'help',
+      icon: '/help.svg',
+    }
+  */
+
   /*{
     name: 'Data',
     items: [
@@ -88,14 +101,14 @@ export const menus: { name: string; slug: string; icon: string }[] = [
 ];
 
 export const tabs: { name: string; slug: string }[] = [
+  
   {
-    name: 'Edit Profile',
-    slug: 'edit-profile',
+    name: 'Visibility',
+    slug: 'visibility',
   },
-  {
-    name: 'Notifications',
-    slug: 'notifications',
-  },
+];
+
+  /*
   {
     name: 'Connected Addresses',
     slug: 'connected-addresses',
@@ -108,4 +121,19 @@ export const tabs: { name: string; slug: string }[] = [
     name: 'Log Out',
     slug: 'logout',
   },
-];
+  {
+    name: 'Edit Profile',
+    slug: 'edit-profile',
+  },
+  {
+    name: 'Notifications',
+    slug: 'notifications',
+  }
+  
+  },
+  */
+
+
+
+
+  
