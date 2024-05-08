@@ -26,7 +26,7 @@ export function Navigation() {
   const pathname = usePathname();
 
   return (
-    <div className="flex h-screen w-48 flex-col gap-4 p-2">
+    <div className="flex h-screen w-48 flex-col gap-4 py-2">
       <div className="flex items-center gap-3 p-2">
         <Image
           src="/logo.png"
@@ -43,8 +43,8 @@ export function Navigation() {
             href={link.href}
             key={link.href}
             className={cn(
-              "flex items-center gap-2 p-2 hover:bg-gray-800",
-              pathname === link.href && "bg-gray-700",
+              "flex items-center gap-2 p-2 hover:bg-gray-200",
+              pathname === link.href && "bg-gray-300",
             )}
           >
             <link.icon className="h-4 w-4" />
