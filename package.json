@@ -14,6 +14,7 @@
   "dependencies": {
     "@auth/drizzle-adapter": "^0.7.0",
     "@t3-oss/env-nextjs": "^0.10.1",
+    "@vercel/postgres": "0.8.0",
     "class-variance-authority": "0.7.0",
     "clsx": "2.1.1",
     "drizzle-orm": "^0.29.4",
