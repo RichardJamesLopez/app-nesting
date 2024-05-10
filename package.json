@@ -15,7 +15,9 @@
     "@auth/drizzle-adapter": "^0.7.0",
     "@radix-ui/react-slot": "1.0.2",
     "@t3-oss/env-nextjs": "^0.10.1",
+    "@tanstack/react-query": "5.35.1",
     "@vercel/postgres": "0.8.0",
+    "@web3modal/wagmi": "4.1.11",
     "class-variance-authority": "0.7.0",
     "clsx": "2.1.1",
     "drizzle-orm": "^0.29.4",
@@ -27,6 +29,8 @@
     "react-dom": "18.2.0",
     "tailwind-merge": "2.3.0",
     "tailwindcss-animate": "1.0.7",
+    "viem": "2.10.3",
+    "wagmi": "2.8.4",
     "zod": "^3.23.3"
   },
   "devDependencies": {

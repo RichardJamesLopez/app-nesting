@@ -4,8 +4,7 @@ import "~/styles/globals.css";
 import { Navigation } from "~/components/navigation";
 import { Header } from "~/components/header";
 import { cn } from "~/lib/utils";
-
-import { ClientProviders } from "./clientProviders";
+import { ContextProviders } from "~/components/contextProviders";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -26,13 +25,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn(`font-sans ${inter.variable}`, "flex")}>
-        <ClientProviders>
+        <ContextProviders>
           <Navigation />
           <main className="relative flex flex-grow items-center justify-center">
             <Header />
             {children}
           </main>
-        </ClientProviders>
+        </ContextProviders>
       </body>
     </html>
   );
