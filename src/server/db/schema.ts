@@ -27,14 +27,14 @@ export const posts = createTable(
     createdById: varchar("createdById", { length: 255 })
       .notNull()
       .references(() => users.id),
-    createdAt: timestamp("created_at", { withTimezone: true })
+    createdAt: timestamp("createdAt", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt", { withTimezone: true }),
   },
-  (example) => ({
-    createdByIdIdx: index("createdById_idx").on(example.createdById),
-    nameIndex: index("name_idx").on(example.name),
+  (t) => ({
+    createdByIdIdx: index("post_createdById_idx").on(t.createdById),
+    nameIndex: index("post_name_idx").on(t.name),
   }),
 );
 
@@ -47,10 +47,80 @@ export const users = createTable("user", {
     withTimezone: true,
   }).default(sql`CURRENT_TIMESTAMP`),
   image: varchar("image", { length: 255 }),
+  createdAt: timestamp("createdAt", { withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updatedAt", { withTimezone: true }),
 });
 
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
+  userRoles: many(userRoles),
+}));
+
+export const organizations = createTable(
+  "organization",
+  {
+    id: varchar("id", { length: 255 }).notNull().primaryKey(),
+    name: varchar("name", { length: 255 }),
+    createdById: varchar("createdById", { length: 255 })
+      .notNull()
+      .references(() => users.id),
+    createdAt: timestamp("createdAt", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt", { withTimezone: true }),
+  },
+  (t) => ({
+    createdByIdIdx: index("organization_createdById_idx").on(t.createdById),
+    nameIndex: index("organization_name_idx").on(t.name),
+  }),
+);
+
+export const organizationsRelations = relations(organizations, ({ many }) => ({
+  userRoles: many(userRoles),
+}));
+
+export const roles = createTable("role", {
+  id: varchar("id", { length: 255 }).notNull().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull().unique(),
+});
+
+export const rolesRelations = relations(roles, ({ many }) => ({
+  userRoles: many(userRoles),
+}));
+
+export const userRoles = createTable(
+  "userRole",
+  {
+    userId: varchar("userId", { length: 255 }).references(() => users.id),
+    roleId: varchar("roleId", { length: 255 }).references(() => roles.id),
+    organizationId: varchar("organizationId", { length: 255 }).references(
+      () => organizations.id,
+    ),
+    createdAt: timestamp("createdAt", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    deletedAt: timestamp("deletedAt", { withTimezone: true }),
+  },
+  (t) => ({
+    compoundKey: primaryKey({
+      columns: [t.userId, t.roleId, t.organizationId],
+    }),
+    userIdIdx: index("userRole_userId_idx").on(t.userId),
+    organizationIdIdx: index("userRole_organizationId_idx").on(
+      t.organizationId,
+    ),
+  }),
+);
+
+export const userRolesRelations = relations(userRoles, ({ one }) => ({
+  user: one(users, { fields: [userRoles.userId], references: [users.id] }),
+  role: one(roles, { fields: [userRoles.roleId], references: [roles.id] }),
+  organization: one(organizations, {
+    fields: [userRoles.organizationId],
+    references: [organizations.id],
+  }),
 }));
 
 export const accounts = createTable(
@@ -72,11 +142,11 @@ export const accounts = createTable(
     id_token: text("id_token"),
     session_state: varchar("session_state", { length: 255 }),
   },
-  (account) => ({
+  (t) => ({
     compoundKey: primaryKey({
-      columns: [account.provider, account.providerAccountId],
+      columns: [t.provider, t.providerAccountId],
     }),
-    userIdIdx: index("account_userId_idx").on(account.userId),
+    userIdIdx: index("account_userId_idx").on(t.userId),
   }),
 );
 
