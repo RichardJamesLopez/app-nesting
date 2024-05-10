@@ -8,5 +8,5 @@ export default {
   dbCredentials: {
     url: env.POSTGRES_URL,
   },
-  tablesFilter: ["t3-mock_*"],
+  tablesFilter: ["appNesting_*"],
 } satisfies Config;
