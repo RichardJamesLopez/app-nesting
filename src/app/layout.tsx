@@ -10,6 +10,7 @@ import {
 import { Header } from "~/components/header";
 import { cn } from "~/lib/utils";
 import { ContextProviders } from "~/components/contextProviders";
+import { Toaster } from "~/components/ui/sonner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -58,6 +59,7 @@ export default function RootLayout({
             {children}
           </main>
         </ContextProviders>
+        <Toaster />
       </body>
     </html>
   );

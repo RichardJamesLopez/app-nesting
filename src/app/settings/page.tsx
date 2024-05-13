@@ -1,9 +1,12 @@
+import Link from "next/link";
+import { UserPlusIcon } from "lucide-react";
+
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Switch } from "~/components/ui/switch";
 import { Label } from "~/components/ui/label";
+import { Button } from "~/components/ui/button";
 
 import { Members } from "./members";
-import { InviteMember } from "./inviteMember";
 
 export default function SettingsPage() {
   return (
@@ -16,7 +19,11 @@ export default function SettingsPage() {
         <CardHeader>
           <CardTitle className="flex justify-between">
             Members
-            <InviteMember />
+            <Link href="settings/invites">
+              <Button size="sm" variant="outline">
+                <UserPlusIcon className="mr-2 h-4 w-4" /> Invite
+              </Button>
+            </Link>
           </CardTitle>
         </CardHeader>
         <CardContent>
