@@ -10,9 +10,9 @@ import {
   CircleHelpIcon,
   type LucideIcon,
 } from "lucide-react";
-import Image from "next/image";
 
 import { cn } from "~/lib/utils";
+import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 
 const links: { icon: LucideIcon; title: string; href: string }[] = [
   { title: "Dashboard", href: "/dashboard", icon: HomeIcon },
@@ -26,32 +26,28 @@ export function Navigation() {
   const pathname = usePathname();
 
   return (
-    <div className="flex h-screen w-48 flex-col gap-4 py-2">
-      <div className="flex items-center gap-3 p-2">
-        <Image
-          src="/logo.png"
-          alt="Logo"
-          width={36}
-          height={36}
-          className="rounded-lg"
-        />
-        <span className="text-xl font-bold">Ourmada</span>
-      </div>
-      <nav>
-        {links.map((link) => (
-          <Link
-            href={link.href}
-            key={link.href}
-            className={cn(
-              "flex items-center gap-2 p-2 hover:bg-gray-200",
-              pathname === link.href && "bg-gray-300",
-            )}
-          >
-            <link.icon className="h-4 w-4" />
-            <span>{link.title}</span>
-          </Link>
-        ))}
-      </nav>
-    </div>
+    <nav className="space-y-2">
+      {links.map((link) => (
+        <Link
+          href={link.href}
+          key={link.href}
+          className={cn(
+            "flex items-center rounded-md px-4 py-3 text-sm font-semibold",
+            pathname === link.href
+              ? "bg-blue-100 text-blue-600"
+              : "text-gray-600 hover:bg-gray-100",
+          )}
+        >
+          <link.icon className="mr-2 h-5 w-5" />
+          <span>{link.title}</span>
+        </Link>
+      ))}
+    </nav>
   );
 }
+
+export {
+  Sheet as NavigationSheet,
+  SheetContent as NavigationSheetContent,
+  SheetTrigger as NavigationSheetTrigger,
+};
