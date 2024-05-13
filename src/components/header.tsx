@@ -14,10 +14,7 @@ import {
   CommandItem,
   CommandList,
 } from "~/components/ui/command";
-import {
-  NavigationSheetTrigger,
-  NavigationSheetContent,
-} from "~/components/navigation";
+import { NavigationSheetTrigger } from "~/components/navigation";
 
 export function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
