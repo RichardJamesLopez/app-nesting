@@ -1,6 +1,7 @@
 "use client";
 
 import { MoreHorizontalIcon } from "lucide-react";
+import { toast } from "sonner";
 
 import {
   DropdownMenu,
@@ -42,7 +43,10 @@ export function MemberActions({ member }: { member: Member }) {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuItem
-          onClick={() => navigator.clipboard.writeText(member.wallet)}
+          onClick={async () => {
+            await navigator.clipboard.writeText(member.wallet);
+            toast("Wallet address copied.");
+          }}
         >
           Copy wallet address
         </DropdownMenuItem>
