@@ -11,6 +11,7 @@ import { Header } from "~/components/header";
 import { cn } from "~/lib/utils";
 import { ContextProviders } from "~/components/contextProviders";
 import { Toaster } from "~/components/ui/sonner";
+import { TestToolbar } from "~/components/testToolbar";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -60,6 +61,7 @@ export default function RootLayout({
           </main>
         </ContextProviders>
         <Toaster />
+        <TestToolbar />
       </body>
     </html>
   );
