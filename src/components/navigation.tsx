@@ -33,7 +33,7 @@ export function Navigation() {
           key={link.href}
           className={cn(
             "flex items-center rounded-md px-4 py-3 text-sm font-semibold",
-            pathname === link.href
+            pathname.startsWith(link.href)
               ? "bg-blue-100 text-blue-600"
               : "text-gray-600 hover:bg-gray-100",
           )}
