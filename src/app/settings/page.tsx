@@ -21,7 +21,8 @@ export default function SettingsPage() {
             Members
             <Link href="settings/invites">
               <Button size="sm" variant="outline">
-                <UserPlusIcon className="mr-2 h-4 w-4" /> Invite
+                <UserPlusIcon className="mr-2 h-4 w-4" />
+                Invites
               </Button>
             </Link>
           </CardTitle>

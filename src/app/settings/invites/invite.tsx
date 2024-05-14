@@ -38,7 +38,7 @@ export function Invite({ invite }: { invite: Invite }) {
         {invite.expiry ? format(invite.expiry, "yyyy-MM-dd hh:mm") : "-"}
       </TableCell>
       <TableCell className="text-right">
-        <Button variant="ghost" size="icon">
+        <Button variant="outline" size="icon">
           <XIcon className="h-4 w-4 text-destructive" />
         </Button>
       </TableCell>
