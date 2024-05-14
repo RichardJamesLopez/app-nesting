@@ -18,7 +18,7 @@ export default function SettingsPage() {
       <Card className="mb-4">
         <CardHeader>
           <CardTitle className="flex justify-between">
-            Members
+            User management
             <Link href="settings/invites">
               <Button size="sm" variant="outline">
                 <UserPlusIcon className="mr-2 h-4 w-4" />
