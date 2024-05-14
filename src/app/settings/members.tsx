@@ -23,10 +23,18 @@ type Member = {
 
 const members: Member[] = [
   {
-    name: "Konstantin Kornev",
-    email: "konstantin.kornev.1@gmail.com",
+    name: "John Doe",
+    email: "john.doe.1@gmail.com",
     image: "/logo.png",
     wallet: "0x3242342342",
+    role: "Admin",
+    joinedOn: new Date(Number(new Date()) - 20000000),
+  },
+  {
+    name: "Alice",
+    email: "alice@gmail.com",
+    image: "/logo.png",
+    wallet: "0x6242342342",
     role: "Member",
     joinedOn: new Date(Number(new Date()) - 10000000),
   },
