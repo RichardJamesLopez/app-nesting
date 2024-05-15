@@ -76,6 +76,7 @@ export const organizations = createTable(
     nameIndex: index("organization_name_idx").on(t.name),
   }),
 );
+export type Organization = InferSelectModel<typeof organizations>;
 
 export const organizationsRelations = relations(organizations, ({ many }) => ({
   userRoles: many(userRoles),

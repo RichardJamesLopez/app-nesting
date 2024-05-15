@@ -39,8 +39,8 @@ export function NewInvite() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      userLimit: 1,
       expiry: new Date(Number(new Date()) + 10000000),
+      userLimit: 1,
     },
   });
 
@@ -67,7 +67,7 @@ export function NewInvite() {
             await navigator.clipboard.writeText(
               "https://invite.link/laskfsdljfa",
             );
-            toast("Link copied.");
+            toast("Link copied");
           }}
         >
           https://invite.link/laskfsdljfa
@@ -87,7 +87,7 @@ export function NewInvite() {
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="No limit" />
+                        <SelectValue placeholder="7 days" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>

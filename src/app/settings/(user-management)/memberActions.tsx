@@ -21,6 +21,7 @@ import {
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
 import { Button } from "~/components/ui/button";
+import { db } from "~/server/db";
 
 type Member = {
   name: string;
@@ -45,7 +46,7 @@ export function MemberActions({ member }: { member: Member }) {
         <DropdownMenuItem
           onClick={async () => {
             await navigator.clipboard.writeText(member.wallet);
-            toast("Wallet address copied.");
+            toast("Wallet address copied");
           }}
         >
           Copy wallet address

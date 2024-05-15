@@ -24,7 +24,7 @@ export function Invite({ invite }: { invite: Invite }) {
           size="icon"
           onClick={async () => {
             await navigator.clipboard.writeText(invite.link);
-            toast("Link copied.");
+            toast("Link copied");
           }}
         >
           <CopyIcon className="h-4 w-4 text-gray-400" />

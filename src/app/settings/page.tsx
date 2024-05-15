@@ -6,7 +6,7 @@ import { Switch } from "~/components/ui/switch";
 import { Label } from "~/components/ui/label";
 import { Button } from "~/components/ui/button";
 
-import { Members } from "./members";
+import { UserManagement } from "./(user-management)";
 
 export default function SettingsPage() {
   return (
@@ -28,7 +28,7 @@ export default function SettingsPage() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Members />
+          <UserManagement />
         </CardContent>
       </Card>
 

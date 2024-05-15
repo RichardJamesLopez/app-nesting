@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
+import { eq } from "drizzle-orm";
 
 import {
   Table,
@@ -9,10 +10,11 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { db } from "~/server/db";
 
 import { MemberActions } from "./memberActions";
 
-type Member = {
+type User = {
   name: string;
   email: string;
   image: string;
@@ -21,7 +23,7 @@ type Member = {
   joinedOn: Date;
 };
 
-const members: Member[] = [
+const users: User[] = [
   {
     name: "John Doe",
     email: "john.doe.1@gmail.com",
@@ -40,7 +42,11 @@ const members: Member[] = [
   },
 ];
 
-export async function Members() {
+export async function UserManagement() {
+  // const something = await db.query.userRoles.findMany({
+  //   where:
+  // });
+
   return (
     <Table>
       <TableHeader>
@@ -52,31 +58,31 @@ export async function Members() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {members.map((member) => (
-          <TableRow key={member.email}>
+        {users.map((user) => (
+          <TableRow key={user.email}>
             <TableCell className="font-medium">
               <div className="flex">
                 <Image
-                  src={member.image}
-                  alt={`${member.name}' avatar`}
+                  src={user.image}
+                  alt={`${user.name}' avatar`}
                   width={24}
                   height={24}
                   className="mr-1 h-8 w-8 rounded-full"
                 />
                 <div className="flex flex-col space-y-1">
                   <p className="text-sm font-medium leading-none">
-                    {member.name}
+                    {user.name}
                   </p>
                   <p className="text-xs leading-none text-muted-foreground">
-                    {member.email}
+                    {user.email}
                   </p>
                 </div>
               </div>
             </TableCell>
-            <TableCell>{member.role}</TableCell>
-            <TableCell>{formatDistanceToNow(member.joinedOn)} ago</TableCell>
+            <TableCell>{user.role}</TableCell>
+            <TableCell>{formatDistanceToNow(user.joinedOn)} ago</TableCell>
             <TableCell className="text-right">
-              <MemberActions member={member} />
+              <MemberActions member={user} />
             </TableCell>
           </TableRow>
         ))}
