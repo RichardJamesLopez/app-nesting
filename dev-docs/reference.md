@@ -3,13 +3,13 @@
 # ConnectButton /app/page.tsx
 ## Imported Code Object
 
-ConnectButton is a React component that handles connecting the user's wallet when they click the "Connect Wallet" button. 
+ConnectButton is a React component that handles connecting the user's wallet when they click the "Connect Wallet" button.
 
-It uses useWeb3Modal to open the modal for the user to connect their wallet. useAccount tracks the user's wallet address and connection status. 
+It uses useWeb3Modal to open the modal for the user to connect their wallet. useAccount tracks the user's wallet address and connection status.
 
 When the wallet is connected, it calls the registerUser function to register the new wallet address in the backend. This allows associating the user with their wallet address in the app.
 
-It displays the branded UI for the landing page and shows the "Connect Wallet" button. When clicked, this opens the wallet connection modal. 
+It displays the branded UI for the landing page and shows the "Connect Wallet" button. When clicked, this opens the wallet connection modal.
 
 After connecting, the user is redirected to the /dashboard route to enter the main app experience.
 
@@ -52,7 +52,7 @@ When called, it will open the modal dialog where the user can select which walle
 # router /app/page.tsx
 ## Imported Code Object
 
-The useRouter hook is a function provided by Next.js that returns an object containing information about the current router state. 
+The useRouter hook is a function provided by Next.js that returns an object containing information about the current router state.
 
 router /app/page.tsx refers to the file path of the page component that is currently being rendered. So in this case, the page component located at /app/page.tsx is being rendered and the useRouter hook allows you to access the router instance and state for this particular page.
 
@@ -79,30 +79,30 @@ Specifically, it adds these customizations:
 
 
 ---
-# <function> /app/page.tsx
+# /app/page.tsx
 ## Imported Code Object
 
 styled is a function that is used to style a react component. In this case, it is being used to style the Button component.
 
 The styled(Button) call creates a new StyledButton component that will render a Button with some additional styles.
 
-The function passed to styled(({theme}) => ...) defines the styles that should be applied to the StyledButton. It is using the theme object to reference colors defined in the theme, allowing the StyledButton to automatically adapt if the theme colors change.
+The function passed to styled(({theme}) =&gt; ...) defines the styles that should be applied to the StyledButton. It is using the theme object to reference colors defined in the theme, allowing the StyledButton to automatically adapt if the theme colors change.
 
 So in summary, this is creating a reusable StyledButton component that renders a Button with some hover, padding, and text style customizations applied.
 
 
 ---
-# '&:hover' /app/page.tsx
+# '&amp;:hover' /app/page.tsx
 ## Imported Code Object
 
-The '&:hover' is a Nesting selector in CSS that applies a style rule when the parent selector is hovered over. In this case, it is applying a background color of white and text color of black when the parent element is hovered over with the mouse pointer. The ampersand (&) refers to the parent selector, allowing you to nest styles specifically for when that parent element is in the :hover pseudo-class state.
+The '&amp;:hover' is a Nesting selector in CSS that applies a style rule when the parent selector is hovered over. In this case, it is applying a background color of white and text color of black when the parent element is hovered over with the mouse pointer. The ampersand (&amp;) refers to the parent selector, allowing you to nest styles specifically for when that parent element is in the :hover pseudo-class state.
 
 
 ---
 # backgroundColor /app/page.tsx
 ## Imported Code Object
 
-backgroundColor is a style property that sets the background color of an element. 
+backgroundColor is a style property that sets the background color of an element.
 
 theme.palette.common.white is accessing the white color value defined in the theme's palette. So it is setting the background color to white based on the theme.
 
@@ -132,7 +132,7 @@ The textTransform property in this code snippet specifies how the text content o
 # useEffect() callback /app/page.tsx
 ## Imported Code Object
 
-The useEffect hook runs after the component mounts. It registers a new user by making an API call with the user's address. 
+The useEffect hook runs after the component mounts. It registers a new user by making an API call with the user's address.
 
 It has a dependency array with [address, router] - this means the effect will run after the initial render and any time the address or router values update.
 
@@ -145,7 +145,7 @@ So in summary, it registers the user on mount and on address change, then redire
 # registerUser /app/page.tsx
 ## Imported Code Object
 
-The registerUser function is an asynchronous function that handles registering a new user. 
+The registerUser function is an asynchronous function that handles registering a new user.
 
 It makes a POST request to the /api/users/registration endpoint, sending the user's wallet address in the request body.
 
@@ -155,7 +155,7 @@ The async/await syntax is used to handle the promise-based fetch API call.
 
 The response is parsed as JSON and checked for a successful response.
 
-If successful, the user is redirected to the /dashboard route. 
+If successful, the user is redirected to the /dashboard route.
 
 If there is an error, the error is logged to the console.
 
@@ -173,7 +173,7 @@ data /app/page.tsx refers to the JSON data that is being extracted from the resp
 # error /app/page.tsx
 ## Imported Code Object
 
-The code snippet shows an empty try/catch block. The try block contains code that could potentially throw an error. If an error occurs while executing the code inside the try block, it will be caught and the variable "error" will contain the error object. 
+The code snippet shows an empty try/catch block. The try block contains code that could potentially throw an error. If an error occurs while executing the code inside the try block, it will be caught and the variable "error" will contain the error object.
 
 So "error /app/page.tsx" is not valid syntax here. The variable "error" refers to the error object that was thrown from some other code inside the try block. The catch block allows the code to gracefully handle errors instead of crashing.
 
@@ -209,7 +209,8 @@ The 'Content-Type' header in the code snippet specifies that the content being s
 ---
 # method /app/page.tsx
 ## Imported Code Object
- The method property in the code snippet you provided specifies the HTTP method to be used when making the request to the /app/page.tsx endpoint. In this case, the method is set to 'POST', indicating that the request should be made using the HTTP POST method.
+
+The method property in the code snippet you provided specifies the HTTP method to be used when making the request to the /app/page.tsx endpoint. In this case, the method is set to 'POST', indicating that the request should be made using the HTTP POST method.
 
 ---
 # metadata /app/ssr/layout.tsx
@@ -263,7 +264,7 @@ The ids.map() callback is mapping over an array of objects called ids and return
 # slug /app/ssr/layout.tsx
 ## Imported Code Object
 
-The code snippet "slug: x.id" appears to be assigning the value of the id property of the x object to a variable called slug. 
+The code snippet "slug: x.id" appears to be assigning the value of the id property of the x object to a variable called slug.
 
 So in this context, slug is a variable that will contain the id value from the x object. This is likely being done to generate a unique slug or URL identifier from the id.
 
@@ -273,4 +274,27 @@ So in this context, slug is a variable that will contain the id value from the x
 ## Imported Code Object
 
 The code snippet 'text: `Post ${x.id}`,' is concatenating a string 'Post ' with the value of the id property of the x object. So if x.id equals 5, the text would render as 'Post 5'. It is using backticks to allow embedding the x.id variable directly in the string.
+
+
+---
+# Page /app/dashboard/page.tsx
+## Imported Code Object
+In the Next.js framework, `app/dashboard/page.tsx` is a React component that represents the main content of the `/dashboard` route. It serves as the entry point for rendering the user interface (UI) for the "Dashboard" section of your application.
+
+In this specific code snippet, the `Page` component is rendering a responsive layout using the Material-UI `Grid` component. The layout consists of two sections, each containing a grid system with different components placed inside.
+
+Here's a breakdown of what's happening:
+
+1. The first section renders a grid with two columns on larger screens (`md` and above), where the left column (`xs={12} sm={12} md={8}`) contains the `Slogan` and `Summary` components, and the right column (`xs={12} sm={12} md={4}`) contains the `Leaderboard` component.
+
+2. The second section also renders a grid with two columns on larger screens (`md` and above), where the left column (`xs={12} sm={12} md={8}`) contains the `Activities` component, and the right column (`xs={12} sm={12} md={4}`) contains the `Health` component.
+
+The `Page` component is responsible for organizing and rendering the various components that make up the Dashboard page. It acts as a container component that brings together different parts of the UI into a cohesive layout.
+
+In the Next.js file structure, `app/dashboard/page.tsx` is a special file that Next.js recognizes as the page component for the `/dashboard` route. When a user visits the `/dashboard` URL, Next.js will render the content of this `Page` component.
+
+---
+# labelStyle /app/kanban/[slug]/page.tsx
+## Imported Code Object
+In the given code snippet, `labelStyle` is likely a CSS class or an object representing styles that will be applied to the labels or tags associated with the tasks or cards in a Kanban board. The `/app/kanban/[slug]/page.tsx` part refers to the file path and the specific file where this code is defined. In Next.js, the `app` directory is used for creating the React components that make up the application's UI. The `kanban` directory within `app` suggests that it contains components related to a Kanban board feature or functionality. The `[slug]` part is a dynamic segment or parameter in the file path, which means that the component defined in `page.tsx` will render for any URL that matches the pattern `/kanban/some-value`. This allows for creating dynamic pages or components based on the provided `slug` value, which could be used to render different Kanban boards or workspaces. So, in summary, `labelStyle` is likely a style object or class used for styling the labels or tags on the Kanban board, and this code is defined in the `page.tsx` file within the dynamic route `/app/kanban/[slug]`, which is responsible for rendering the Kanban board based on the provided `slug` value.
 

@@ -91,14 +91,11 @@ export default function ConnectButton() {
             <p className="m-auto mt-4 w-6/12 text-center text-white">
               Ourmada is a modular platform for the web3 tools you need. All
               updates, feedback and community member activities are
-              transparently displayed in each of the DAO instances.
+              transparently displayed for your trusted community.
             </p>
-            <p className="mt-4 text-center text-white">
-              Enjoy Ourmada for the fastest way to get succinct, contextual, and
-              interactive updates.
-            </p>
+          
             <p className="mt-4 text-center font-bold text-white">
-              Ourmada ships tools for DAOs
+              Ourmada ships are your customized crowdsource.
             </p>
             <div>
               <div className="m-auto mt-8 w-28 rounded-md bg-white p-2">

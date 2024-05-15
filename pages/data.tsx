@@ -215,7 +215,7 @@ const handleHeaderClick = (key: string) => {
         <div className="text-left text-4xl font-bold text-white">Selected Deals
           </div>
         </div>
-      <p> The following activity are selected deals that are visible to the community. </p>
+      <p> The following activities are selected deals that are visible to the community. </p>
       <p>Click on the column headers to sort the data.</p>
       <table style={tableStyle}>
   
