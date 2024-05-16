@@ -61,7 +61,8 @@ export function UserMenu() {
   useEffect(() => {
     if (!organizationId && organizations.data) {
       if (organizations.data[0]) setOrganizationId(organizations.data[0].id);
-      else setIsNewOrganizationSheetOpen(true);
+      else if (!window.location.pathname.includes("/invite/"))
+        setIsNewOrganizationSheetOpen(true);
     }
   }, [organizations.data, setOrganizationId, organizationId]);
 
