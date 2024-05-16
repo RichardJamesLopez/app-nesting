@@ -151,7 +151,9 @@ export function UserMenu() {
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem onClick={() => signOut()}>
+            <DropdownMenuItem
+              onClick={() => signOut({ callbackUrl: window.location.origin })}
+            >
               <LogOutIcon className="mr-2 h-4 w-4" />
               <span>Sign out</span>
             </DropdownMenuItem>
