@@ -1,8 +1,7 @@
 "use client";
 
-import { toast } from "sonner";
 import { signIn, useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { api } from "~/trpc/react";
@@ -14,11 +13,13 @@ export default function InvitePage({
   params: { inviteId: string };
 }) {
   const { status } = useSession();
+  const router = useRouter();
   const user = api.user.get.useQuery();
+  const organizations = api.organization.getAll.useQuery();
   const createMember = api.userRole.createMember.useMutation({
-    onSuccess: (organizationName) => {
-      toast.success(`Welcome to ${organizationName}!`);
-      redirect("/dashboard");
+    onSuccess: () => {
+      organizations.refetch();
+      router.push("/dashboard");
     },
     onError: (error) => {
       // toast.error("Failed to create a member");
@@ -26,26 +27,25 @@ export default function InvitePage({
     },
   });
 
-  const isFreshUser =
-    status === "authenticated" &&
-    Number(new Date()) - Number(user.data?.createdAt) < 10000 &&
-    !user.data?.userRoles.length;
-
   const [isDoneOnce, setIsDoneOnce] = useState<boolean>(false);
   useEffect(() => {
+    const isFreshUser =
+      status === "authenticated" &&
+      Number(new Date()) - Number(user.data?.createdAt) < 10000 &&
+      !user.data?.userRoles.length;
+
     if (status === "authenticated" && isFreshUser && !isDoneOnce) {
+      createMember.mutate(params.inviteId);
       setIsDoneOnce(true);
-      setTimeout(() => {
-        createMember.mutate(params.inviteId);
-      }, 1000);
     }
   }, [
     createMember,
-    isFreshUser,
     params.inviteId,
     status,
     setIsDoneOnce,
     isDoneOnce,
+    user.data?.createdAt,
+    user.data?.userRoles.length,
   ]);
 
   return status === "unauthenticated" ? (
