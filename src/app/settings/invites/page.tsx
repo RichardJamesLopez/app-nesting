@@ -1,10 +1,15 @@
+"use client";
+
+import { useAtomValue } from "jotai";
+import { toast } from "sonner";
+import { useState } from "react";
+
 import {
   Table,
   TableBody,
   TableHead,
   TableHeader,
   TableRow,
-  TableCell,
 } from "~/components/ui/table";
 import {
   Breadcrumb,
@@ -15,27 +20,52 @@ import {
   BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { api } from "~/trpc/react";
+import { organizationIdAtom } from "~/state";
 
 import { Invite } from "./invite";
 import { NewInvite } from "./newInvite";
 
-type Invite = {
-  link: string;
-  users: number;
-  userLimit?: number;
-  expiry?: Date;
-};
+export default function Invites() {
+  const [newInviteId, setNewInviteId] = useState<string>();
 
-const invites: Invite[] = [
-  {
-    link: "https://invite.link/asljfasd",
-    users: 0,
-    userLimit: 10,
-    expiry: new Date(Number(new Date()) + 10000000),
-  },
-];
+  const organizationId = useAtomValue(organizationIdAtom);
+  const invites = api.invite.getAll.useQuery(organizationId ?? "");
+  const createInvite = api.invite.create.useMutation({
+    onSuccess: (id) => {
+      toast("Invite created");
+      if (typeof id === "string") setNewInviteId(id);
+      invites.refetch();
+    },
+    onError: (error) => {
+      toast.error("Failed to create an invite");
+      console.error(error);
+    },
+  });
+  const updateInvite = api.invite.update.useMutation({
+    onSuccess: (id) => {
+      toast("Invite updated");
+      if (typeof id === "string") setNewInviteId(id);
+      invites.refetch();
+    },
+    onError: (error) => {
+      toast.error("Failed to update an invite");
+      console.error(error);
+    },
+  });
+  const deleteInvite = api.invite.delete.useMutation({
+    onSuccess: () => {
+      toast("Invite deleted");
+      invites.refetch();
+    },
+    onError: (error) => {
+      toast.error("Failed to delete an invite");
+      console.error(error);
+    },
+  });
 
-export default async function Invites() {
+  if (!organizationId) return "Select organization";
+
   return (
     <>
       <Breadcrumb className="mb-6">
@@ -53,7 +83,12 @@ export default async function Invites() {
         <CardHeader>
           <CardTitle className="flex justify-between">
             Invites
-            <NewInvite />
+            <NewInvite
+              id={newInviteId}
+              organizationId={organizationId}
+              onCreate={createInvite.mutate}
+              onUpdate={updateInvite.mutate}
+            />
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -67,8 +102,13 @@ export default async function Invites() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {invites.map((invite) => (
-                <Invite key={invite.link} invite={invite} />
+              {invites.data?.map((invite) => (
+                <Invite
+                  key={invite.id}
+                  invite={invite}
+                  timesUsed={invite.userRoles.length}
+                  onDelete={deleteInvite.mutate}
+                />
               ))}
             </TableBody>
           </Table>

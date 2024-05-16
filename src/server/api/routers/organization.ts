@@ -21,8 +21,6 @@ export const organizationRouter = createTRPCRouter({
         },
       });
 
-      console.log("myRoles", myRoles);
-
       const uniqueOrgIds = new Set();
 
       return myRoles

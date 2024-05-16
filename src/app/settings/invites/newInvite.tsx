@@ -1,10 +1,10 @@
 "use client";
 
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { PlusIcon, CopyIcon } from "lucide-react";
 import { toast } from "sonner";
+import { useEffect } from "react";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -29,29 +29,48 @@ import {
   SheetHeader,
   SheetTitle,
 } from "~/components/ui/sheet";
+import { inviteFormSchema, type InviteFormType } from "~/lib/validationSchemas";
 
-const formSchema = z.object({
-  userLimit: z.number().min(1).max(50).optional(),
-  expiry: z.date().optional(),
-});
-
-export function NewInvite() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+export function NewInvite({
+  id,
+  organizationId,
+  onCreate,
+  onUpdate,
+}: {
+  id?: string;
+  organizationId: string;
+  onCreate: (values: InviteFormType) => void;
+  onUpdate: (values: { id: string; form: InviteFormType }) => void;
+}) {
+  const form = useForm<InviteFormType>({
+    resolver: zodResolver(inviteFormSchema),
     defaultValues: {
-      expiry: new Date(Number(new Date()) + 10000000),
-      userLimit: 1,
+      expires: "168",
+      userLimit: "no",
+      organizationId,
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-  }
+  useEffect(() => {
+    const subscription = form.watch((value, { name }) => {
+      console.log("=== useEffect ===", name, value);
+      id &&
+        name &&
+        onUpdate({ id, form: { ...form.getValues(), [name]: value[name] } });
+    });
+    return () => subscription.unsubscribe();
+  }, [id, form, form.watch, onUpdate]);
 
   return (
-    <Sheet>
+    <Sheet onOpenChange={(open) => !open && form.reset()}>
       <SheetTrigger asChild>
-        <Button size="sm">
+        <Button
+          size="sm"
+          onClick={async () => {
+            const isValid = await form.trigger();
+            if (isValid) onCreate(form.getValues());
+          }}
+        >
           <PlusIcon className="mr-2 h-4 w-4" />
           New invite
         </Button>
@@ -74,10 +93,10 @@ export function NewInvite() {
           <CopyIcon className="ml-3 h-4 w-4 text-white" />
         </Button>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onCreate)} className="space-y-4">
             <FormField
               control={form.control}
-              name="expiry"
+              name="expires"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Expire after</FormLabel>
@@ -87,7 +106,7 @@ export function NewInvite() {
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="7 days" />
+                        <SelectValue />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -116,7 +135,7 @@ export function NewInvite() {
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="No limit" />
+                        <SelectValue />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>

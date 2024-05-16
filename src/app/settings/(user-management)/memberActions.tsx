@@ -23,16 +23,7 @@ import {
 import { Button } from "~/components/ui/button";
 import { db } from "~/server/db";
 
-type Member = {
-  name: string;
-  email: string;
-  image: string;
-  wallet: string;
-  role: string;
-  joinedOn: Date;
-};
-
-export function MemberActions({ member }: { member: Member }) {
+export function MemberActions() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -43,7 +34,7 @@ export function MemberActions({ member }: { member: Member }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem
+        {/* <DropdownMenuItem
           onClick={async () => {
             await navigator.clipboard.writeText(member.wallet);
             toast("Wallet address copied");
@@ -66,7 +57,7 @@ export function MemberActions({ member }: { member: Member }) {
               <AlertDialogAction>Continue</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
-        </AlertDialog>
+        </AlertDialog> */}
       </DropdownMenuContent>
     </DropdownMenu>
   );

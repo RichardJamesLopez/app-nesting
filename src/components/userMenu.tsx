@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAccount } from "wagmi";
@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useAtom } from "jotai";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import {
@@ -59,8 +58,15 @@ export function UserMenu() {
   const [organizationId, setOrganizationId] = useAtom(organizationIdAtom);
 
   const organizations = api.organization.getAll.useQuery();
-
-  const router = useRouter();
+  useEffect(() => {
+    console.log(
+      "organizations.data, organizationId",
+      organizations.data,
+      !organizationId,
+    );
+    if (organizations.data && organizations.data[0] && !organizationId)
+      setOrganizationId(organizations.data[0].id);
+  }, [organizations.data, setOrganizationId, organizationId]);
 
   const createOrganization = api.organization.create.useMutation({
     onSuccess: (newOrganizationId) => {
@@ -68,7 +74,6 @@ export function UserMenu() {
       setIsNewOrganizationSheetOpen(false);
       toast("Organization created");
       setOrganizationId(newOrganizationId as string);
-      router.refresh();
     },
     onError: () => {
       toast.error("Failed to create an organization");

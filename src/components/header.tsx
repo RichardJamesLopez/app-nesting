@@ -3,6 +3,7 @@
 import { SearchIcon, BellIcon, MenuIcon } from "lucide-react";
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 
 import { UserMenu } from "~/components/userMenu";
 import { Button } from "~/components/ui/button";
@@ -28,6 +29,26 @@ export function Header() {
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
   }, []);
+
+  const { status } = useSession();
+
+  if (status !== "authenticated")
+    return (
+      <header className="fixed top-0 z-10 flex w-full items-center justify-between border-b bg-white px-4 py-2">
+        <div className="mr-4">
+          <div className="flex items-center gap-2">
+            <Image
+              src="/logo.png"
+              alt="Logo"
+              width={36}
+              height={36}
+              className="rounded-lg"
+            />
+            <span className="text-xl font-bold">Ourmada</span>
+          </div>
+        </div>
+      </header>
+    );
 
   return (
     <>

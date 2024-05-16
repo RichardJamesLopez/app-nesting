@@ -10,6 +10,7 @@ import {
   CircleHelpIcon,
   type LucideIcon,
 } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 import { cn } from "~/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
@@ -24,6 +25,10 @@ const links: { icon: LucideIcon; title: string; href: string }[] = [
 
 export function Navigation() {
   const pathname = usePathname();
+
+  const { status } = useSession();
+
+  if (status !== "authenticated") return null;
 
   return (
     <nav className="space-y-2">

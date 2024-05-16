@@ -1,6 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
-import { eq } from "drizzle-orm";
+import { useAtomValue } from "jotai";
 
 import {
   Table,
@@ -10,42 +12,16 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { db } from "~/server/db";
+import { Skeleton } from "~/components/ui/skeleton";
+import { api } from "~/trpc/react";
+import { organizationIdAtom } from "~/state";
 
 import { MemberActions } from "./memberActions";
 
-type User = {
-  name: string;
-  email: string;
-  image: string;
-  wallet: string;
-  role: string;
-  joinedOn: Date;
-};
-
-const users: User[] = [
-  {
-    name: "John Doe",
-    email: "john.doe.1@gmail.com",
-    image: "/logo.png",
-    wallet: "0x3242342342",
-    role: "Admin",
-    joinedOn: new Date(Number(new Date()) - 20000000),
-  },
-  {
-    name: "Alice",
-    email: "alice@gmail.com",
-    image: "/logo.png",
-    wallet: "0x6242342342",
-    role: "Member",
-    joinedOn: new Date(Number(new Date()) - 10000000),
-  },
-];
-
-export async function UserManagement() {
-  // const something = await db.query.userRoles.findMany({
-  //   where:
-  // });
+export function UserManagement() {
+  const organizationId = useAtomValue(organizationIdAtom);
+  const userRoles = api.userRole.getAll.useQuery(organizationId ?? "");
+  if (!organizationId) return "Select organization";
 
   return (
     <Table>
@@ -58,17 +34,21 @@ export async function UserManagement() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {users.map((user) => (
+        {userRoles.data?.map(({ createdAt, user, role }) => (
           <TableRow key={user.email}>
             <TableCell className="font-medium">
               <div className="flex">
-                <Image
-                  src={user.image}
-                  alt={`${user.name}' avatar`}
-                  width={24}
-                  height={24}
-                  className="mr-1 h-8 w-8 rounded-full"
-                />
+                {user.image ? (
+                  <Image
+                    src={user.image}
+                    alt={`${user.name}' avatar`}
+                    height={24}
+                    width={24}
+                    className="mr-1 h-8 w-8 rounded-full"
+                  />
+                ) : (
+                  <Skeleton className="mr-1 h-8 w-8 rounded-full" />
+                )}
                 <div className="flex flex-col space-y-1">
                   <p className="text-sm font-medium leading-none">
                     {user.name}
@@ -79,10 +59,10 @@ export async function UserManagement() {
                 </div>
               </div>
             </TableCell>
-            <TableCell>{user.role}</TableCell>
-            <TableCell>{formatDistanceToNow(user.joinedOn)} ago</TableCell>
+            <TableCell>{role.name}</TableCell>
+            <TableCell>{formatDistanceToNow(createdAt)} ago</TableCell>
             <TableCell className="text-right">
-              <MemberActions member={user} />
+              <MemberActions />
             </TableCell>
           </TableRow>
         ))}

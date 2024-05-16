@@ -6,24 +6,28 @@ import { toast } from "sonner";
 
 import { TableCell, TableRow } from "~/components/ui/table";
 import { Button } from "~/components/ui/button";
+import { type Invite } from "~/server/db/schema";
 
-type Invite = {
-  link: string;
-  users: number;
-  userLimit?: number;
-  expiry?: Date;
-};
+export function Invite({
+  invite,
+  timesUsed,
+  onDelete,
+}: {
+  invite: Invite;
+  timesUsed: number;
+  onDelete: (id: string) => void;
+}) {
+  const url = `${window.location.origin}/invite/${invite.id}`;
 
-export function Invite({ invite }: { invite: Invite }) {
   return (
     <TableRow>
       <TableCell className="flex items-center font-medium">
-        {invite.link}
+        {invite.id}
         <Button
           variant="ghost"
           size="icon"
           onClick={async () => {
-            await navigator.clipboard.writeText(invite.link);
+            await navigator.clipboard.writeText(url);
             toast("Link copied");
           }}
         >
@@ -31,14 +35,14 @@ export function Invite({ invite }: { invite: Invite }) {
         </Button>
       </TableCell>
       <TableCell>
-        {invite.users}
+        {timesUsed}
         {invite.userLimit && `/${invite.userLimit}`}
       </TableCell>
       <TableCell>
-        {invite.expiry ? format(invite.expiry, "yyyy-MM-dd hh:mm") : "-"}
+        {invite.expires ? format(invite.expires, "yyyy-MM-dd hh:mm") : "-"}
       </TableCell>
       <TableCell className="text-right">
-        <Button variant="outline" size="icon">
+        <Button variant="ghost" size="icon" onClick={() => onDelete(invite.id)}>
           <XIcon className="h-4 w-4 text-destructive" />
         </Button>
       </TableCell>

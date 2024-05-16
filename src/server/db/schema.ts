@@ -56,6 +56,7 @@ export const users = createTable("user", {
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
   userRoles: many(userRoles),
+  invites: many(invites),
 }));
 
 export const organizations = createTable(
@@ -80,6 +81,7 @@ export type Organization = InferSelectModel<typeof organizations>;
 
 export const organizationsRelations = relations(organizations, ({ many }) => ({
   userRoles: many(userRoles),
+  invites: many(invites),
 }));
 
 export const roles = createTable("role", {
@@ -103,9 +105,11 @@ export const userRoles = createTable(
     organizationId: varchar("organizationId", { length: 255 })
       .references(() => organizations.id)
       .notNull(),
+    inviteId: varchar("id", { length: 16 }).references(() => invites.id),
     createdAt: timestamp("createdAt", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
+    updatedAt: timestamp("updatedAt", { withTimezone: true }),
     deletedAt: timestamp("deletedAt", { withTimezone: true }),
   },
   (t) => ({
@@ -126,6 +130,48 @@ export const userRolesRelations = relations(userRoles, ({ one }) => ({
     fields: [userRoles.organizationId],
     references: [organizations.id],
   }),
+  invite: one(invites, {
+    fields: [userRoles.inviteId],
+    references: [invites.id],
+  }),
+}));
+
+export const invites = createTable(
+  "invite",
+  {
+    id: varchar("id", { length: 16 }).notNull().primaryKey(),
+    userLimit: integer("userLimit"),
+    expires: timestamp("expires", {
+      mode: "date",
+      withTimezone: true,
+    }),
+    createdById: varchar("createdById", { length: 255 })
+      .references(() => users.id)
+      .notNull(),
+    organizationId: varchar("organizationId", { length: 255 })
+      .references(() => organizations.id)
+      .notNull(),
+    createdAt: timestamp("createdAt", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+  },
+  (t) => ({
+    createdByIdIdx: index("invite_createdById_idx").on(t.createdById),
+    organizationIdIdx: index("invite_organizationId_idx").on(t.organizationId),
+  }),
+);
+export type Invite = InferSelectModel<typeof invites>;
+
+export const invitesRelations = relations(invites, ({ one, many }) => ({
+  createdById: one(users, {
+    fields: [invites.createdById],
+    references: [users.id],
+  }),
+  organization: one(organizations, {
+    fields: [invites.organizationId],
+    references: [organizations.id],
+  }),
+  userRoles: many(userRoles),
 }));
 
 export const accounts = createTable(
