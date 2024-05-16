@@ -59,13 +59,10 @@ export function UserMenu() {
 
   const organizations = api.organization.getAll.useQuery();
   useEffect(() => {
-    console.log(
-      "organizations.data, organizationId",
-      organizations.data,
-      !organizationId,
-    );
-    if (organizations.data && organizations.data[0] && !organizationId)
-      setOrganizationId(organizations.data[0].id);
+    if (!organizationId && organizations.data) {
+      if (organizations.data[0]) setOrganizationId(organizations.data[0].id);
+      else setIsNewOrganizationSheetOpen(true);
+    }
   }, [organizations.data, setOrganizationId, organizationId]);
 
   const createOrganization = api.organization.create.useMutation({
