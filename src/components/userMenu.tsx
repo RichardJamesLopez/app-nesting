@@ -13,6 +13,8 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useAtom } from "jotai";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import {
   DropdownMenu,
@@ -38,9 +40,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "~/components/ui/sheet";
-import { db } from "~/server/db";
-import { organizations } from "~/server/db/schema";
-import { generateId } from "~/lib/utils";
+import { api } from "~/trpc/react";
 
 export function UserMenu() {
   const { data: session } = useSession();
@@ -53,10 +53,27 @@ export function UserMenu() {
 
   const truncatedWalletAddress = `${walletAddress?.slice(0, 4)}...${walletAddress?.slice(-4)}`;
 
-  const [organizationId, setOrganizationId] = useAtom(organizationIdAtom);
-
   const [isNewOrganizationSheetOpen, setIsNewOrganizationSheetOpen] =
     useState<boolean>(false);
+
+  const [organizationId, setOrganizationId] = useAtom(organizationIdAtom);
+
+  const organizations = api.organization.getAll.useQuery();
+
+  const router = useRouter();
+
+  const createOrganization = api.organization.create.useMutation({
+    onSuccess: (newOrganizationId) => {
+      organizations.refetch();
+      setIsNewOrganizationSheetOpen(false);
+      toast("Organization created");
+      setOrganizationId(newOrganizationId as string);
+      router.refresh();
+    },
+    onError: () => {
+      toast.error("Failed to create an organization");
+    },
+  });
 
   return (
     <NewOrganizationSheet
@@ -103,15 +120,23 @@ export function UserMenu() {
               </DropdownMenuSubTrigger>
               <DropdownMenuPortal>
                 <DropdownMenuSubContent>
-                  {[].map((organization: { id: string; name: string }) => (
-                    <DropdownMenuCheckboxItem
-                      key={organization.id}
-                      checked={organization.id === organizationId}
-                      onCheckedChange={() => setOrganizationId(organization.id)}
-                    >
-                      {organization.name}
+                  {!organizations.data?.length ? (
+                    <DropdownMenuCheckboxItem disabled>
+                      None
                     </DropdownMenuCheckboxItem>
-                  ))}
+                  ) : (
+                    organizations.data?.map((organization) => (
+                      <DropdownMenuCheckboxItem
+                        key={organization.id}
+                        checked={organization.id === organizationId}
+                        onCheckedChange={() =>
+                          setOrganizationId(organization.id)
+                        }
+                      >
+                        {organization.name}
+                      </DropdownMenuCheckboxItem>
+                    ))
+                  )}
                 </DropdownMenuSubContent>
               </DropdownMenuPortal>
             </DropdownMenuSub>
@@ -136,21 +161,7 @@ export function UserMenu() {
         <SheetHeader className="mb-2">
           <SheetTitle>New organization</SheetTitle>
         </SheetHeader>
-        {session && (
-          <OrganizationForm
-            onSave={async (values) => {
-              try {
-                await db.insert(organizations).values({
-                  id: generateId(),
-                  name: values.name,
-                  createdById: session.user.id,
-                });
-              } catch (error) {
-                console.error("error lol:", error);
-              }
-            }}
-          />
-        )}
+        {session && <OrganizationForm onSubmit={createOrganization.mutate} />}
       </SheetContent>
     </NewOrganizationSheet>
   );

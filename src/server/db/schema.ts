@@ -94,11 +94,15 @@ export const rolesRelations = relations(roles, ({ many }) => ({
 export const userRoles = createTable(
   "userRole",
   {
-    userId: varchar("userId", { length: 255 }).references(() => users.id),
-    roleId: varchar("roleId", { length: 255 }).references(() => roles.id),
-    organizationId: varchar("organizationId", { length: 255 }).references(
-      () => organizations.id,
-    ),
+    userId: varchar("userId", { length: 255 })
+      .references(() => users.id)
+      .notNull(),
+    roleId: varchar("roleId", { length: 255 })
+      .references(() => roles.id)
+      .notNull(),
+    organizationId: varchar("organizationId", { length: 255 })
+      .references(() => organizations.id)
+      .notNull(),
     createdAt: timestamp("createdAt", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),

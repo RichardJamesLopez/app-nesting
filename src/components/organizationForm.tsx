@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -20,9 +19,9 @@ import {
 } from "~/lib/validationSchemas";
 
 export function OrganizationForm({
-  onSave,
+  onSubmit,
 }: {
-  onSave: (values: OrganizationFormType) => Promise<void>;
+  onSubmit: (values: OrganizationFormType) => void;
 }) {
   const form = useForm<OrganizationFormType>({
     resolver: zodResolver(organizationFormSchema),
@@ -30,11 +29,6 @@ export function OrganizationForm({
       name: "",
     },
   });
-
-  async function onSubmit(values: OrganizationFormType) {
-    await onSave(values);
-    toast("Organization created");
-  }
 
   return (
     <Form {...form}>
