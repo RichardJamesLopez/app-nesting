@@ -34,7 +34,7 @@ export function Header() {
 
   if (status !== "authenticated")
     return (
-      <header className="fixed top-0 z-10 flex w-full items-center justify-between border-b bg-white px-4 py-2">
+      <header className="fixed top-0 z-30 flex w-full items-center justify-between border-b bg-white px-4 py-2">
         <div className="mr-4">
           <div className="flex items-center gap-2">
             <Image
@@ -52,7 +52,7 @@ export function Header() {
 
   return (
     <>
-      <header className="fixed top-0 z-10 flex w-full items-center justify-between border-b bg-white px-4 py-2">
+      <header className="fixed top-0 z-30 flex w-full items-center justify-between border-b bg-white px-4 py-2">
         <div className="mr-4">
           <div className="hidden items-center gap-2 md:flex">
             <Image

@@ -35,7 +35,7 @@ export default function RootLayout({
         <ContextProviders>
           <NavigationSheet>
             <Header />
-            <div className="hidden h-screen w-full max-w-56 flex-col gap-4 bg-white p-2 pt-20 md:block">
+            <div className="fixed z-10 hidden h-screen w-56 flex-col gap-4 bg-white p-2 pt-20 md:block">
               <Navigation />
             </div>
             <NavigationSheetContent
@@ -56,7 +56,7 @@ export default function RootLayout({
               <Navigation />
             </NavigationSheetContent>
           </NavigationSheet>
-          <main className="mx-auto mb-12 w-full px-4 pt-20 md:max-w-xl lg:max-w-3xl xl:max-w-5xl">
+          <main className="mx-auto mb-12 w-full pl-4 pr-4 pt-20 md:max-w-3xl md:pl-60 lg:max-w-5xl xl:max-w-7xl">
             {children}
           </main>
         </ContextProviders>
