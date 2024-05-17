@@ -41,8 +41,8 @@ export default function InvitePage({
     .includes(invite.data.organizationId);
 
   if (isInOrganization && status === "authenticated") {
-    router.push("/dashboard");
     setOrganizationId(invite.data.organizationId);
+    router.push("/dashboard");
 
     return null;
   }

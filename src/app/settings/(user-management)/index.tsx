@@ -35,7 +35,7 @@ export function UserManagement() {
   )
     return null;
 
-  if (!organizationId) return "Select organization";
+  if (!organizationId) return null;
 
   return (
     <Card className="mb-4">

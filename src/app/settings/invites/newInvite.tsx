@@ -60,6 +60,8 @@ export function NewInvite({
     return () => subscription.unsubscribe();
   }, [id, form, form.watch, onUpdate]);
 
+  const url = `${window.location.origin}/invite/${id}`;
+
   return (
     <Sheet onOpenChange={(open) => !open && form.reset()}>
       <SheetTrigger asChild>
@@ -81,14 +83,13 @@ export function NewInvite({
         <Button
           size="sm"
           className="mb-6 w-full"
+          disabled={!id}
           onClick={async () => {
-            await navigator.clipboard.writeText(
-              "https://invite.link/laskfsdljfa",
-            );
+            await navigator.clipboard.writeText(url);
             toast("Link copied");
           }}
         >
-          https://invite.link/laskfsdljfa
+          {id ? id : "loading..."}
           <CopyIcon className="ml-3 h-4 w-4 text-white" />
         </Button>
         <Form {...form}>
