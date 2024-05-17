@@ -53,7 +53,6 @@ export function NewInvite({
 
   useEffect(() => {
     const subscription = form.watch((value, { name }) => {
-      console.log("=== useEffect ===", name, value);
       id &&
         name &&
         onUpdate({ id, form: { ...form.getValues(), [name]: value[name] } });
