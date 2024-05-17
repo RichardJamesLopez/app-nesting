@@ -51,7 +51,6 @@ export function UserManagement() {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <UserManagement />
         <Table>
           <TableHeader>
             <TableRow>
