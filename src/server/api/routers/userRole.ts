@@ -4,7 +4,6 @@ import * as z from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { userRoles, invites } from "~/server/db/schema";
 import { RoleIdType } from "~/lib/validationSchemas";
-import { Origami } from "lucide-react";
 
 export const userRoleRouter = createTRPCRouter({
   getAll: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {

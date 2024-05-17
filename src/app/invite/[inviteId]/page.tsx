@@ -2,10 +2,12 @@
 
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useSetAtom } from "jotai";
+import { toast } from "sonner";
 
 import { api } from "~/trpc/react";
 import { Button } from "~/components/ui/button";
+import { organizationIdAtom } from "~/state";
 
 export default function InvitePage({
   params,
@@ -14,52 +16,55 @@ export default function InvitePage({
 }) {
   const { status } = useSession();
   const router = useRouter();
-  const user = api.user.get.useQuery();
+  const invite = api.invite.get.useQuery(params.inviteId);
   const organizations = api.organization.getAll.useQuery();
   const createMember = api.userRole.createMember.useMutation({
     onSuccess: () => {
+      setOrganizationId(invite.data?.organizationId);
       organizations.refetch();
       router.push("/dashboard");
     },
     onError: (error) => {
-      // toast.error("Failed to create a member");
+      toast.error("Failed to join");
       console.error(error);
     },
   });
 
-  const [isDoneOnce, setIsDoneOnce] = useState<boolean>(false);
-  useEffect(() => {
-    const isFreshUser =
-      status === "authenticated" &&
-      Number(new Date()) - Number(user.data?.createdAt) < 10000 &&
-      !user.data?.userRoles.length;
+  const setOrganizationId = useSetAtom(organizationIdAtom);
 
-    if (status === "authenticated" && isFreshUser && !isDoneOnce) {
-      createMember.mutate(params.inviteId);
-      setIsDoneOnce(true);
-    }
-  }, [
-    createMember,
-    params.inviteId,
-    status,
-    setIsDoneOnce,
-    isDoneOnce,
-    user.data?.createdAt,
-    user.data?.userRoles.length,
-  ]);
+  if (status === "loading") return "Loading";
 
-  return status === "unauthenticated" ? (
+  if (!invite.data) return null;
+
+  const isInOrganization = organizations.data
+    ?.map(({ id }) => id)
+    .includes(invite.data.organizationId);
+
+  if (isInOrganization && status === "authenticated") {
+    router.push("/dashboard");
+    setOrganizationId(invite.data.organizationId);
+
+    return null;
+  }
+
+  return (
     <>
-      <h1 className="mb-4 text-3xl font-thin">You are invited</h1>
-      <Button
-        onClick={() =>
-          signIn("google", {
-            callbackUrl: `${window.location.origin}/invite/${params.inviteId}`,
-          })
-        }
-      >
-        Join
-      </Button>
+      <p>{invite.data.inviterName} invited you to join</p>
+      <h1 className="mb-4 text-3xl">{invite.data.organizationName}</h1>
+      {status === "authenticated" && (
+        <Button onClick={() => createMember.mutate(params.inviteId)}>
+          Accept invite
+        </Button>
+      )}
+      {status === "unauthenticated" && (
+        <Button
+          onClick={() =>
+            signIn("google", { callbackUrl: window.location.href })
+          }
+        >
+          Sign in
+        </Button>
+      )}
     </>
-  ) : null;
+  );
 }

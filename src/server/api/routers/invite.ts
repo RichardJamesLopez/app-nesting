@@ -2,7 +2,11 @@ import { eq, and } from "drizzle-orm";
 import * as z from "zod";
 
 import { generateId } from "~/lib/utils";
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 import { invites } from "~/server/db/schema";
 import { inviteFormSchema } from "~/lib/validationSchemas";
 
@@ -18,6 +22,23 @@ export const inviteRouter = createTRPCRouter({
           userRoles: true,
         },
       });
+    } catch (error) {
+      console.error(error);
+    }
+  }),
+  get: publicProcedure.input(z.string()).query(async ({ ctx, input }) => {
+    try {
+      const invite = await ctx.db.query.invites.findFirst({
+        where: eq(invites.id, input),
+        with: { organization: true, createdById: true },
+      });
+      if (!invite) throw new Error("Invite not found.");
+
+      return {
+        organizationId: invite.organizationId,
+        organizationName: invite.organization.name,
+        inviterName: invite.createdById.name,
+      };
     } catch (error) {
       console.error(error);
     }
