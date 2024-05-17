@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import { DealRecordType, DealStatus } from "~/lib/dealRecordType";
+import { DealRecordType } from "~/lib/dealRecordType";
 
 export function Summary({ data }: { data: DealRecordType[] }) {
   const totalCount = data.length;

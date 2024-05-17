@@ -38,7 +38,7 @@ export function Activities({ data }: { data?: DealRecordType[] }) {
             <TableCell>{properties["Status"].status.name}</TableCell>
             <TableCell>
               {format(
-                properties["Last edited time"].last_edited_time,
+                new Date(properties["Last edited time"].last_edited_time),
                 "MM/dd/yyyy, hh:mm aa",
               )}
             </TableCell>
