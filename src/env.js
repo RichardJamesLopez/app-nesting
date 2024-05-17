@@ -26,6 +26,8 @@ export const env = createEnv({
     DISCORD_CLIENT_SECRET: z.string(),
     GOOGLE_CLIENT_ID: z.string(),
     GOOGLE_CLIENT_SECRET: z.string(),
+    NOTION_TOKEN: z.string(),
+    NOTION_DB_ID: z.string(),
   },
 
   /**
@@ -54,6 +56,8 @@ export const env = createEnv({
     NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID:
       process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
     NEXT_PUBLIC_WALLETCONNECT_URL: process.env.NEXT_PUBLIC_WALLETCONNECT_URL,
+    NOTION_TOKEN: process.env.NOTION_TOKEN,
+    NOTION_DB_ID: process.env.NOTION_DB_ID,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

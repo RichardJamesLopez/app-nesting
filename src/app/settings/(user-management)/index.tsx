@@ -94,7 +94,7 @@ export function UserManagement() {
               </TableRow>
             ))}
           </TableBody>
-        </Table>{" "}
+        </Table>
       </CardContent>
     </Card>
   );

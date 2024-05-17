@@ -56,7 +56,7 @@ export default function RootLayout({
               <Navigation />
             </NavigationSheetContent>
           </NavigationSheet>
-          <main className="mx-auto w-full px-4 pt-20 md:max-w-xl lg:max-w-3xl xl:max-w-5xl">
+          <main className="mx-auto mb-12 w-full px-4 pt-20 md:max-w-xl lg:max-w-3xl xl:max-w-5xl">
             {children}
           </main>
         </ContextProviders>
