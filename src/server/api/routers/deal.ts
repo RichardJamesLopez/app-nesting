@@ -6,24 +6,40 @@ import { env } from "~/env";
 export const dealRouter = createTRPCRouter({
   getAll: protectedProcedure.query(async () => {
     try {
-      return (await notion.databases.query({
+      const response = (await notion.databases.query({
         database_id: env.NOTION_DB_ID,
-        sorts: [{ property: sortingProperty, direction: "ascending" }],
-      })) as unknown as DealResponse;
+        sorts: [
+          {
+            property: "Name" as DealResponsePropertyKey,
+            direction: "ascending",
+          },
+        ],
+      })) as unknown as DealResponseType;
+
+      return response.results.map((item) => ({
+        id: item.id,
+        name: item.properties.Name.title[0].text.content,
+        value: item.properties["Deal Value"].number,
+        status: item.properties.Status.status.name,
+        lastEdited: item.properties["Last edited time"].last_edited_time,
+        visibility: item.properties.Visibility.select.name,
+      })) as DealType[];
     } catch (error) {
       console.error(error);
     }
   }),
 });
 
-export type DealPropertyKey =
+type DealStatus = "Lead" | "In development" | "Reviewing" | "Testing" | "Done";
+export type DealVisibility = "Show" | "Custom Visibility" | "Hidden";
+type DealResponsePropertyKey =
   | "Name"
   | "Deal Value"
   | "Status"
   | "Last edited time"
   | "Visibility";
 
-type DealPropertiesType = {
+type DealResponsePropertiesType = {
   Name: {
     [key: string]: any;
     title: {
@@ -34,12 +50,10 @@ type DealPropertiesType = {
       };
     }[];
   };
-
   "Deal Value": {
     [key: string]: any;
     number: number;
   };
-
   Status: {
     [key: string]: any;
     status: {
@@ -47,12 +61,10 @@ type DealPropertiesType = {
       name: DealStatus;
     };
   };
-
   "Last edited time": {
     [key: string]: any;
     last_edited_time: string;
   };
-
   Visibility: {
     [key: string]: any;
     select: {
@@ -62,28 +74,24 @@ type DealPropertiesType = {
   };
 };
 
-export type DealStatus =
-  | "Lead"
-  | "Testing"
-  | "Done"
-  | "Reviewing"
-  | "In development";
-
-export type DealVisibility = "Show" | "Custom Visibility" | "Hidden";
+type DealResponseType = Omit<QueryDatabaseResponse, "results"> & {
+  results: {
+    [key: string]: any;
+    id: string;
+    created_time: string;
+    properties: {
+      [key: string]: any;
+    } & {
+      [key in DealResponsePropertyKey]: DealResponsePropertiesType[DealResponsePropertyKey];
+    };
+  }[];
+};
 
 export type DealType = {
-  [key: string]: any;
   id: string;
-  created_time: string;
-  properties: {
-    [key: string]: any;
-  } & {
-    [key in DealPropertyKey]: DealPropertiesType[DealPropertyKey];
-  };
+  name: string;
+  value: number;
+  status: DealStatus;
+  lastEdited: string;
+  visibility: DealVisibility;
 };
-
-type DealResponse = Omit<QueryDatabaseResponse, "results"> & {
-  results: DealType[];
-};
-
-export const sortingProperty = "Name" as DealPropertyKey;

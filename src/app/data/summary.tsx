@@ -7,32 +7,26 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import { DealType } from "~/server/api/routers/deal";
+import { type DealType } from "~/server/api/routers/deal";
 
 export function Summary({ data }: { data?: DealType[] }) {
   if (!data) return null;
 
   const totalCount = data.length;
-  const totalDealValue = data.reduce((acc, deal) => {
-    const dealValue = deal.properties["Deal Value"].number;
-    return acc + dealValue;
-  }, 0);
+  const totalDealValue = data.reduce((acc, { value }) => acc + value, 0);
 
   const statusGroupedDeals = data.reduce<{
     [status: string]: {
       count: number;
       totalDealValue: number;
     };
-  }>((acc, deal) => {
-    const status = deal.properties.Status.status.name;
-    const dealValue = deal.properties["Deal Value"].number;
-
+  }>((acc, { status, value }) => {
     if (!acc[status]) {
       acc[status] = { count: 0, totalDealValue: 0 };
     }
 
     acc[status]!.count += 1;
-    acc[status]!.totalDealValue += dealValue;
+    acc[status]!.totalDealValue += value;
 
     return acc;
   }, {});
@@ -50,16 +44,13 @@ export function Summary({ data }: { data?: DealType[] }) {
       count: number;
       totalDealValue: number;
     };
-  }>((acc, deal) => {
-    const visibility = deal.properties.Visibility.select.name;
-    const dealValue = deal.properties["Deal Value"].number;
-
+  }>((acc, { visibility, value }) => {
     if (!acc[visibility]) {
       acc[visibility] = { count: 0, totalDealValue: 0 };
     }
 
     acc[visibility]!.count += 1;
-    acc[visibility]!.totalDealValue += dealValue;
+    acc[visibility]!.totalDealValue += value;
 
     return acc;
   }, {});

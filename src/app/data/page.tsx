@@ -7,11 +7,12 @@ import {
 } from "~/components/ui/card";
 import { api } from "~/trpc/server";
 
-import { Activities } from "./activities";
+import { Activities, columns } from "./(activities)";
 import { Summary } from "./summary";
 
 export default async function DataPage() {
   const deals = await api.deal.getAll();
+  if (!deals) return null;
 
   return (
     <>
@@ -24,10 +25,12 @@ export default async function DataPage() {
           <CardDescription>
             The following activities are selected deals that are visible to the
             community.
+            <br />
+            Click on the column headers to sort the data.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Activities data={deals?.results} />
+          <Activities data={deals} columns={columns} />
         </CardContent>
       </Card>
 
@@ -40,7 +43,7 @@ export default async function DataPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Summary data={deals?.results} />
+          <Summary data={deals} />
         </CardContent>
       </Card>
     </>
