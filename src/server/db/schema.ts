@@ -77,7 +77,7 @@ export const organizations = createTable(
     nameIndex: index("organization_name_idx").on(t.name),
   }),
 );
-export type Organization = InferSelectModel<typeof organizations>;
+export type OrganizationType = InferSelectModel<typeof organizations>;
 
 export const organizationsRelations = relations(organizations, ({ many }) => ({
   userRoles: many(userRoles),
@@ -160,7 +160,7 @@ export const invites = createTable(
     organizationIdIdx: index("invite_organizationId_idx").on(t.organizationId),
   }),
 );
-export type Invite = InferSelectModel<typeof invites>;
+export type InviteType = InferSelectModel<typeof invites>;
 
 export const invitesRelations = relations(invites, ({ one, many }) => ({
   createdById: one(users, {

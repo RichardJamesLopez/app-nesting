@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Table,
   TableBody,
@@ -9,9 +7,11 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import { DealRecordType } from "~/lib/dealRecordType";
+import { DealType } from "~/server/api/routers/deal";
 
-export function Summary({ data }: { data: DealRecordType[] }) {
+export function Summary({ data }: { data?: DealType[] }) {
+  if (!data) return null;
+
   const totalCount = data.length;
   const totalDealValue = data.reduce((acc, deal) => {
     const dealValue = deal.properties["Deal Value"].number;

@@ -6,7 +6,6 @@ import {
   CardDescription,
 } from "~/components/ui/card";
 import { api } from "~/trpc/server";
-import { DealRecordType } from "~/lib/dealRecordType";
 
 import { Activities } from "./activities";
 import { Summary } from "./summary";
@@ -28,7 +27,7 @@ export default async function DataPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Activities data={deals?.results as unknown as DealRecordType[]} />
+          <Activities data={deals?.results} />
         </CardContent>
       </Card>
 
@@ -41,7 +40,7 @@ export default async function DataPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Summary data={deals?.results as unknown as DealRecordType[]} />
+          <Summary data={deals?.results} />
         </CardContent>
       </Card>
     </>

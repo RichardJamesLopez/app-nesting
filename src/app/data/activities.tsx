@@ -8,9 +8,9 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { DealRecordType } from "~/lib/dealRecordType";
+import { DealType } from "~/server/api/routers/deal";
 
-export function Activities({ data }: { data?: DealRecordType[] }) {
+export function Activities({ data }: { data?: DealType[] }) {
   return (
     <Table>
       <TableHeader>
