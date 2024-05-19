@@ -57,7 +57,7 @@ type DealPropertiesType = {
     [key: string]: any;
     select: {
       [key: string]: any;
-      name: "Show" | "Custom Visibility";
+      name: DealVisibility;
     };
   };
 };
@@ -68,6 +68,8 @@ export type DealStatus =
   | "Done"
   | "Reviewing"
   | "In development";
+
+export type DealVisibility = "Show" | "Custom Visibility" | "Hidden";
 
 export type DealType = {
   [key: string]: any;
