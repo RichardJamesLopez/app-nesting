@@ -5,7 +5,7 @@ export const organizationFormSchema = z.object({
 });
 export type OrganizationFormType = z.infer<typeof organizationFormSchema>;
 
-export type RoleIdTypeType = "admin" | "member";
+export type RoleIdType = "admin" | "member";
 
 export const inviteFormSchema = z.object({
   userLimit: z.string(),
