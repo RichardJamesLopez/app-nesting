@@ -8,6 +8,7 @@ import {
   text,
   timestamp,
   varchar,
+  boolean,
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
@@ -71,6 +72,7 @@ export const organizations = createTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt", { withTimezone: true }),
+    includeHiddenDeals: boolean("includeHiddenDeals"),
   },
   (t) => ({
     createdByIdIdx: index("organization_createdById_idx").on(t.createdById),

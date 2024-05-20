@@ -13,3 +13,8 @@ export const inviteFormSchema = z.object({
   organizationId: z.string(),
 });
 export type InviteFormType = z.infer<typeof inviteFormSchema>;
+
+export const visibilityFormSchema = z.object({
+  includeHiddenDeals: z.boolean().nullish(),
+});
+export type VisibilityFormType = z.infer<typeof visibilityFormSchema>;

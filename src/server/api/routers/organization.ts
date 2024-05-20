@@ -1,4 +1,5 @@
 import { eq, and, isNull } from "drizzle-orm";
+import * as z from "zod";
 
 import { generateId } from "~/lib/utils";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
@@ -6,6 +7,7 @@ import { organizations, userRoles } from "~/server/db/schema";
 import {
   organizationFormSchema,
   type RoleIdType,
+  visibilityFormSchema,
 } from "~/lib/validationSchemas";
 
 export const organizationRouter = createTRPCRouter({
@@ -37,6 +39,15 @@ export const organizationRouter = createTRPCRouter({
       console.error(error);
     }
   }),
+  get: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
+    try {
+      return await ctx.db.query.organizations.findFirst({
+        where: eq(organizations.id, input),
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }),
   create: protectedProcedure
     .input(organizationFormSchema)
     .mutation(async ({ ctx, input }) => {
@@ -59,6 +70,20 @@ export const organizationRouter = createTRPCRouter({
         });
 
         return organization.id;
+      } catch (error) {
+        console.error(error);
+
+        return [];
+      }
+    }),
+  setVisibility: protectedProcedure
+    .input(z.object({ id: z.string(), form: visibilityFormSchema }))
+    .mutation(async ({ ctx, input }) => {
+      try {
+        await ctx.db
+          .update(organizations)
+          .set({ includeHiddenDeals: input.form.includeHiddenDeals })
+          .where(eq(organizations.id, input.id));
       } catch (error) {
         console.error(error);
 

@@ -94,9 +94,8 @@ export function Header() {
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandGroup heading="Suggestions">
-            <CommandItem>Calendar</CommandItem>
-            <CommandItem>Search Emoji</CommandItem>
-            <CommandItem>Calculator</CommandItem>
+            <CommandItem>Data</CommandItem>
+            <CommandItem>Settings</CommandItem>
           </CommandGroup>
         </CommandList>
       </CommandDialog>

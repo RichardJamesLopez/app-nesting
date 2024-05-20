@@ -31,7 +31,7 @@ export const dealRouter = createTRPCRouter({
 });
 
 type DealStatus = "Lead" | "In development" | "Reviewing" | "Testing" | "Done";
-export type DealVisibility = "Show" | "Custom Visibility" | "Hidden";
+export type DealVisibility = "Show" | "Custom Visibility" | "Hide";
 type DealResponsePropertyKey =
   | "Name"
   | "Deal Value"

@@ -1,3 +1,7 @@
+"use client";
+
+import { useAtomValue } from "jotai";
+
 import {
   Card,
   CardContent,
@@ -5,14 +9,22 @@ import {
   CardTitle,
   CardDescription,
 } from "~/components/ui/card";
-import { api } from "~/trpc/server";
+import { api } from "~/trpc/react";
+import { organizationIdAtom } from "~/state";
 
 import { Activities, columns } from "./(activities)";
 import { Summary } from "./summary";
 
-export default async function DataPage() {
-  const deals = await api.deal.getAll();
-  if (!deals) return null;
+export default function DataPage() {
+  const organizationId = useAtomValue(organizationIdAtom);
+  const deals = api.deal.getAll.useQuery();
+  const organization = api.organization.get.useQuery(organizationId ?? "");
+
+  if (!deals.data || !organization.data) return null;
+
+  const dataWithoutHiddenDeals = deals.data.filter(
+    ({ visibility }) => visibility !== "Hide",
+  );
 
   return (
     <>
@@ -30,7 +42,7 @@ export default async function DataPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Activities data={deals} columns={columns} />
+          <Activities data={dataWithoutHiddenDeals} columns={columns} />
         </CardContent>
       </Card>
 
@@ -43,7 +55,13 @@ export default async function DataPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Summary data={deals} />
+          <Summary
+            data={
+              organization.data.includeHiddenDeals
+                ? deals.data
+                : dataWithoutHiddenDeals
+            }
+          />
         </CardContent>
       </Card>
     </>
