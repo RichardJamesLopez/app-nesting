@@ -5,5 +5,5 @@ export default async function HomePage() {
   const session = await getServerAuthSession();
 
   if (!session) redirect("api/auth/signin");
-  else redirect("dashboard");
+  else redirect("data");
 }
