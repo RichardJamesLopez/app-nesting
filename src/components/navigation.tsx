@@ -2,25 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  HomeIcon,
-  PaperclipIcon,
-  AreaChartIcon,
-  SettingsIcon,
-  CircleHelpIcon,
-  type LucideIcon,
-} from "lucide-react";
+import { PaperclipIcon, SettingsIcon, type LucideIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 
 import { cn } from "~/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 
 const links: { icon: LucideIcon; title: string; href: string }[] = [
-  { title: "Dashboard", href: "/dashboard", icon: HomeIcon },
   { title: "Data", href: "/data", icon: PaperclipIcon },
-  { title: "Analytics", href: "/activities", icon: AreaChartIcon },
   { title: "Settings", href: "/settings", icon: SettingsIcon },
-  { title: "Help", href: "/help", icon: CircleHelpIcon },
 ];
 
 export function Navigation() {
