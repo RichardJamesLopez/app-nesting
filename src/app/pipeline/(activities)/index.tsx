@@ -18,7 +18,6 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { type DealType } from "~/server/api/routers/deal";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

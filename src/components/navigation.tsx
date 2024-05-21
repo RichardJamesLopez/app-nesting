@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { PaperclipIcon, SettingsIcon, type LucideIcon } from "lucide-react";
+import { Table2Icon, SettingsIcon, type LucideIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 
 import { cn } from "~/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 
 const links: { icon: LucideIcon; title: string; href: string }[] = [
-  { title: "Pipeline", href: "/pipeline", icon: PaperclipIcon },
+  { title: "Pipeline", href: "/pipeline", icon: Table2Icon },
   { title: "Settings", href: "/settings", icon: SettingsIcon },
 ];
 
