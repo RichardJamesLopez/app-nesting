@@ -63,7 +63,7 @@ export const usersRelations = relations(users, ({ many }) => ({
 export const organizations = createTable(
   "organization",
   {
-    id: varchar("id", { length: 255 }).notNull().primaryKey(),
+    id: varchar("id", { length: 16 }).notNull().primaryKey(),
     name: varchar("name", { length: 255 }),
     createdById: varchar("createdById", { length: 255 })
       .notNull()
