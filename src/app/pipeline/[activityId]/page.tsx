@@ -20,6 +20,8 @@ import {
 import { Label } from "~/components/ui/label";
 import { api } from "~/trpc/server";
 
+import Comments from "./comments";
+
 export default async function ActivityPage({
   params,
 }: {
@@ -29,7 +31,7 @@ export default async function ActivityPage({
   if (!deal) return null;
 
   return (
-    <div className="mx-auto max-w-lg">
+    <div className="mx-auto max-w-2xl">
       <Breadcrumb className="mb-6">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -41,7 +43,7 @@ export default async function ActivityPage({
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <Card className="mb-4">
+      <Card className="mb-6">
         <CardHeader>
           <CardTitle>
             {deal.visibility === "Show" ? deal.name : "---"}
@@ -76,6 +78,7 @@ export default async function ActivityPage({
           </form>
         </CardContent>
       </Card>
+      <Comments />
     </div>
   );
 }
