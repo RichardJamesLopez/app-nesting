@@ -1,3 +1,5 @@
+import * as z from "zod";
+
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { notion, type QueryDatabaseResponse } from "~/notion";
 
@@ -24,6 +26,27 @@ export const dealRouter = createTRPCRouter({
         lastEdited: item.properties["Last edited time"].last_edited_time,
         visibility: item.properties.Visibility.select.name,
       })) as DealType[];
+    } catch (error) {
+      console.error(error);
+    }
+  }),
+  get: protectedProcedure.input(z.string()).query(async ({ input }) => {
+    try {
+      const response = (await notion.pages.retrieve({
+        page_id: input,
+      })) as unknown as {
+        [key: string]: any;
+        properties: DealResponsePropertiesType;
+      };
+
+      return {
+        id: response.id,
+        name: response.properties.Name.title[0]?.text.content,
+        value: response.properties["Deal Value"].number,
+        status: response.properties.Status.status.name,
+        lastEdited: response.properties["Last edited time"].last_edited_time,
+        visibility: response.properties.Visibility.select.name,
+      };
     } catch (error) {
       console.error(error);
     }

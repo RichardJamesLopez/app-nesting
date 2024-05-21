@@ -9,6 +9,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useState } from "react";
+import Link from "next/link";
 
 import {
   Table,
@@ -18,6 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { type DealType } from "~/server/api/routers/deal";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -70,7 +72,9 @@ export function Activities<TData, TValue>({
             >
               {row.getVisibleCells().map((cell) => (
                 <TableCell key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  <Link href={`/data/${(row.original as DealType).id}`}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </Link>
                 </TableCell>
               ))}
             </TableRow>
