@@ -94,7 +94,7 @@ export function Header() {
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandGroup heading="Suggestions">
-            <CommandItem>Data</CommandItem>
+            <CommandItem>Pipeline</CommandItem>
             <CommandItem>Settings</CommandItem>
           </CommandGroup>
         </CommandList>

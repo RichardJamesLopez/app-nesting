@@ -33,7 +33,7 @@ export default async function ActivityPage({
       <Breadcrumb className="mb-6">
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/data">Data</BreadcrumbLink>
+            <BreadcrumbLink href="/pipeline">Pipeline</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>

@@ -9,7 +9,7 @@ import { cn } from "~/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 
 const links: { icon: LucideIcon; title: string; href: string }[] = [
-  { title: "Data", href: "/data", icon: PaperclipIcon },
+  { title: "Pipeline", href: "/pipeline", icon: PaperclipIcon },
   { title: "Settings", href: "/settings", icon: SettingsIcon },
 ];
 

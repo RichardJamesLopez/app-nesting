@@ -22,7 +22,7 @@ export default function InvitePage({
     onSuccess: () => {
       setOrganizationId(invite.data?.organizationId);
       organizations.refetch();
-      router.push("/dashboard");
+      router.push("/pipeline");
     },
     onError: (error) => {
       toast.error("Failed to join");
@@ -42,7 +42,7 @@ export default function InvitePage({
 
   if (isInOrganization && status === "authenticated") {
     setOrganizationId(invite.data.organizationId);
-    router.push("/dashboard");
+    router.push("/pipeline");
 
     return null;
   }

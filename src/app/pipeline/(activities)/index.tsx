@@ -72,7 +72,7 @@ export function Activities<TData, TValue>({
             >
               {row.getVisibleCells().map((cell) => (
                 <TableCell key={cell.id}>
-                  <Link href={`/data/${(row.original as DealType).id}`}>
+                  <Link href={`/pipeline/${(row.original as DealType).id}`}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </Link>
                 </TableCell>

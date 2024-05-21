@@ -15,7 +15,7 @@ import { organizationIdAtom } from "~/state";
 import { Activities, columns } from "./(activities)";
 import { Summary } from "./summary";
 
-export default function DataPage() {
+export default function PipelinePage() {
   const organizationId = useAtomValue(organizationIdAtom);
   const deals = api.deal.getAll.useQuery();
   const organization = api.organization.get.useQuery(organizationId ?? "");
