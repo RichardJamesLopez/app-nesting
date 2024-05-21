@@ -1,6 +1,6 @@
 import * as z from "zod";
 import { Client } from "@notionhq/client";
-export { type QueryDatabaseResponse } from "@notionhq/client/build/src/api-endpoints";
+import { type QueryDatabaseResponse } from "@notionhq/client/build/src/api-endpoints";
 
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
