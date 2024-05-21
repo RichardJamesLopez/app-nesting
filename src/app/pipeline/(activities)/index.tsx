@@ -9,7 +9,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useState } from "react";
-import Link from "next/link";
 
 import {
   Table,
@@ -72,9 +71,7 @@ export function Activities<TData, TValue>({
             >
               {row.getVisibleCells().map((cell) => (
                 <TableCell key={cell.id}>
-                  <Link href={`/pipeline/${(row.original as DealType).id}`}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </Link>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </TableCell>
               ))}
             </TableRow>

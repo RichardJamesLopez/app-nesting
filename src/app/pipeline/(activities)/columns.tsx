@@ -3,6 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { ArrowUpDownIcon } from "lucide-react";
+import Link from "next/link";
 
 import { type DealType, type DealVisibility } from "~/server/api/routers/deal";
 import { Button } from "~/components/ui/button";
@@ -22,10 +23,18 @@ export const columns: ColumnDef<DealType>[] = [
       );
     },
     cell: ({ row }) => {
-      if (row.original.visibility === ("Custom Visibility" as DealVisibility))
-        return "---";
+      const value =
+        row.original.visibility === ("Show" as DealVisibility)
+          ? (row.getValue("name") as string)
+          : "---";
 
-      return row.getValue("name");
+      return (
+        <Link href={`/pipeline/${(row.original as DealType).id}`}>
+          <Button variant="link" size="sm" className="h-min">
+            {value}
+          </Button>
+        </Link>
+      );
     },
   },
   {
