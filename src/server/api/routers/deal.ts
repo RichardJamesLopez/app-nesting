@@ -1,15 +1,26 @@
 import * as z from "zod";
+import { Client } from "@notionhq/client";
+export { type QueryDatabaseResponse } from "@notionhq/client/build/src/api-endpoints";
 
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-import { notion, type QueryDatabaseResponse } from "~/notion";
 
 import { env } from "~/env";
 
 export const dealRouter = createTRPCRouter({
-  getAll: protectedProcedure.query(async () => {
+  getAll: protectedProcedure.query(async ({ ctx }) => {
     try {
+      const notionCredentials: { dbId: string; token: string } =
+        (ctx.session.user.email === env.TEST_EMAIL_1 ||
+          ctx.session.user.email === env.TEST_EMAIL_2) &&
+        env.NOTION_DB_ID_1 &&
+        env.NOTION_TOKEN_1
+          ? { dbId: env.NOTION_DB_ID_1, token: env.NOTION_TOKEN_1 }
+          : { dbId: env.NOTION_DB_ID, token: env.NOTION_TOKEN };
+
+      const notion = new Client({ auth: notionCredentials.token });
+
       const response = (await notion.databases.query({
-        database_id: env.NOTION_DB_ID,
+        database_id: notionCredentials.dbId,
         sorts: [
           {
             property: "Name" as DealResponsePropertyKey,
@@ -30,8 +41,18 @@ export const dealRouter = createTRPCRouter({
       console.error(error);
     }
   }),
-  get: protectedProcedure.input(z.string()).query(async ({ input }) => {
+  get: protectedProcedure.input(z.string()).query(async ({ input, ctx }) => {
     try {
+      const notionCredentials: { dbId: string; token: string } =
+        (ctx.session.user.email === env.TEST_EMAIL_1 ||
+          ctx.session.user.email === env.TEST_EMAIL_2) &&
+        env.NOTION_DB_ID_1 &&
+        env.NOTION_TOKEN_1
+          ? { dbId: env.NOTION_DB_ID_1, token: env.NOTION_TOKEN_1 }
+          : { dbId: env.NOTION_DB_ID, token: env.NOTION_TOKEN };
+
+      const notion = new Client({ auth: notionCredentials.token });
+
       const response = (await notion.pages.retrieve({
         page_id: input,
       })) as unknown as {
