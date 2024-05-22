@@ -28,7 +28,9 @@ export default async function ActivityPage({
   params: { activityId: string };
 }) {
   const deal = await api.deal.get(params.activityId);
-  if (!deal) return null;
+  if (!deal) {
+    return "Deal not found.";
+  }
 
   return (
     <div className="mx-auto max-w-2xl">
