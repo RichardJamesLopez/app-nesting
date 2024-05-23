@@ -27,24 +27,32 @@ export default async function ActivityPage({
 }: {
   params: { activityId: string };
 }) {
+  const breadcrumb = (
+    <Breadcrumb className="mb-6">
+      <BreadcrumbList>
+        <BreadcrumbItem>
+          <BreadcrumbLink href="/pipeline">Pipeline</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbPage>Deal</BreadcrumbPage>
+        </BreadcrumbItem>
+      </BreadcrumbList>
+    </Breadcrumb>
+  );
+
   const deal = await api.deal.get(params.activityId);
   if (!deal) {
-    return "Deal not found.";
+    return (
+      <div className="mx-auto max-w-2xl">
+        {breadcrumb}
+        <p>Deal not found.</p>
+      </div>
+    );
   }
 
   return (
     <div className="mx-auto max-w-2xl">
-      <Breadcrumb className="mb-6">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/pipeline">Pipeline</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Deal</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
       <Card className="mb-6">
         <CardHeader>
           <CardTitle>
