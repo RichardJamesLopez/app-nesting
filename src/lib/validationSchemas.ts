@@ -18,3 +18,10 @@ export const visibilityFormSchema = z.object({
   includeHiddenDeals: z.boolean().nullish(),
 });
 export type VisibilityFormType = z.infer<typeof visibilityFormSchema>;
+
+export const commentFormSchema = z.object({
+  content: z.string().min(1).max(10000),
+  dealId: z.string(),
+  parentId: z.number().optional(),
+});
+export type CommentFormType = z.infer<typeof commentFormSchema>;

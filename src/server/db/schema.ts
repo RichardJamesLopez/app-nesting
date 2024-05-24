@@ -9,6 +9,7 @@ import {
   timestamp,
   varchar,
   boolean,
+  type AnyPgColumn,
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
@@ -20,22 +21,70 @@ import { type AdapterAccount } from "next-auth/adapters";
  */
 export const createTable = pgTableCreator((name) => `appNesting_${name}`);
 
-export const posts = createTable(
-  "post",
+export const comments = createTable(
+  "comment",
   {
     id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }),
+    content: varchar("name", { length: 10000 }),
     createdById: varchar("createdById", { length: 255 })
       .notNull()
       .references(() => users.id),
+    dealId: varchar("dealId", { length: 255 }).notNull(),
+    parentId: integer("parentId").references((): AnyPgColumn => comments.id),
     createdAt: timestamp("createdAt", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt", { withTimezone: true }),
   },
   (t) => ({
-    createdByIdIdx: index("post_createdById_idx").on(t.createdById),
-    nameIndex: index("post_name_idx").on(t.name),
+    createdByIdIdx: index("comment_createdById_idx").on(t.createdById),
+    dealIdIdx: index("comment_dealId_idx").on(t.dealId),
+  }),
+);
+export type CommentType = InferSelectModel<typeof comments>;
+
+export const commentsRelations = relations(comments, ({ one, many }) => ({
+  user: one(users, { fields: [comments.createdById], references: [users.id] }),
+  parent: one(comments, {
+    fields: [comments.parentId],
+    references: [comments.id],
+    relationName: "parentComment",
+  }),
+  replies: many(comments, {
+    relationName: "parentComment",
+  }),
+  reactions: many(commentReactions),
+}));
+
+export const commentReactions = createTable(
+  "commentReaction",
+  {
+    commentId: integer("commentId")
+      .notNull()
+      .references(() => comments.id),
+    userId: varchar("userId", { length: 255 })
+      .notNull()
+      .references(() => users.id),
+    type: boolean("type").notNull(),
+  },
+  (t) => ({
+    compoundKey: primaryKey({ columns: [t.commentId, t.userId] }),
+    commentIdIdx: index("commentReaction_commentId_idx").on(t.commentId),
+    userIdIdx: index("commentReaction_userId_idx").on(t.userId),
+  }),
+);
+
+export const commentReactionsRelations = relations(
+  commentReactions,
+  ({ one }) => ({
+    comment: one(comments, {
+      fields: [commentReactions.commentId],
+      references: [comments.id],
+    }),
+    user: one(users, {
+      fields: [commentReactions.userId],
+      references: [users.id],
+    }),
   }),
 );
 
@@ -58,6 +107,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
   userRoles: many(userRoles),
   invites: many(invites),
+  comments: many(comments),
 }));
 
 export const organizations = createTable(

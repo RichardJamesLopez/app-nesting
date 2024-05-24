@@ -88,7 +88,7 @@ export default async function ActivityPage({
           </form>
         </CardContent>
       </Card>
-      <Comments />
+      <Comments dealId={params.activityId} />
     </div>
   );
 }
