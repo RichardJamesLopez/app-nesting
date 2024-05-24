@@ -17,7 +17,6 @@ export const Comment: React.FC<CommentType & { replies?: CommentType[] }> = ({
   content,
   user,
   createdAt,
-  totalVote,
   dealId,
   replies,
   reactions,
