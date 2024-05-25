@@ -1,56 +1,60 @@
-import { eq, and, isNull, sql } from "drizzle-orm";
+import { eq, and, isNull, sql, getTableColumns } from "drizzle-orm";
 import * as z from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-import { comments, commentReactions } from "~/server/db/schema";
+import { comments, commentReactions, users } from "~/server/db/schema";
 import { commentFormSchema } from "~/lib/validationSchemas";
 
 export const commentRouter = createTRPCRouter({
   getAll: protectedProcedure
     .input(z.object({ parentId: z.number().optional(), dealId: z.string() }))
     .query(async ({ ctx, input }) => {
-      const extras = {
-        // totalVote:
-        //   sql`COALESCE(SUM(CASE WHEN ${commentReactions.type} THEN 1 ELSE -1 END), 0)`.as(
-        //     "totalVote",
-        //   ),
-        // userReaction:
-        //   sql`CASE WHEN ${commentReactions.userId} = ${ctx.session.user.id} THEN ${commentReactions.type} ELSE NULL END`.as(
-        //     "userReaction",
-        //   ),
-      };
+      const totalVotes = ctx.db
+        .select({
+          commentId: commentReactions.commentId,
+          totalVote:
+            sql`COALESCE(SUM(CASE WHEN ${commentReactions.type} THEN 1 ELSE -1 END), 0)`.as(
+              "totalVote",
+            ),
+        })
+        .from(commentReactions)
+        .groupBy(commentReactions.commentId)
+        .as("totalVotes");
 
-      const comments = await ctx.db.query.comments.findMany({
-        where: (comments) =>
+      const userReactions = ctx.db
+        .select({
+          commentId: commentReactions.commentId,
+          userReaction:
+            sql`CASE WHEN ${commentReactions.userId} = ${ctx.session.user.id} THEN ${commentReactions.type} ELSE NULL END`.as(
+              "userReaction",
+            ),
+        })
+        .from(commentReactions)
+        .where(eq(commentReactions.userId, ctx.session.user.id))
+        .as("userReactions");
+
+      const response = await ctx.db
+        .select({
+          ...getTableColumns(comments),
+          totalVote: totalVotes.totalVote,
+          userReaction: userReactions.userReaction,
+          user: getTableColumns(users),
+        })
+        .from(comments)
+        .where(
           and(
             eq(comments.dealId, input.dealId),
             input.parentId
               ? eq(comments.parentId, input.parentId)
               : isNull(comments.parentId),
           ),
-        extras,
-        with: {
-          user: true,
-          reactions: true,
-          replies: {
-            extras,
-            with: {
-              user: true,
-              reactions: true,
-              replies: {
-                extras,
-                with: {
-                  user: true,
-                  reactions: true,
-                  replies: true,
-                },
-              },
-            },
-          },
-        },
-      });
+        )
+        .orderBy(comments.createdAt)
+        .leftJoin(totalVotes, eq(comments.id, totalVotes.commentId))
+        .leftJoin(userReactions, eq(comments.id, userReactions.commentId))
+        .innerJoin(users, eq(comments.createdById, users.id));
 
-      return comments;
+      return response;
     }),
 
   create: protectedProcedure

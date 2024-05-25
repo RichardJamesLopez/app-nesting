@@ -19,7 +19,8 @@ export const Comment: React.FC<CommentType & { replies?: CommentType[] }> = ({
   createdAt,
   dealId,
   replies,
-  reactions,
+  userReaction,
+  totalVote,
 }) => {
   return (
     <div className="mt-2 flex items-start space-x-2">
@@ -46,7 +47,8 @@ export const Comment: React.FC<CommentType & { replies?: CommentType[] }> = ({
         <p className="mt-1 text-sm">{content}</p>
         <CommentActions
           id={id}
-          reactions={reactions}
+          userReaction={userReaction as boolean}
+          totalVote={totalVote as number}
           dealId={dealId}
           avatar={user.image}
           userId={user.id}
