@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpIcon, ArrowDownIcon } from "lucide-react";
+import { ArrowUpIcon, ArrowDownIcon, DotIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -46,11 +46,13 @@ export const CommentActions: React.FC<{
                 type: userReaction === true ? undefined : true,
               })
             }
-            className="h-min w-min p-1"
+            className="h-min w-min flex-1 p-0.5"
           >
-            <ArrowUpIcon className="h-4 w-4 text-gray-500" />
+            <ArrowUpIcon strokeWidth={4} className="h-4 w-4 text-gray-400" />
           </Button>
-          <span className="text-sm">{totalVote ?? 0}</span>
+          <span className="flex-1 text-xs">
+            {totalVote ?? <DotIcon strokeWidth={4} className="h-3 w-3" />}
+          </span>
           <Button
             size="icon"
             variant={userReaction === false ? "default" : "ghost"}
@@ -61,9 +63,9 @@ export const CommentActions: React.FC<{
                 type: userReaction === false ? undefined : false,
               })
             }
-            className="h-min w-min p-1"
+            className="h-min w-min flex-1 p-0.5"
           >
-            <ArrowDownIcon className="h-4 w-4 text-gray-500" />
+            <ArrowDownIcon strokeWidth={4} className="h-4 w-4 text-gray-400" />
           </Button>
         </div>
         <Button
