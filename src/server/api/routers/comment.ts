@@ -1,4 +1,4 @@
-import { eq, and, isNull, sql, getTableColumns } from "drizzle-orm";
+import { eq, and, isNull, sql, getTableColumns, desc } from "drizzle-orm";
 import * as z from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
@@ -49,10 +49,10 @@ export const commentRouter = createTRPCRouter({
               : isNull(comments.parentId),
           ),
         )
-        .orderBy(comments.createdAt)
         .leftJoin(totalVotes, eq(comments.id, totalVotes.commentId))
         .leftJoin(userReactions, eq(comments.id, userReactions.commentId))
-        .innerJoin(users, eq(comments.createdById, users.id));
+        .innerJoin(users, eq(comments.createdById, users.id))
+        .orderBy(desc(sql`COALESCE(${totalVotes.totalVote}, 0)`));
 
       return response;
     }),
