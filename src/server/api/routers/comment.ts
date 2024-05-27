@@ -1,4 +1,12 @@
-import { eq, and, isNull, sql, getTableColumns, desc } from "drizzle-orm";
+import {
+  eq,
+  and,
+  isNull,
+  sql,
+  desc,
+  aliasedTable,
+  getTableColumns,
+} from "drizzle-orm";
 import * as z from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
@@ -9,36 +17,83 @@ export const commentRouter = createTRPCRouter({
   getAll: protectedProcedure
     .input(z.object({ parentId: z.number().optional(), dealId: z.string() }))
     .query(async ({ ctx, input }) => {
-      const totalVotes = ctx.db
+      const totalVote = sql`COALESCE(SUM(CASE WHEN ${commentReactions.type} THEN 1 ELSE -1 END), 0)`;
+      const userReaction = sql`CASE WHEN ${commentReactions.userId} = ${ctx.session.user.id} THEN ${commentReactions.type} ELSE NULL END`;
+
+      const commentTotalVotes = ctx.db
         .select({
           commentId: commentReactions.commentId,
-          totalVote:
-            sql`COALESCE(SUM(CASE WHEN ${commentReactions.type} THEN 1 ELSE -1 END), 0)`.as(
-              "totalVote",
-            ),
+          commentTotalVote: totalVote.as("commentTotalVote"),
         })
         .from(commentReactions)
         .groupBy(commentReactions.commentId)
-        .as("totalVotes");
+        .as("commentTotalVotes");
 
-      const userReactions = ctx.db
+      const replyTotalVotes = ctx.db
         .select({
           commentId: commentReactions.commentId,
-          userReaction:
-            sql`CASE WHEN ${commentReactions.userId} = ${ctx.session.user.id} THEN ${commentReactions.type} ELSE NULL END`.as(
-              "userReaction",
-            ),
+          replyTotalVote: totalVote.as("replyTotalVote"),
+        })
+        .from(commentReactions)
+        .groupBy(commentReactions.commentId)
+        .as("replyTotalVotes");
+
+      const commentUserReactions = ctx.db
+        .select({
+          commentId: commentReactions.commentId,
+          commentUserReaction: userReaction.as("commentUserReaction"),
         })
         .from(commentReactions)
         .where(eq(commentReactions.userId, ctx.session.user.id))
-        .as("userReactions");
+        .as("commentUserReactions");
 
-      const response = await ctx.db
+      const replyUserReactions = ctx.db
         .select({
-          ...getTableColumns(comments),
-          totalVote: totalVotes.totalVote,
-          userReaction: userReactions.userReaction,
-          user: getTableColumns(users),
+          commentId: commentReactions.commentId,
+          replyUserReaction: userReaction.as("replyUserReaction"),
+        })
+        .from(commentReactions)
+        .where(eq(commentReactions.userId, ctx.session.user.id))
+        .as("replyUserReactions");
+
+      const replies = aliasedTable(comments, "replies");
+      const replyUsers = aliasedTable(users, "replyUsers");
+
+      const result = await ctx.db
+        .select({
+          id: comments.id,
+          content: comments.content,
+          parentId: comments.parentId,
+          createdAt: comments.createdAt,
+          dealId: comments.dealId,
+          totalVote: commentTotalVotes.commentTotalVote,
+          userReaction: commentUserReactions.commentUserReaction,
+          user: {
+            id: users.id,
+            name: users.name,
+            image: users.image,
+          },
+          replies: sql`COALESCE(
+                      json_agg(
+                          CASE WHEN ${replies.id} IS NOT NULL THEN
+                              json_build_object(
+                                  'id', ${replies.id},
+                                  'content', ${replies.content},
+                                  'parentId', ${replies.parentId},
+                                  'createdAt', ${replies.createdAt},
+                                  'dealId', ${replies.dealId},
+                                  'totalVote', ${replyTotalVotes.replyTotalVote},
+                                  'userReaction', ${replyUserReactions.replyUserReaction},
+                                  'user', json_build_object(
+                                      'id', ${replyUsers.id},
+                                      'name', ${replyUsers.name},
+                                      'image', ${replyUsers.image}
+                                  )
+                              )
+                          END
+                      ) FILTER (WHERE ${replies.id} IS NOT NULL),
+                      '[]'::json
+                  )`,
         })
         .from(comments)
         .where(
@@ -49,12 +104,65 @@ export const commentRouter = createTRPCRouter({
               : isNull(comments.parentId),
           ),
         )
-        .leftJoin(totalVotes, eq(comments.id, totalVotes.commentId))
-        .leftJoin(userReactions, eq(comments.id, userReactions.commentId))
-        .innerJoin(users, eq(comments.createdById, users.id))
-        .orderBy(desc(sql`COALESCE(${totalVotes.totalVote}, 0)`));
+        .leftJoin(replies, eq(comments.id, replies.parentId))
+        .leftJoin(
+          commentTotalVotes,
+          eq(comments.id, commentTotalVotes.commentId),
+        )
+        .leftJoin(
+          commentUserReactions,
+          eq(comments.id, commentUserReactions.commentId),
+        )
+        .leftJoin(replyTotalVotes, eq(replies.id, replyTotalVotes.commentId))
+        .leftJoin(
+          replyUserReactions,
+          eq(replies.id, replyUserReactions.commentId),
+        )
+        .leftJoin(users, eq(comments.createdById, users.id))
+        .leftJoin(replyUsers, eq(replies.createdById, replyUsers.id))
+        .groupBy(
+          comments.id,
+          comments.content,
+          comments.parentId,
+          replies.id,
+          replies.content,
+          replies.parentId,
+          users.id,
+          replyUsers.id,
+          commentTotalVotes.commentTotalVote,
+          commentUserReactions.commentUserReaction,
+          replyTotalVotes.replyTotalVote,
+          replyUserReactions.replyUserReaction,
+        );
 
-      return response;
+      return result as {
+        id: number;
+        content: string;
+        parentId: number | null;
+        createdAt: Date;
+        dealId: string;
+        totalVote: number | null;
+        userReaction: boolean | null;
+        user: {
+          id: string;
+          name?: string;
+          image?: string;
+        };
+        replies: {
+          id: number;
+          content: string;
+          parentId: number | null;
+          createdAt: Date;
+          dealId: string;
+          totalVote: number | null;
+          userReaction: boolean | null;
+          user: {
+            id: string;
+            name?: string;
+            image?: string;
+          };
+        }[];
+      }[];
     }),
 
   create: protectedProcedure
