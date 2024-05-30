@@ -23,14 +23,14 @@ export function NewComment({
   organizationId,
   self,
   onClose,
-  onSave,
+  onSaveReplySuccess,
 }: {
   dealId: string;
   parentId?: number;
   organizationId: string;
   self: User;
   onClose?: () => void;
-  onSave?: () => void;
+  onSaveReplySuccess?: () => void;
 }) {
   const form = useForm<CommentFormType>({
     resolver: zodResolver(commentFormSchema),
@@ -47,9 +47,11 @@ export function NewComment({
   const createComment = api.comment.create.useMutation({
     onSuccess: () => {
       toast(`${parentId ? "Reply" : "Comment"} posted`);
-      router.refresh();
       form.reset();
-      onSave && onSave();
+
+      if (onSaveReplySuccess)
+        onSaveReplySuccess(); // data from a client component
+      else router.refresh(); // data from a server component
     },
     onError: (error) => {
       toast.error("Failed to post");
@@ -62,7 +64,7 @@ export function NewComment({
   };
 
   return (
-    <div className="flex items-start space-x-2">
+    <div className="flex min-w-48 items-start space-x-2">
       {self.image ? (
         <Image
           alt="User avatar"

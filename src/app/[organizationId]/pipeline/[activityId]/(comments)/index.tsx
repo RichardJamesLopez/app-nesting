@@ -1,8 +1,8 @@
 import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/trpc/server";
 
-import { Comment } from "./(comment)/index";
-import { NewComment } from "./(comment)/newComment";
+import { Comment } from "./comment";
+import { NewComment } from "./newComment";
 
 export default async function Comments({
   dealId,

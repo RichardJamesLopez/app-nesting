@@ -54,6 +54,10 @@ export const commentRouter = createTRPCRouter({
           ? eq(comments.parentId, input.parentId)
           : isNull(comments.parentId),
       );
+      const isLevelTwo = inArray(
+        comments.parentId,
+        ctx.db.select({ id: comments.id }).from(comments).where(isLevelOne),
+      );
 
       const selectedColumns = {
         ...getTableColumns(comments),
@@ -75,20 +79,24 @@ export const commentRouter = createTRPCRouter({
       const levelTwoComments = ctx.db
         .select(selectedColumns)
         .from(comments)
-        .where(
-          inArray(
-            comments.parentId,
-            ctx.db.select({ id: comments.id }).from(comments).where(isLevelOne),
-          ),
-        );
+        .where(isLevelTwo);
 
-      [levelOneComments, levelTwoComments].forEach((level) =>
-        level
+      [levelOneComments, levelTwoComments].forEach((levelNComments) =>
+        levelNComments
           .leftJoin(users, eq(comments.createdById, users.id))
           .leftJoin(totalVotes, eq(comments.id, totalVotes.commentId))
           .leftJoin(userReactions, eq(comments.id, userReactions.commentId))
           .leftJoin(replyCounts, eq(comments.id, replyCounts.commentId)),
       );
+
+      if (input.parentId) {
+        const result = await levelOneComments;
+
+        return result.map((comment: (typeof result)[number]) => ({
+          ...comment,
+          replies: [],
+        }));
+      }
 
       const result = await unionAll(levelOneComments, levelTwoComments);
 
@@ -140,7 +148,7 @@ export const commentRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       try {
-        if (input.type === undefined) {
+        if (input.type === undefined)
           await ctx.db
             .delete(commentReactions)
             .where(
@@ -149,20 +157,18 @@ export const commentRouter = createTRPCRouter({
                 eq(commentReactions.userId, input.userId),
               ),
             );
-          return;
-        }
-
-        await ctx.db
-          .insert(commentReactions)
-          .values({
-            commentId: input.commentId,
-            userId: input.userId,
-            type: input.type,
-          })
-          .onConflictDoUpdate({
-            target: [commentReactions.commentId, commentReactions.userId],
-            set: { type: input.type },
-          });
+        else
+          await ctx.db
+            .insert(commentReactions)
+            .values({
+              commentId: input.commentId,
+              userId: input.userId,
+              type: input.type,
+            })
+            .onConflictDoUpdate({
+              target: [commentReactions.commentId, commentReactions.userId],
+              set: { type: input.type },
+            });
       } catch (error) {
         console.error(error);
       }

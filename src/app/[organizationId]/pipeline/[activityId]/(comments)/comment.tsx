@@ -3,6 +3,8 @@
 import { formatDistanceToNow } from "date-fns";
 import Image from "next/image";
 import { type User } from "next-auth";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import { type CommentType } from "~/server/api/routers/comment";
 import { Skeleton } from "~/components/ui/skeleton";
@@ -10,11 +12,13 @@ import { api } from "~/trpc/react";
 import { Button } from "~/components/ui/button";
 
 import { CommentActions } from "./actions";
+import { NewComment } from "./newComment";
 
-export const Comment: React.FC<{ self: User; comment: CommentType }> = ({
-  comment,
-  self,
-}) => {
+export const Comment: React.FC<{
+  self: User;
+  comment: CommentType;
+  onVoteSuccess?: () => void;
+}> = ({ comment, self, onVoteSuccess }) => {
   const {
     id,
     content,
@@ -26,19 +30,37 @@ export const Comment: React.FC<{ self: User; comment: CommentType }> = ({
     replyCount,
   } = comment;
 
-  const { data: fetchedReplies, refetch } = api.comment.getAll.useQuery(
+  const {
+    data: fetchedReplies,
+    refetch,
+    isFetched: areRepliesFetched,
+  } = api.comment.getAll.useQuery(
     { dealId, organizationId, parentId: id },
     { enabled: false },
   );
 
-  const replies = fetchedReplies?.length ? fetchedReplies : initialReplies;
+  const router = useRouter();
+
+  const replies = areRepliesFetched ? fetchedReplies : initialReplies;
+
+  const replyCountNumber = Number(replyCount);
 
   let renderedReplies = null;
   if (replies?.length)
     renderedReplies = replies
       .sort((a, b) => Number(b.createdAt) - Number(a.createdAt))
-      .map((reply) => <Comment key={reply.id} comment={reply} self={self} />);
-  else if (Number(replyCount))
+      .map((reply) => (
+        <Comment
+          key={reply.id}
+          comment={reply}
+          self={self}
+          onVoteSuccess={() => {
+            refetch();
+            router.refresh();
+          }} // go one level up to be able to cover the item
+        />
+      ));
+  else if (replyCountNumber)
     renderedReplies = (
       <Button
         onClick={() => refetch()}
@@ -46,9 +68,11 @@ export const Comment: React.FC<{ self: User; comment: CommentType }> = ({
         variant="ghost"
         size="sm"
       >
-        More replies ({Number(replyCount)})
+        {replyCountNumber} more repl{replyCountNumber > 1 ? "ies" : "y"}
       </Button>
     );
+
+  const [showCommentForm, setShowCommentForm] = useState<boolean>(false);
 
   return (
     <div className="mt-2 flex items-start space-x-2">
@@ -76,9 +100,27 @@ export const Comment: React.FC<{ self: User; comment: CommentType }> = ({
         <CommentActions
           comment={comment}
           self={self}
-          onNewCommentSave={() => refetch()}
+          onReplyFormOpen={() => setShowCommentForm(true)}
+          onVoteSuccess={() => {
+            if (onVoteSuccess)
+              onVoteSuccess(); // data from a client component
+            else router.refresh(); // data from a server component
+          }}
         />
         <div className="mt-4 border-l-2 border-gray-200 pl-4">
+          {showCommentForm && (
+            <NewComment
+              dealId={dealId}
+              parentId={id}
+              organizationId={organizationId}
+              self={self}
+              onClose={() => setShowCommentForm(false)}
+              onSaveReplySuccess={() => {
+                refetch();
+                setShowCommentForm(false);
+              }}
+            />
+          )}
           {renderedReplies}
         </div>
       </div>
