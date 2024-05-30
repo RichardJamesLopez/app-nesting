@@ -1,18 +1,11 @@
-import {
-  eq,
-  and,
-  isNull,
-  sql,
-  desc,
-  aliasedTable,
-  getTableColumns,
-} from "drizzle-orm";
+import { eq, and, isNull, sql, getTableColumns, inArray } from "drizzle-orm";
+import { unionAll } from "drizzle-orm/pg-core";
 import * as z from "zod";
+import { inferProcedureOutput } from "@trpc/server";
 
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { comments, commentReactions, users } from "~/server/db/schema";
 import { commentFormSchema } from "~/lib/validationSchemas";
-import { type CommentType } from "~/lib/types";
 
 export const commentRouter = createTRPCRouter({
   getAll: protectedProcedure
@@ -27,124 +20,98 @@ export const commentRouter = createTRPCRouter({
       const totalVote = sql`COALESCE(SUM(CASE WHEN ${commentReactions.type} THEN 1 ELSE -1 END), 0)`;
       const userReaction = sql`CASE WHEN ${commentReactions.userId} = ${ctx.session.user.id} THEN ${commentReactions.type} ELSE NULL END`;
 
-      const commentTotalVotes = ctx.db
+      const totalVotes = ctx.db
         .select({
           commentId: commentReactions.commentId,
-          commentTotalVote: totalVote.as("commentTotalVote"),
+          totalVote: totalVote.as("totalVote"),
         })
         .from(commentReactions)
         .groupBy(commentReactions.commentId)
-        .as("commentTotalVotes");
+        .as("totalVotes");
 
-      const replyTotalVotes = ctx.db
+      const userReactions = ctx.db
         .select({
           commentId: commentReactions.commentId,
-          replyTotalVote: totalVote.as("replyTotalVote"),
-        })
-        .from(commentReactions)
-        .groupBy(commentReactions.commentId)
-        .as("replyTotalVotes");
-
-      const commentUserReactions = ctx.db
-        .select({
-          commentId: commentReactions.commentId,
-          commentUserReaction: userReaction.as("commentUserReaction"),
+          userReaction: userReaction.as("userReaction"),
         })
         .from(commentReactions)
         .where(eq(commentReactions.userId, ctx.session.user.id))
-        .as("commentUserReactions");
+        .as("userReactions");
 
-      const replyUserReactions = ctx.db
+      const replyCounts = ctx.db
         .select({
-          commentId: commentReactions.commentId,
-          replyUserReaction: userReaction.as("replyUserReaction"),
-        })
-        .from(commentReactions)
-        .where(eq(commentReactions.userId, ctx.session.user.id))
-        .as("replyUserReactions");
-
-      const replies = aliasedTable(comments, "replies");
-      const replyUsers = aliasedTable(users, "replyUsers");
-
-      const result = await ctx.db
-        .select({
-          id: comments.id,
-          content: comments.content,
-          parentId: comments.parentId,
-          createdAt: comments.createdAt,
-          dealId: comments.dealId,
-          organizationId: comments.organizationId,
-          totalVote: commentTotalVotes.commentTotalVote,
-          userReaction: commentUserReactions.commentUserReaction,
-          user: {
-            id: users.id,
-            name: users.name,
-            image: users.image,
-          },
-          replies: sql`COALESCE(
-                      json_agg(
-                          CASE WHEN ${replies.id} IS NOT NULL THEN
-                              json_build_object(
-                                  'id', ${replies.id},
-                                  'content', ${replies.content},
-                                  'parentId', ${replies.parentId},
-                                  'createdAt', ${replies.createdAt},
-                                  'dealId', ${replies.dealId},
-                                  'totalVote', ${replyTotalVotes.replyTotalVote},
-                                  'userReaction', ${replyUserReactions.replyUserReaction},
-                                  'user', json_build_object(
-                                      'id', ${replyUsers.id},
-                                      'name', ${replyUsers.name},
-                                      'image', ${replyUsers.image}
-                                  )
-                              )
-                          END
-                      ) FILTER (WHERE ${replies.id} IS NOT NULL),
-                      '[]'::json
-                  )`,
+          commentId: comments.parentId,
+          replyCount: sql`COUNT(${comments.id})`.as("replyCount"),
         })
         .from(comments)
+        .groupBy(comments.parentId)
+        .as("replyCount");
+
+      const isLevelOne = and(
+        eq(comments.dealId, input.dealId),
+        eq(comments.organizationId, input.organizationId),
+        input.parentId
+          ? eq(comments.parentId, input.parentId)
+          : isNull(comments.parentId),
+      );
+
+      const selectedColumns = {
+        ...getTableColumns(comments),
+        user: {
+          id: users.id,
+          name: users.name,
+          image: users.image,
+        },
+        totalVote: totalVotes.totalVote,
+        userReaction: userReactions.userReaction,
+        replyCount: replyCounts.replyCount,
+      };
+
+      const levelOneComments = ctx.db
+        .select(selectedColumns)
+        .from(comments)
+        .where(isLevelOne);
+
+      const levelTwoComments = ctx.db
+        .select(selectedColumns)
+        .from(comments)
         .where(
-          and(
-            eq(comments.dealId, input.dealId),
-            eq(comments.organizationId, input.organizationId),
-            input.parentId
-              ? eq(comments.parentId, input.parentId)
-              : isNull(comments.parentId),
+          inArray(
+            comments.parentId,
+            ctx.db.select({ id: comments.id }).from(comments).where(isLevelOne),
           ),
-        )
-        .leftJoin(replies, eq(comments.id, replies.parentId))
-        .leftJoin(
-          commentTotalVotes,
-          eq(comments.id, commentTotalVotes.commentId),
-        )
-        .leftJoin(
-          commentUserReactions,
-          eq(comments.id, commentUserReactions.commentId),
-        )
-        .leftJoin(replyTotalVotes, eq(replies.id, replyTotalVotes.commentId))
-        .leftJoin(
-          replyUserReactions,
-          eq(replies.id, replyUserReactions.commentId),
-        )
-        .leftJoin(users, eq(comments.createdById, users.id))
-        .leftJoin(replyUsers, eq(replies.createdById, replyUsers.id))
-        .groupBy(
-          comments.id,
-          // comments.content,
-          // comments.parentId,
-          // replies.id,
-          // replies.content,
-          // replies.parentId,
-          users.id,
-          // replyUsers.id,
-          commentTotalVotes.commentTotalVote,
-          commentUserReactions.commentUserReaction,
-          // replyTotalVotes.replyTotalVote,
-          // replyUserReactions.replyUserReaction,
         );
 
-      return result as CommentType[];
+      [levelOneComments, levelTwoComments].forEach((level) =>
+        level
+          .leftJoin(users, eq(comments.createdById, users.id))
+          .leftJoin(totalVotes, eq(comments.id, totalVotes.commentId))
+          .leftJoin(userReactions, eq(comments.id, userReactions.commentId))
+          .leftJoin(replyCounts, eq(comments.id, replyCounts.commentId)),
+      );
+
+      const result = await unionAll(levelOneComments, levelTwoComments);
+
+      type Comment = (typeof result)[number] & {
+        replies?: typeof result;
+      };
+      const idToCommentMap = new Map<number, Comment>();
+      const commentTree: Comment[] = [];
+
+      result.forEach((comment) => {
+        idToCommentMap.set(comment.id, { ...comment, replies: [] });
+      });
+
+      result.forEach((comment) => {
+        if (comment.parentId === null) {
+          commentTree.push(idToCommentMap.get(comment.id)!);
+        } else {
+          const parent = idToCommentMap.get(comment.parentId);
+          parent?.replies?.push(idToCommentMap.get(comment.id)!);
+        }
+      });
+
+      return commentTree;
     }),
 
   create: protectedProcedure
@@ -202,4 +169,14 @@ export const commentRouter = createTRPCRouter({
     }),
 });
 
-export type CommentRouter = typeof commentRouter;
+// type CommentTypeWithoutReplies = Omit<
+//   inferProcedureOutput<typeof commentRouter.getAll>[number],
+//   "replies"
+// >;
+// export type CommentType = CommentTypeWithoutReplies & {
+//   replies?: CommentTypeWithoutReplies[];
+// };
+
+export type CommentType = inferProcedureOutput<
+  typeof commentRouter.getAll
+>[number];

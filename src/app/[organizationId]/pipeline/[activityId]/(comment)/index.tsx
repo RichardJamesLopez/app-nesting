@@ -4,32 +4,17 @@ import { formatDistanceToNow } from "date-fns";
 import Image from "next/image";
 import { type User } from "next-auth";
 
-import { type CommentType as ICommentType } from "~/lib/types";
+import { type CommentType } from "~/server/api/routers/comment";
 import { Skeleton } from "~/components/ui/skeleton";
 
 import { CommentActions } from "./actions";
 
-type CommentType = Omit<ICommentType, "replies">;
-
-export const Comment: React.FC<
-  CommentType & {
-    replies?: CommentType[];
-    self: User;
-    children?: React.ReactNode;
-  }
-> = ({
-  id,
-  content,
-  user,
-  createdAt,
-  dealId,
-  organizationId,
-  replies,
-  userReaction,
-  totalVote,
+export const Comment: React.FC<{ self: User; comment: CommentType }> = ({
+  comment,
   self,
-  children,
 }) => {
+  const { content, user, createdAt, replies } = comment;
+
   return (
     <div className="mt-2 flex items-start space-x-2">
       {user.image ? (
@@ -53,19 +38,13 @@ export const Comment: React.FC<
           </div>
         </div>
         <p className="mt-1 text-sm">{content}</p>
-        <CommentActions
-          id={id}
-          userReaction={userReaction as boolean}
-          totalVote={totalVote as number}
-          dealId={dealId}
-          userId={user.id}
-          organizationId={organizationId}
-          self={self}
-        />
+        <CommentActions comment={comment} self={self} />
         <div className="mt-4 border-l-2 border-gray-200 pl-4">
-          {replies?.map((reply) => (
-            <Comment key={reply.id} {...reply} self={self} />
-          ))}
+          {replies
+            ?.sort((a, b) => Number(b.createdAt) - Number(a.createdAt))
+            .map((reply) => (
+              <Comment key={reply.id} comment={reply} self={self} />
+            ))}
         </div>
       </div>
     </div>

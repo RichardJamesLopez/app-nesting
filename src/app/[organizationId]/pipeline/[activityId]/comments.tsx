@@ -26,9 +26,11 @@ export default async function Comments({
         />
       </div>
 
-      {comments.map((comment) => (
-        <Comment key={comment.id} {...comment} self={session.user} />
-      ))}
+      {comments
+        .sort((a, b) => Number(b.createdAt) - Number(a.createdAt))
+        .map((comment) => (
+          <Comment key={comment.id} comment={comment} self={session.user} />
+        ))}
     </div>
   );
 }

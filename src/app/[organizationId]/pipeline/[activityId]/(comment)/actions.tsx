@@ -8,18 +8,16 @@ import { type User } from "next-auth";
 
 import { Button } from "~/components/ui/button";
 import { api } from "~/trpc/react";
+import { type CommentType } from "~/server/api/routers/comment";
 
 import { NewComment } from "./newComment";
 
-export const CommentActions: React.FC<{
-  id: number;
-  dealId: string;
-  userId: string;
-  organizationId: string;
-  totalVote: number;
-  userReaction: boolean;
-  self: User;
-}> = ({ id, dealId, organizationId, totalVote, userReaction, self }) => {
+export const CommentActions: React.FC<{ self: User; comment: CommentType }> = ({
+  comment,
+  self,
+}) => {
+  const { id, dealId, organizationId, totalVote, userReaction } = comment;
+
   const [showCommentForm, setShowCommentForm] = useState<boolean>(false);
 
   const router = useRouter();
@@ -53,7 +51,9 @@ export const CommentActions: React.FC<{
             <ArrowUpIcon strokeWidth={4} className="h-4 w-4 text-gray-400" />
           </Button>
           <span className="flex-1 text-xs">
-            {totalVote ?? <DotIcon strokeWidth={4} className="h-3 w-3" />}
+            {(totalVote as number) ?? (
+              <DotIcon strokeWidth={4} className="h-3 w-3" />
+            )}
           </span>
           <Button
             size="icon"
