@@ -3,7 +3,6 @@
 import { toast } from "sonner";
 
 import { api } from "~/trpc/react";
-import { RoleIdType } from "~/lib/validationSchemas";
 
 import { UserManagement } from "./(user-management)";
 import { Visibility } from "./visibility";
@@ -22,20 +21,15 @@ export default function SettingsPage({
     onError: () => toast.error("Failed to update settings"),
   });
 
-  const user = api.user.get.useQuery();
-
-  const isUserAdmin = user.data?.memberships
-    .find((membership) => membership.organizationId === organizationId)
-    ?.membershipRoles.map(({ roleId }) => roleId)
-    .includes("admin" as RoleIdType);
+  const { data: isAdmin } = api.user.getIsAdmin.useQuery();
 
   return (
     <>
       <h1 className="mb-6 text-3xl font-semibold tracking-tight first:mt-0">
         Settings
       </h1>
-      <UserManagement organizationId={organizationId} />
-      {isUserAdmin && organization.data ? (
+      {isAdmin ? <UserManagement organizationId={organizationId} /> : null}
+      {isAdmin && organization.data ? (
         <Visibility
           defaultValues={{
             includeHiddenDeals: organization.data.includeHiddenDeals,

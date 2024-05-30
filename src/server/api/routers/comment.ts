@@ -50,13 +50,17 @@ export const commentRouter = createTRPCRouter({
       const isLevelOne = and(
         eq(comments.dealId, input.dealId),
         eq(comments.organizationId, input.organizationId),
+        isNull(comments.deletedAt),
         input.parentId
           ? eq(comments.parentId, input.parentId)
           : isNull(comments.parentId),
       );
-      const isLevelTwo = inArray(
-        comments.parentId,
-        ctx.db.select({ id: comments.id }).from(comments).where(isLevelOne),
+      const isLevelTwo = and(
+        inArray(
+          comments.parentId,
+          ctx.db.select({ id: comments.id }).from(comments).where(isLevelOne),
+        ),
+        isNull(comments.deletedAt),
       );
 
       const selectedColumns = {
@@ -173,15 +177,20 @@ export const commentRouter = createTRPCRouter({
         console.error(error);
       }
     }),
-});
 
-// type CommentTypeWithoutReplies = Omit<
-//   inferProcedureOutput<typeof commentRouter.getAll>[number],
-//   "replies"
-// >;
-// export type CommentType = CommentTypeWithoutReplies & {
-//   replies?: CommentTypeWithoutReplies[];
-// };
+  delete: protectedProcedure
+    .input(z.number())
+    .mutation(async ({ ctx, input }) => {
+      try {
+        await ctx.db
+          .update(comments)
+          .set({ deletedAt: sql`CURRENT_TIMESTAMP` })
+          .where(eq(comments.id, input));
+      } catch (error) {
+        console.error(error);
+      }
+    }),
+});
 
 export type CommentType = inferProcedureOutput<
   typeof commentRouter.getAll

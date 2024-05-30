@@ -19,17 +19,9 @@ import { api } from "~/trpc/react";
 import { Button } from "~/components/ui/button";
 
 import { MemberActions } from "./memberActions";
-import { RoleIdType } from "~/lib/validationSchemas";
 
 export function UserManagement({ organizationId }: { organizationId: string }) {
   const memberships = api.membership.getAll.useQuery(organizationId ?? "");
-
-  const user = api.user.get.useQuery();
-  const isUserAdmin = user.data?.memberships
-    .find((membership) => membership.organizationId === organizationId)
-    ?.membershipRoles.map(({ roleId }) => roleId)
-    .includes("admin" as RoleIdType);
-  if (!isUserAdmin) return null;
 
   return (
     <Card className="mb-4">

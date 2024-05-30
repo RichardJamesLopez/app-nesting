@@ -17,8 +17,8 @@ import { NewComment } from "./newComment";
 export const Comment: React.FC<{
   self: User;
   comment: CommentType;
-  onVoteSuccess?: () => void;
-}> = ({ comment, self, onVoteSuccess }) => {
+  onChange?: () => void;
+}> = ({ comment, self, onChange }) => {
   const {
     id,
     content,
@@ -54,7 +54,7 @@ export const Comment: React.FC<{
           key={reply.id}
           comment={reply}
           self={self}
-          onVoteSuccess={() => {
+          onChange={() => {
             refetch();
             router.refresh();
           }} // go one level up to be able to cover the item
@@ -101,9 +101,9 @@ export const Comment: React.FC<{
           comment={comment}
           self={self}
           onReplyFormOpen={() => setShowCommentForm(true)}
-          onVoteSuccess={() => {
-            if (onVoteSuccess)
-              onVoteSuccess(); // data from a client component
+          onChange={() => {
+            if (onChange)
+              onChange(); // data from a client component
             else router.refresh(); // data from a server component
           }}
         />

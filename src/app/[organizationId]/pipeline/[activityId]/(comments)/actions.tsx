@@ -1,30 +1,65 @@
 "use client";
 
-import { ArrowUpIcon, ArrowDownIcon, DotIcon } from "lucide-react";
+import {
+  ArrowUpIcon,
+  ArrowDownIcon,
+  DotIcon,
+  MoreHorizontalIcon,
+} from "lucide-react";
 import { toast } from "sonner";
 import { type User } from "next-auth";
 
 import { Button } from "~/components/ui/button";
 import { api } from "~/trpc/react";
 import { type CommentType } from "~/server/api/routers/comment";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "~/components/ui/alert-dialog";
 
 export const CommentActions: React.FC<{
   self: User;
   comment: CommentType;
   onReplyFormOpen: () => void;
-  onVoteSuccess: () => void;
-}> = ({ comment, self, onReplyFormOpen, onVoteSuccess }) => {
+  onChange: () => void;
+}> = ({ comment, self, onReplyFormOpen, onChange }) => {
   const { id, totalVote, userReaction } = comment;
 
   const addReaction = api.comment.vote.useMutation({
     onSuccess: () => {
-      onVoteSuccess();
+      onChange();
     },
     onError: (error) => {
       toast.error("Error");
       console.error(error);
     },
   });
+
+  const deleteComment = api.comment.delete.useMutation({
+    onSuccess: () => {
+      onChange();
+      toast("Comment deleted");
+    },
+    onError: (error) => {
+      toast.error("Error");
+      console.error(error);
+    },
+  });
+  const { data: isAdmin } = api.user.getIsAdmin.useQuery();
+  const isDeletable = isAdmin || comment.createdById === self.id;
 
   return (
     <>
@@ -72,6 +107,37 @@ export const CommentActions: React.FC<{
         >
           Reply
         </Button>
+
+        {isDeletable && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-min p-1">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontalIcon className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                    Delete
+                  </DropdownMenuItem>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete the comment?</AlertDialogTitle>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => deleteComment.mutate(id)}>
+                      Delete
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
     </>
   );
