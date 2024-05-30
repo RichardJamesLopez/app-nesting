@@ -22,6 +22,7 @@ export type VisibilityFormType = z.infer<typeof visibilityFormSchema>;
 export const commentFormSchema = z.object({
   content: z.string().min(1).max(10000),
   dealId: z.string(),
+  organizationId: z.string(),
   parentId: z.number().optional(),
 });
 export type CommentFormType = z.infer<typeof commentFormSchema>;

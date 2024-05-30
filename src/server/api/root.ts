@@ -1,5 +1,5 @@
 import { organizationRouter } from "~/server/api/routers/organization";
-import { userRoleRouter } from "~/server/api/routers/userRole";
+import { membershipRouter } from "~/server/api/routers/membership";
 import { inviteRouter } from "~/server/api/routers/invite";
 import { userRouter } from "~/server/api/routers/user";
 import { dealRouter } from "~/server/api/routers/deal";
@@ -13,7 +13,7 @@ import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
  */
 export const appRouter = createTRPCRouter({
   organization: organizationRouter,
-  userRole: userRoleRouter,
+  membership: membershipRouter,
   invite: inviteRouter,
   user: userRouter,
   deal: dealRouter,

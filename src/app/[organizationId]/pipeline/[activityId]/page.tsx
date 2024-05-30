@@ -25,13 +25,15 @@ import Comments from "./comments";
 export default async function ActivityPage({
   params,
 }: {
-  params: { activityId: string };
+  params: { activityId: string; organizationId: string };
 }) {
   const breadcrumb = (
     <Breadcrumb className="mb-6">
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href="/pipeline">Pipeline</BreadcrumbLink>
+          <BreadcrumbLink href={`/${params.organizationId}/pipeline`}>
+            Pipeline
+          </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
@@ -89,7 +91,10 @@ export default async function ActivityPage({
           </form>
         </CardContent>
       </Card>
-      <Comments dealId={params.activityId} />
+      <Comments
+        dealId={params.activityId}
+        organizationId={params.organizationId}
+      />
     </div>
   );
 }

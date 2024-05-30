@@ -12,10 +12,17 @@ import * as z from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { comments, commentReactions, users } from "~/server/db/schema";
 import { commentFormSchema } from "~/lib/validationSchemas";
+import { type CommentType } from "~/lib/types";
 
 export const commentRouter = createTRPCRouter({
   getAll: protectedProcedure
-    .input(z.object({ parentId: z.number().optional(), dealId: z.string() }))
+    .input(
+      z.object({
+        parentId: z.number().optional(),
+        dealId: z.string(),
+        organizationId: z.string(),
+      }),
+    )
     .query(async ({ ctx, input }) => {
       const totalVote = sql`COALESCE(SUM(CASE WHEN ${commentReactions.type} THEN 1 ELSE -1 END), 0)`;
       const userReaction = sql`CASE WHEN ${commentReactions.userId} = ${ctx.session.user.id} THEN ${commentReactions.type} ELSE NULL END`;
@@ -66,6 +73,7 @@ export const commentRouter = createTRPCRouter({
           parentId: comments.parentId,
           createdAt: comments.createdAt,
           dealId: comments.dealId,
+          organizationId: comments.organizationId,
           totalVote: commentTotalVotes.commentTotalVote,
           userReaction: commentUserReactions.commentUserReaction,
           user: {
@@ -99,6 +107,7 @@ export const commentRouter = createTRPCRouter({
         .where(
           and(
             eq(comments.dealId, input.dealId),
+            eq(comments.organizationId, input.organizationId),
             input.parentId
               ? eq(comments.parentId, input.parentId)
               : isNull(comments.parentId),
@@ -122,47 +131,20 @@ export const commentRouter = createTRPCRouter({
         .leftJoin(replyUsers, eq(replies.createdById, replyUsers.id))
         .groupBy(
           comments.id,
-          comments.content,
-          comments.parentId,
-          replies.id,
-          replies.content,
-          replies.parentId,
+          // comments.content,
+          // comments.parentId,
+          // replies.id,
+          // replies.content,
+          // replies.parentId,
           users.id,
-          replyUsers.id,
+          // replyUsers.id,
           commentTotalVotes.commentTotalVote,
           commentUserReactions.commentUserReaction,
-          replyTotalVotes.replyTotalVote,
-          replyUserReactions.replyUserReaction,
+          // replyTotalVotes.replyTotalVote,
+          // replyUserReactions.replyUserReaction,
         );
 
-      return result as {
-        id: number;
-        content: string;
-        parentId: number | null;
-        createdAt: Date;
-        dealId: string;
-        totalVote: number | null;
-        userReaction: boolean | null;
-        user: {
-          id: string;
-          name?: string;
-          image?: string;
-        };
-        replies: {
-          id: number;
-          content: string;
-          parentId: number | null;
-          createdAt: Date;
-          dealId: string;
-          totalVote: number | null;
-          userReaction: boolean | null;
-          user: {
-            id: string;
-            name?: string;
-            image?: string;
-          };
-        }[];
-      }[];
+      return result as CommentType[];
     }),
 
   create: protectedProcedure
@@ -173,12 +155,14 @@ export const commentRouter = createTRPCRouter({
           content: input.content,
           dealId: input.dealId,
           parentId: input.parentId,
+          organizationId: input.organizationId,
           createdById: ctx.session.user.id,
         });
       } catch (error) {
         console.error(error);
       }
     }),
+
   vote: protectedProcedure
     .input(
       z.object({

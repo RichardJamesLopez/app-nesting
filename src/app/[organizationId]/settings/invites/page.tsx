@@ -1,6 +1,5 @@
 "use client";
 
-import { useAtomValue } from "jotai";
 import { toast } from "sonner";
 import { useState } from "react";
 
@@ -21,15 +20,17 @@ import {
 } from "~/components/ui/breadcrumb";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { api } from "~/trpc/react";
-import { organizationIdAtom } from "~/state";
 
 import { Invite } from "./invite";
 import { NewInvite } from "./newInvite";
 
-export default function Invites() {
+export default function Invites({
+  params: { organizationId },
+}: {
+  params: { organizationId: string };
+}) {
   const [newInviteId, setNewInviteId] = useState<string>();
 
-  const organizationId = useAtomValue(organizationIdAtom);
   const invites = api.invite.getAll.useQuery(organizationId ?? "");
   const createInvite = api.invite.create.useMutation({
     onSuccess: (id) => {
@@ -71,7 +72,9 @@ export default function Invites() {
       <Breadcrumb className="mb-6">
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/settings">Settings</BreadcrumbLink>
+            <BreadcrumbLink href={`/${organizationId}/settings`}>
+              Settings
+            </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
@@ -106,7 +109,7 @@ export default function Invites() {
                 <Invite
                   key={invite.id}
                   invite={invite}
-                  timesUsed={invite.userRoles.length}
+                  timesUsed={invite.memberships.length}
                   onDelete={deleteInvite.mutate}
                 />
               ))}

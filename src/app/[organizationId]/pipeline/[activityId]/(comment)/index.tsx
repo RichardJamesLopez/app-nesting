@@ -1,26 +1,34 @@
+"use client";
+
 import { formatDistanceToNow } from "date-fns";
 import Image from "next/image";
-import { inferRouterOutputs } from "@trpc/server";
+import { type User } from "next-auth";
 
-import { type CommentRouter } from "~/server/api/routers/comment";
+import { type CommentType as ICommentType } from "~/lib/types";
 import { Skeleton } from "~/components/ui/skeleton";
 
 import { CommentActions } from "./actions";
 
-type CommentType = Omit<
-  inferRouterOutputs<CommentRouter>["getAll"][number],
-  "replies"
->;
+type CommentType = Omit<ICommentType, "replies">;
 
-export const Comment: React.FC<CommentType & { replies?: CommentType[] }> = ({
+export const Comment: React.FC<
+  CommentType & {
+    replies?: CommentType[];
+    self: User;
+    children?: React.ReactNode;
+  }
+> = ({
   id,
   content,
   user,
   createdAt,
   dealId,
+  organizationId,
   replies,
   userReaction,
   totalVote,
+  self,
+  children,
 }) => {
   return (
     <div className="mt-2 flex items-start space-x-2">
@@ -28,8 +36,8 @@ export const Comment: React.FC<CommentType & { replies?: CommentType[] }> = ({
         <Image
           alt="User avatar"
           src={user.image}
-          height={40}
-          width={40}
+          height={36}
+          width={36}
           className="rounded-full"
         />
       ) : (
@@ -50,16 +58,15 @@ export const Comment: React.FC<CommentType & { replies?: CommentType[] }> = ({
           userReaction={userReaction as boolean}
           totalVote={totalVote as number}
           dealId={dealId}
-          avatar={user.image}
           userId={user.id}
+          organizationId={organizationId}
+          self={self}
         />
-        {replies && replies.length > 0 && (
-          <div className="mt-4 border-l-2 border-gray-200 pl-4">
-            {replies.map((reply) => (
-              <Comment key={reply.id} {...reply} />
-            ))}
-          </div>
-        )}
+        <div className="mt-4 border-l-2 border-gray-200 pl-4">
+          {replies?.map((reply) => (
+            <Comment key={reply.id} {...reply} self={self} />
+          ))}
+        </div>
       </div>
     </div>
   );

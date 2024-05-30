@@ -1,7 +1,3 @@
-"use client";
-
-import { useAtomValue } from "jotai";
-
 import {
   Card,
   CardContent,
@@ -9,22 +5,24 @@ import {
   CardTitle,
   CardDescription,
 } from "~/components/ui/card";
-import { api } from "~/trpc/react";
-import { organizationIdAtom } from "~/state";
+import { api } from "~/trpc/server";
 
 import { Activities, columns } from "./(activities)";
 import { Summary } from "./summary";
 
-export default function PipelinePage() {
-  const organizationId = useAtomValue(organizationIdAtom);
-  const deals = api.deal.getAll.useQuery();
-  const organization = api.organization.get.useQuery(organizationId ?? "");
+export default async function PipelinePage({
+  params: { organizationId },
+}: {
+  params: { organizationId: string };
+}) {
+  const deals = await api.deal.getAll();
+  const organization = await api.organization.get(organizationId ?? "");
 
-  if (!deals.data || !organization.data) return null;
+  if (!deals || !organization) return null;
 
-  const dataWithoutHiddenDeals = deals.data.filter(
-    ({ visibility }) => visibility !== "Hide",
-  );
+  const dataWithoutHiddenDeals = deals
+    .filter(({ visibility }) => visibility !== "Hide")
+    .map((deal) => ({ ...deal, organizationId }));
 
   return (
     <>
@@ -57,9 +55,7 @@ export default function PipelinePage() {
         <CardContent>
           <Summary
             data={
-              organization.data.includeHiddenDeals
-                ? deals.data
-                : dataWithoutHiddenDeals
+              organization.includeHiddenDeals ? deals : dataWithoutHiddenDeals
             }
           />
         </CardContent>

@@ -8,7 +8,9 @@ import Link from "next/link";
 import { type DealType, type DealVisibility } from "~/server/api/routers/deal";
 import { Button } from "~/components/ui/button";
 
-export const columns: ColumnDef<DealType>[] = [
+type RowType = DealType & { organizationId: string };
+
+export const columns: ColumnDef<RowType>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => {
@@ -29,7 +31,9 @@ export const columns: ColumnDef<DealType>[] = [
           : "---";
 
       return (
-        <Link href={`/pipeline/${(row.original as DealType).id}`}>
+        <Link
+          href={`/${row.original.organizationId}/pipeline/${row.original.id}`}
+        >
           <Button variant="link" size="sm" className="h-min">
             {value}
           </Button>

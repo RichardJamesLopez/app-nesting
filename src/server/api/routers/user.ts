@@ -6,10 +6,18 @@ import { users } from "~/server/db/schema";
 export const userRouter = createTRPCRouter({
   get: protectedProcedure.query(async ({ ctx }) => {
     try {
-      return await ctx.db.query.users.findFirst({
+      const user = await ctx.db.query.users.findFirst({
         where: and(eq(users.id, ctx.session.user.id)),
-        with: { userRoles: true },
+        with: {
+          memberships: {
+            with: {
+              membershipRoles: true,
+            },
+          },
+        },
       });
+
+      return user;
     } catch (error) {
       console.error(error);
     }

@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { type User } from "next-auth";
 
 import { Button } from "~/components/ui/button";
 import { Form, FormField, FormItem, FormMessage } from "~/components/ui/form";
@@ -19,12 +20,14 @@ import { Skeleton } from "~/components/ui/skeleton";
 export function NewComment({
   dealId,
   parentId,
-  avatar,
+  organizationId,
+  self,
   onClose,
 }: {
   dealId: string;
   parentId?: number;
-  avatar?: string;
+  organizationId: string;
+  self: User;
   onClose?: () => void;
 }) {
   const form = useForm<CommentFormType>({
@@ -33,6 +36,7 @@ export function NewComment({
       content: "",
       dealId,
       parentId,
+      organizationId,
     },
   });
 
@@ -57,12 +61,12 @@ export function NewComment({
 
   return (
     <div className="flex items-start space-x-2">
-      {avatar ? (
+      {self.image ? (
         <Image
           alt="User avatar"
-          src={avatar}
-          height={40}
-          width={40}
+          src={self.image}
+          height={36}
+          width={36}
           className="rounded-full"
         />
       ) : (
@@ -80,8 +84,9 @@ export function NewComment({
               <FormItem>
                 <Textarea
                   {...field}
+                  autoFocus={!!parentId}
                   className="flex-1"
-                  placeholder="Add a comment..."
+                  placeholder={`Add a ${parentId ? "reply" : "comment"}...`}
                 />
                 <FormMessage />
               </FormItem>

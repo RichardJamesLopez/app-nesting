@@ -4,6 +4,7 @@ import { ArrowUpIcon, ArrowDownIcon, DotIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { type User } from "next-auth";
 
 import { Button } from "~/components/ui/button";
 import { api } from "~/trpc/react";
@@ -13,11 +14,12 @@ import { NewComment } from "./newComment";
 export const CommentActions: React.FC<{
   id: number;
   dealId: string;
-  avatar?: string | null;
   userId: string;
+  organizationId: string;
   totalVote: number;
   userReaction: boolean;
-}> = ({ id, dealId, avatar, userId, totalVote, userReaction }) => {
+  self: User;
+}> = ({ id, dealId, organizationId, totalVote, userReaction, self }) => {
   const [showCommentForm, setShowCommentForm] = useState<boolean>(false);
 
   const router = useRouter();
@@ -42,7 +44,7 @@ export const CommentActions: React.FC<{
             onClick={() =>
               addReaction.mutate({
                 commentId: id,
-                userId,
+                userId: self.id,
                 type: userReaction === true ? undefined : true,
               })
             }
@@ -59,7 +61,7 @@ export const CommentActions: React.FC<{
             onClick={() =>
               addReaction.mutate({
                 commentId: id,
-                userId,
+                userId: self.id,
                 type: userReaction === false ? undefined : false,
               })
             }
@@ -82,7 +84,8 @@ export const CommentActions: React.FC<{
           <NewComment
             dealId={dealId}
             parentId={id}
-            avatar={avatar ?? undefined}
+            organizationId={organizationId}
+            self={self}
             onClose={() => setShowCommentForm(false)}
           />
         </div>
