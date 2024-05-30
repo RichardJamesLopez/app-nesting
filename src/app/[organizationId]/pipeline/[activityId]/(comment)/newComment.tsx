@@ -23,12 +23,14 @@ export function NewComment({
   organizationId,
   self,
   onClose,
+  onSave,
 }: {
   dealId: string;
   parentId?: number;
   organizationId: string;
   self: User;
   onClose?: () => void;
+  onSave?: () => void;
 }) {
   const form = useForm<CommentFormType>({
     resolver: zodResolver(commentFormSchema),
@@ -47,7 +49,7 @@ export function NewComment({
       toast(`${parentId ? "Reply" : "Comment"} posted`);
       router.refresh();
       form.reset();
-      onClose && onClose();
+      onSave && onSave();
     },
     onError: (error) => {
       toast.error("Failed to post");

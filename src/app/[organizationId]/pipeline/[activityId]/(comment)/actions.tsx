@@ -12,10 +12,11 @@ import { type CommentType } from "~/server/api/routers/comment";
 
 import { NewComment } from "./newComment";
 
-export const CommentActions: React.FC<{ self: User; comment: CommentType }> = ({
-  comment,
-  self,
-}) => {
+export const CommentActions: React.FC<{
+  self: User;
+  comment: CommentType;
+  onNewCommentSave: () => void;
+}> = ({ comment, self, onNewCommentSave }) => {
   const { id, dealId, organizationId, totalVote, userReaction } = comment;
 
   const [showCommentForm, setShowCommentForm] = useState<boolean>(false);
@@ -87,6 +88,10 @@ export const CommentActions: React.FC<{ self: User; comment: CommentType }> = ({
             organizationId={organizationId}
             self={self}
             onClose={() => setShowCommentForm(false)}
+            onSave={() => {
+              onNewCommentSave();
+              setShowCommentForm(false);
+            }}
           />
         </div>
       )}

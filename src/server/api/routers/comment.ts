@@ -103,7 +103,7 @@ export const commentRouter = createTRPCRouter({
       });
 
       result.forEach((comment) => {
-        if (comment.parentId === null) {
+        if (comment.parentId === null || comment.parentId === input.parentId) {
           commentTree.push(idToCommentMap.get(comment.id)!);
         } else {
           const parent = idToCommentMap.get(comment.parentId);

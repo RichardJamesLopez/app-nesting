@@ -6,6 +6,8 @@ import { type User } from "next-auth";
 
 import { type CommentType } from "~/server/api/routers/comment";
 import { Skeleton } from "~/components/ui/skeleton";
+import { api } from "~/trpc/react";
+import { Button } from "~/components/ui/button";
 
 import { CommentActions } from "./actions";
 
@@ -13,7 +15,40 @@ export const Comment: React.FC<{ self: User; comment: CommentType }> = ({
   comment,
   self,
 }) => {
-  const { content, user, createdAt, replies } = comment;
+  const {
+    id,
+    content,
+    user,
+    dealId,
+    organizationId,
+    createdAt,
+    replies: initialReplies,
+    replyCount,
+  } = comment;
+
+  const { data: fetchedReplies, refetch } = api.comment.getAll.useQuery(
+    { dealId, organizationId, parentId: id },
+    { enabled: false },
+  );
+
+  const replies = fetchedReplies?.length ? fetchedReplies : initialReplies;
+
+  let renderedReplies = null;
+  if (replies?.length)
+    renderedReplies = replies
+      .sort((a, b) => Number(b.createdAt) - Number(a.createdAt))
+      .map((reply) => <Comment key={reply.id} comment={reply} self={self} />);
+  else if (Number(replyCount))
+    renderedReplies = (
+      <Button
+        onClick={() => refetch()}
+        className="h-min p-1 text-xs"
+        variant="ghost"
+        size="sm"
+      >
+        More replies ({Number(replyCount)})
+      </Button>
+    );
 
   return (
     <div className="mt-2 flex items-start space-x-2">
@@ -38,13 +73,13 @@ export const Comment: React.FC<{ self: User; comment: CommentType }> = ({
           </div>
         </div>
         <p className="mt-1 text-sm">{content}</p>
-        <CommentActions comment={comment} self={self} />
+        <CommentActions
+          comment={comment}
+          self={self}
+          onNewCommentSave={() => refetch()}
+        />
         <div className="mt-4 border-l-2 border-gray-200 pl-4">
-          {replies
-            ?.sort((a, b) => Number(b.createdAt) - Number(a.createdAt))
-            .map((reply) => (
-              <Comment key={reply.id} comment={reply} self={self} />
-            ))}
+          {renderedReplies}
         </div>
       </div>
     </div>
