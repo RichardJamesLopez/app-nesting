@@ -14,3 +14,8 @@ pnpm install
 pnpm dev
 ```
 
+## Browsing the database
+
+```
+pnpm db:studio
+```
