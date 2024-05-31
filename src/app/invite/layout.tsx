@@ -1,4 +1,4 @@
-export default function RootLayout({
+export default function InviteLayout({
   children,
 }: {
   children: React.ReactNode;

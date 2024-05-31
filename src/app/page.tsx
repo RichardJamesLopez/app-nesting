@@ -12,7 +12,7 @@ export default async function HomePage() {
     return "Error";
   }
 
-  if (!user.memberships[0]) return null;
+  if (!user.memberships[0]) return redirect("/new-organization");
 
   const { organizationId } = user.memberships.reduce(
     (last, x) => (x.lastSelectedAt > last.lastSelectedAt ? x : last),
