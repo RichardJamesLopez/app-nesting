@@ -12,8 +12,8 @@ import {
   PlusIcon,
 } from "lucide-react";
 import Image from "next/image";
-import { useAtom } from "jotai";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 import {
   DropdownMenu,
@@ -30,7 +30,6 @@ import {
   DropdownMenuCheckboxItem,
 } from "~/components/ui/dropdown-menu";
 import { Skeleton } from "~/components/ui/skeleton";
-import { organizationIdAtom } from "~/state";
 import { OrganizationForm } from "~/components/organizationForm";
 import {
   Sheet as NewOrganizationSheet,
@@ -41,8 +40,9 @@ import {
 } from "~/components/ui/sheet";
 import { api } from "~/trpc/react";
 
-export function UserMenu() {
+export function UserMenu({ organizationId }: { organizationId: string }) {
   const { data: session } = useSession();
+  const router = useRouter();
 
   const { isConnected: isWeb3Connected, address: walletAddress } = useAccount();
   const { open: openWeb3 } = useWeb3Modal();
@@ -55,23 +55,17 @@ export function UserMenu() {
   const [isNewOrganizationSheetOpen, setIsNewOrganizationSheetOpen] =
     useState<boolean>(false);
 
-  const [organizationId, setOrganizationId] = useAtom(organizationIdAtom);
-
   const organizations = api.organization.getAll.useQuery();
   useEffect(() => {
-    if (!organizationId && organizations.data) {
-      if (organizations.data[0]) setOrganizationId(organizations.data[0].id);
-      else if (!window.location.pathname.includes("/invite/"))
-        setIsNewOrganizationSheetOpen(true);
-    }
-  }, [organizations.data, setOrganizationId, organizationId]);
+    if (!organizationId) setIsNewOrganizationSheetOpen(true);
+  }, [organizationId]);
 
   const createOrganization = api.organization.create.useMutation({
     onSuccess: (newOrganizationId) => {
       organizations.refetch();
       setIsNewOrganizationSheetOpen(false);
       toast("Organization created");
-      setOrganizationId(newOrganizationId as string);
+      router.push(`/${newOrganizationId}/pipeline`);
     },
     onError: () => {
       toast.error("Failed to create an organization");
@@ -89,8 +83,8 @@ export function UserMenu() {
             <Image
               alt="User avatar"
               src={avatar}
-              height={40}
-              width={40}
+              height={36}
+              width={36}
               className="rounded-full"
             />
           ) : (
@@ -133,7 +127,7 @@ export function UserMenu() {
                         key={organization.id}
                         checked={organization.id === organizationId}
                         onCheckedChange={() =>
-                          setOrganizationId(organization.id)
+                          router.push(`/${organization.id}/pipeline`)
                         }
                       >
                         {organization.name}

@@ -38,7 +38,7 @@ export function OrganizationForm({
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>New organization name</FormLabel>
               <FormControl>
                 <Input {...field} autoComplete="off" />
               </FormControl>

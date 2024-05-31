@@ -2,22 +2,23 @@ import { eq, and, isNull } from "drizzle-orm";
 import * as z from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-import { userRoles, invites } from "~/server/db/schema";
-import { RoleIdType } from "~/lib/validationSchemas";
+import { memberships, invites } from "~/server/db/schema";
 
-export const userRoleRouter = createTRPCRouter({
+export const membershipRouter = createTRPCRouter({
   getAll: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
     try {
-      return await ctx.db.query.userRoles.findMany({
+      const organizationMemberships = await ctx.db.query.memberships.findMany({
         where: and(
-          eq(userRoles.organizationId, input),
-          isNull(userRoles.deletedAt),
+          eq(memberships.organizationId, input),
+          isNull(memberships.deletedAt),
         ),
         with: {
           user: true,
-          role: true,
+          membershipRoles: { with: { role: true } },
         },
       });
+
+      return organizationMemberships;
     } catch (error) {
       console.error(error);
     }
@@ -34,11 +35,10 @@ export const userRoleRouter = createTRPCRouter({
         });
         if (!invite) throw new Error("Invite not found");
 
-        await ctx.db.insert(userRoles).values({
+        await ctx.db.insert(memberships).values({
           inviteId: input,
           organizationId: invite.organizationId,
           userId: ctx.session.user.id,
-          roleId: "member" as RoleIdType,
         });
 
         return invite.organization.name;

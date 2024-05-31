@@ -2,12 +2,11 @@
 
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useSetAtom } from "jotai";
 import { toast } from "sonner";
+import Image from "next/image";
 
 import { api } from "~/trpc/react";
 import { Button } from "~/components/ui/button";
-import { organizationIdAtom } from "~/state";
 
 export default function InvitePage({
   params,
@@ -18,19 +17,16 @@ export default function InvitePage({
   const router = useRouter();
   const invite = api.invite.get.useQuery(params.inviteId);
   const organizations = api.organization.getAll.useQuery();
-  const createMember = api.userRole.createMember.useMutation({
+  const createMember = api.membership.createMember.useMutation({
     onSuccess: () => {
-      setOrganizationId(invite.data?.organizationId);
       organizations.refetch();
-      router.push("/dashboard");
+      router.push(`/${invite.data?.organizationId}/pipeline`);
     },
     onError: (error) => {
       toast.error("Failed to join");
       console.error(error);
     },
   });
-
-  const setOrganizationId = useSetAtom(organizationIdAtom);
 
   if (status === "loading") return "Loading";
 
@@ -41,14 +37,24 @@ export default function InvitePage({
     .includes(invite.data.organizationId);
 
   if (isInOrganization && status === "authenticated") {
-    setOrganizationId(invite.data.organizationId);
-    router.push("/dashboard");
+    router.push(`/${invite.data.organizationId}/pipeline`);
 
     return null;
   }
 
   return (
     <>
+      <div className="mb-6 flex items-center gap-2">
+        <Image
+          src="/logo.png"
+          alt="Logo"
+          width={36}
+          height={36}
+          className="rounded-lg"
+        />
+        <span className="text-xl font-bold">Ourmada</span>
+      </div>
+      <hr className="mb-6" />
       <p>{invite.data.inviterName} invited you to join</p>
       <h1 className="mb-4 text-3xl">{invite.data.organizationName}</h1>
       {status === "authenticated" && (

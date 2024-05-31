@@ -6,14 +6,14 @@ import { toast } from "sonner";
 
 import { TableCell, TableRow } from "~/components/ui/table";
 import { Button } from "~/components/ui/button";
-import { type Invite } from "~/server/db/schema";
+import { type InviteType } from "~/server/db/schema";
 
 export function Invite({
   invite,
   timesUsed,
   onDelete,
 }: {
-  invite: Invite;
+  invite: InviteType;
   timesUsed: number;
   onDelete: (id: string) => void;
 }) {

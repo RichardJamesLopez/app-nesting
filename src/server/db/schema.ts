@@ -8,6 +8,8 @@ import {
   text,
   timestamp,
   varchar,
+  boolean,
+  type AnyPgColumn,
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
@@ -19,22 +21,79 @@ import { type AdapterAccount } from "next-auth/adapters";
  */
 export const createTable = pgTableCreator((name) => `appNesting_${name}`);
 
-export const posts = createTable(
-  "post",
+export const comments = createTable(
+  "comment",
   {
     id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }),
+    content: varchar("content", { length: 10000 }),
     createdById: varchar("createdById", { length: 255 })
       .notNull()
       .references(() => users.id),
+    dealId: varchar("dealId", { length: 255 }).notNull(),
+    organizationId: varchar("organizationId", { length: 16 })
+      .references(() => organizations.id)
+      .notNull(),
+    parentId: integer("parentId").references((): AnyPgColumn => comments.id),
     createdAt: timestamp("createdAt", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt", { withTimezone: true }),
+    deletedAt: timestamp("deletedAt", { withTimezone: true }),
   },
   (t) => ({
-    createdByIdIdx: index("post_createdById_idx").on(t.createdById),
-    nameIndex: index("post_name_idx").on(t.name),
+    createdByIdIdx: index("comment_createdById_idx").on(t.createdById),
+    dealIdIdx: index("comment_dealId_idx").on(t.dealId),
+    organizationIdIdx: index("comment_organizationId_idx").on(t.organizationId),
+  }),
+);
+export type CommentType = InferSelectModel<typeof comments>;
+
+export const commentsRelations = relations(comments, ({ one, many }) => ({
+  user: one(users, { fields: [comments.createdById], references: [users.id] }),
+  organization: one(organizations, {
+    fields: [comments.organizationId],
+    references: [organizations.id],
+  }),
+  parent: one(comments, {
+    fields: [comments.parentId],
+    references: [comments.id],
+    relationName: "parentComment",
+  }),
+  replies: many(comments, {
+    relationName: "parentComment",
+  }),
+  reactions: many(commentReactions),
+}));
+
+export const commentReactions = createTable(
+  "commentReaction",
+  {
+    commentId: integer("commentId")
+      .notNull()
+      .references(() => comments.id),
+    userId: varchar("userId", { length: 255 })
+      .notNull()
+      .references(() => users.id),
+    type: boolean("type").notNull(),
+  },
+  (t) => ({
+    compoundKey: primaryKey({ columns: [t.commentId, t.userId] }),
+    commentIdIdx: index("commentReaction_commentId_idx").on(t.commentId),
+    userIdIdx: index("commentReaction_userId_idx").on(t.userId),
+  }),
+);
+
+export const commentReactionsRelations = relations(
+  commentReactions,
+  ({ one }) => ({
+    comment: one(comments, {
+      fields: [commentReactions.commentId],
+      references: [comments.id],
+    }),
+    user: one(users, {
+      fields: [commentReactions.userId],
+      references: [users.id],
+    }),
   }),
 );
 
@@ -55,33 +114,35 @@ export const users = createTable("user", {
 
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
-  userRoles: many(userRoles),
+  memberships: many(memberships),
   invites: many(invites),
+  comments: many(comments),
 }));
 
 export const organizations = createTable(
   "organization",
   {
-    id: varchar("id", { length: 255 }).notNull().primaryKey(),
+    id: varchar("id", { length: 16 }).notNull().primaryKey(),
     name: varchar("name", { length: 255 }),
-    createdById: varchar("createdById", { length: 255 })
-      .notNull()
-      .references(() => users.id),
+    ownerId: varchar("ownerId", { length: 255 })
+      .references(() => users.id)
+      .notNull(),
     createdAt: timestamp("createdAt", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt", { withTimezone: true }),
+    includeHiddenDeals: boolean("includeHiddenDeals"),
   },
   (t) => ({
-    createdByIdIdx: index("organization_createdById_idx").on(t.createdById),
     nameIndex: index("organization_name_idx").on(t.name),
   }),
 );
-export type Organization = InferSelectModel<typeof organizations>;
+export type OrganizationType = InferSelectModel<typeof organizations>;
 
 export const organizationsRelations = relations(organizations, ({ many }) => ({
-  userRoles: many(userRoles),
+  memberships: many(memberships),
   invites: many(invites),
+  // comments: many(comments),
 }));
 
 export const roles = createTable("role", {
@@ -90,23 +151,23 @@ export const roles = createTable("role", {
 });
 
 export const rolesRelations = relations(roles, ({ many }) => ({
-  userRoles: many(userRoles),
+  membershipRoles: many(membershipRoles),
 }));
 
-export const userRoles = createTable(
-  "userRole",
+export const memberships = createTable(
+  "membership",
   {
     userId: varchar("userId", { length: 255 })
       .references(() => users.id)
       .notNull(),
-    roleId: varchar("roleId", { length: 255 })
-      .references(() => roles.id)
-      .notNull(),
-    organizationId: varchar("organizationId", { length: 255 })
+    organizationId: varchar("organizationId", { length: 16 })
       .references(() => organizations.id)
       .notNull(),
     inviteId: varchar("id", { length: 16 }).references(() => invites.id),
     createdAt: timestamp("createdAt", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    lastSelectedAt: timestamp("lastSelectedAt", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt", { withTimezone: true }),
@@ -114,27 +175,61 @@ export const userRoles = createTable(
   },
   (t) => ({
     compoundKey: primaryKey({
-      columns: [t.userId, t.roleId, t.organizationId],
+      columns: [t.userId, t.organizationId],
     }),
-    userIdIdx: index("userRole_userId_idx").on(t.userId),
-    organizationIdIdx: index("userRole_organizationId_idx").on(
+    userIdIdx: index("membership_userId_idx").on(t.userId),
+    organizationIdIdx: index("membership_organizationId_idx").on(
       t.organizationId,
     ),
   }),
 );
 
-export const userRolesRelations = relations(userRoles, ({ one }) => ({
-  user: one(users, { fields: [userRoles.userId], references: [users.id] }),
-  role: one(roles, { fields: [userRoles.roleId], references: [roles.id] }),
+export const membershipsRelations = relations(memberships, ({ one, many }) => ({
+  user: one(users, { fields: [memberships.userId], references: [users.id] }),
   organization: one(organizations, {
-    fields: [userRoles.organizationId],
+    fields: [memberships.organizationId],
     references: [organizations.id],
   }),
+  membershipRoles: many(membershipRoles),
   invite: one(invites, {
-    fields: [userRoles.inviteId],
+    fields: [memberships.inviteId],
     references: [invites.id],
   }),
 }));
+
+export const membershipRoles = createTable(
+  "membershipRole",
+  {
+    userId: varchar("userId", { length: 255 })
+      .references(() => users.id)
+      .notNull(),
+    organizationId: varchar("organizationId", { length: 16 })
+      .references(() => organizations.id)
+      .notNull(),
+    roleId: varchar("roleId", { length: 255 })
+      .references(() => roles.id)
+      .notNull(),
+  },
+  (t) => ({
+    compoundKey: primaryKey({
+      columns: [t.userId, t.organizationId, t.roleId],
+    }),
+  }),
+);
+
+export const membershipRolesRelations = relations(
+  membershipRoles,
+  ({ one }) => ({
+    role: one(roles, {
+      fields: [membershipRoles.roleId],
+      references: [roles.id],
+    }),
+    membership: one(memberships, {
+      fields: [membershipRoles.userId, membershipRoles.organizationId],
+      references: [memberships.userId, memberships.organizationId],
+    }),
+  }),
+);
 
 export const invites = createTable(
   "invite",
@@ -148,7 +243,7 @@ export const invites = createTable(
     createdById: varchar("createdById", { length: 255 })
       .references(() => users.id)
       .notNull(),
-    organizationId: varchar("organizationId", { length: 255 })
+    organizationId: varchar("organizationId", { length: 16 })
       .references(() => organizations.id)
       .notNull(),
     createdAt: timestamp("createdAt", { withTimezone: true })
@@ -160,7 +255,7 @@ export const invites = createTable(
     organizationIdIdx: index("invite_organizationId_idx").on(t.organizationId),
   }),
 );
-export type Invite = InferSelectModel<typeof invites>;
+export type InviteType = InferSelectModel<typeof invites>;
 
 export const invitesRelations = relations(invites, ({ one, many }) => ({
   createdById: one(users, {
@@ -171,7 +266,7 @@ export const invitesRelations = relations(invites, ({ one, many }) => ({
     fields: [invites.organizationId],
     references: [organizations.id],
   }),
-  userRoles: many(userRoles),
+  memberships: many(memberships),
 }));
 
 export const accounts = createTable(

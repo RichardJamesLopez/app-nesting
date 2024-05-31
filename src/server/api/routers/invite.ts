@@ -19,7 +19,7 @@ export const inviteRouter = createTRPCRouter({
           eq(invites.createdById, ctx.session.user.id),
         ),
         with: {
-          userRoles: true,
+          memberships: true,
         },
       });
     } catch (error) {

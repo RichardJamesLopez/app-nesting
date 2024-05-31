@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
-import { useAtomValue } from "jotai";
 import Link from "next/link";
 import { UserPlusIcon } from "lucide-react";
 
@@ -17,25 +16,12 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Skeleton } from "~/components/ui/skeleton";
 import { api } from "~/trpc/react";
-import { organizationIdAtom } from "~/state";
 import { Button } from "~/components/ui/button";
 
 import { MemberActions } from "./memberActions";
-import { RoleIdType } from "~/lib/validationSchemas";
 
-export function UserManagement() {
-  const organizationId = useAtomValue(organizationIdAtom);
-  const userRoles = api.userRole.getAll.useQuery(organizationId ?? "");
-
-  const user = api.user.get.useQuery();
-  if (
-    user.data?.userRoles.find(
-      (userRole) => userRole.organizationId === organizationId,
-    )?.roleId !== ("admin" as RoleIdType)
-  )
-    return null;
-
-  if (!organizationId) return null;
+export function UserManagement({ organizationId }: { organizationId: string }) {
+  const memberships = api.membership.getAll.useQuery(organizationId ?? "");
 
   return (
     <Card className="mb-4">
@@ -61,7 +47,7 @@ export function UserManagement() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {userRoles.data?.map(({ createdAt, user, role }) => (
+            {memberships.data?.map(({ createdAt, user, membershipRoles }) => (
               <TableRow key={user.email}>
                 <TableCell className="font-medium">
                   <div className="flex">
@@ -86,7 +72,9 @@ export function UserManagement() {
                     </div>
                   </div>
                 </TableCell>
-                <TableCell>{role.name}</TableCell>
+                <TableCell>
+                  {membershipRoles[0]?.role.name ?? "Member"}
+                </TableCell>
                 <TableCell>{formatDistanceToNow(createdAt)} ago</TableCell>
                 <TableCell className="text-right">
                   <MemberActions />

@@ -17,7 +17,7 @@ import {
 } from "~/components/ui/command";
 import { NavigationSheetTrigger } from "~/components/navigation";
 
-export function Header() {
+export function Header({ organizationId }: { organizationId: string }) {
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -86,7 +86,7 @@ export function Header() {
             <BellIcon className="h-5 w-5 text-gray-600" />
           </Button>
 
-          <UserMenu />
+          <UserMenu organizationId={organizationId} />
         </div>
       </header>
       <CommandDialog open={isSearchOpen} onOpenChange={setIsSearchOpen}>
@@ -94,9 +94,8 @@ export function Header() {
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandGroup heading="Suggestions">
-            <CommandItem>Calendar</CommandItem>
-            <CommandItem>Search Emoji</CommandItem>
-            <CommandItem>Calculator</CommandItem>
+            <CommandItem>Pipeline</CommandItem>
+            <CommandItem>Settings</CommandItem>
           </CommandGroup>
         </CommandList>
       </CommandDialog>

@@ -6,13 +6,23 @@ import {
   CardDescription,
 } from "~/components/ui/card";
 import { api } from "~/trpc/server";
-import { DealRecordType } from "~/lib/dealRecordType";
 
-import { Activities } from "./activities";
+import { Activities, columns } from "./(activities)";
 import { Summary } from "./summary";
 
-export default async function DataPage() {
+export default async function PipelinePage({
+  params: { organizationId },
+}: {
+  params: { organizationId: string };
+}) {
   const deals = await api.deal.getAll();
+  const organization = await api.organization.get(organizationId ?? "");
+
+  if (!deals || !organization) return null;
+
+  const dataWithoutHiddenDeals = deals
+    .filter(({ visibility }) => visibility !== "Hide")
+    .map((deal) => ({ ...deal, organizationId }));
 
   return (
     <>
@@ -25,10 +35,12 @@ export default async function DataPage() {
           <CardDescription>
             The following activities are selected deals that are visible to the
             community.
+            <br />
+            Click on the column headers to sort the data.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Activities data={deals?.results as unknown as DealRecordType[]} />
+          <Activities data={dataWithoutHiddenDeals} columns={columns} />
         </CardContent>
       </Card>
 
@@ -41,7 +53,11 @@ export default async function DataPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Summary data={deals?.results as unknown as DealRecordType[]} />
+          <Summary
+            data={
+              organization.includeHiddenDeals ? deals : dataWithoutHiddenDeals
+            }
+          />
         </CardContent>
       </Card>
     </>
