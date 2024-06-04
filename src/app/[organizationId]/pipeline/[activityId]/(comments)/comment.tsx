@@ -27,6 +27,16 @@ import {
 import { CommentActions } from "./actions";
 import { NewComment } from "./newComment";
 
+function isJSONParsable(value: string | null) {
+  if (!value) return false;
+  try {
+    JSON.parse(value);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
 export const Comment: React.FC<{
   self: User;
   comment: CommentType;
@@ -118,7 +128,7 @@ export const Comment: React.FC<{
             theme: {
               beautifulMentions: getBeautifulMentionsTheme({ editable: false }),
             },
-            editorState: content,
+            editorState: isJSONParsable(content) ? content : undefined,
             editable: false,
           }}
         >
