@@ -6,7 +6,7 @@ import { type User } from "next-auth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
-import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
+import { PlainTextPlugin } from "@lexical/react/LexicalPlainTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
 import {
@@ -132,7 +132,7 @@ export const Comment: React.FC<{
             editable: false,
           }}
         >
-          <RichTextPlugin
+          <PlainTextPlugin
             contentEditable={<ContentEditable className="mt-1 text-sm" />}
             placeholder={null}
             ErrorBoundary={LexicalErrorBoundary}
