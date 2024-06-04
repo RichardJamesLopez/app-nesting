@@ -21,7 +21,7 @@ export const getBeautifulMentionsTheme = ({
     "bg-blue-100 text-blue-600",
     editable && "cursor-pointer",
   ),
-  "@Focused": cn(mentionsStyleFocused, "ring-primary ring-offset-background"),
+  "@Focused": cn(mentionsStyleFocused, "ring-blue-600 ring-offset-background"),
 });
 
 export function MentionsMenu({
