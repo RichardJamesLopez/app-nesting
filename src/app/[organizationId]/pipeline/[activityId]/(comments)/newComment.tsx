@@ -6,16 +6,34 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { type User } from "next-auth";
+import { LexicalComposer } from "@lexical/react/LexicalComposer";
+import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
+import { ContentEditable } from "@lexical/react/LexicalContentEditable";
+import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
+import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
+import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
+import {
+  BeautifulMentionsPlugin,
+  BeautifulMentionNode,
+} from "lexical-beautiful-mentions";
 
 import { Button } from "~/components/ui/button";
 import { Form, FormField, FormItem, FormMessage } from "~/components/ui/form";
-import { Textarea } from "~/components/ui/textarea";
 import {
   commentFormSchema,
   type CommentFormType,
 } from "~/lib/validationSchemas";
 import { api } from "~/trpc/react";
 import { Skeleton } from "~/components/ui/skeleton";
+import {
+  getBeautifulMentionsTheme,
+  MentionsMenu,
+  MentionsMenuItem,
+} from "~/components/mentions";
+
+const mentionItems = {
+  "@": ["Anton", "Boris", "Catherine", "Dmitri", "Elena", "Felix", "Gina"],
+};
 
 export function NewComment({
   dealId,
@@ -85,17 +103,50 @@ export function NewComment({
             control={form.control}
             name="content"
             render={({ field }) => (
-              <FormItem>
-                <Textarea
-                  {...field}
-                  autoFocus={!!parentId}
-                  className="flex-1"
-                  placeholder={`Add a ${parentId ? "reply" : "comment"}...`}
-                />
-                <FormMessage />
+              <FormItem className="relative space-y-0">
+                <LexicalComposer
+                  initialConfig={{
+                    namespace: "CommentEditor",
+                    onError: console.error,
+                    theme: {
+                      beautifulMentions: getBeautifulMentionsTheme({
+                        editable: true,
+                      }),
+                    },
+                    nodes: [BeautifulMentionNode],
+                  }}
+                >
+                  <RichTextPlugin
+                    contentEditable={
+                      <ContentEditable className="min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
+                    }
+                    placeholder={
+                      <div className="pointer-events-none absolute top-0 px-3 py-2 text-sm text-muted-foreground">
+                        Add a {parentId ? "reply" : "comment"}...
+                      </div>
+                    }
+                    ErrorBoundary={LexicalErrorBoundary}
+                  />
+                  <HistoryPlugin />
+                  <BeautifulMentionsPlugin
+                    items={mentionItems}
+                    menuComponent={MentionsMenu}
+                    menuItemComponent={MentionsMenuItem}
+                  />
+                  <OnChangePlugin
+                    onChange={(editorState) => {
+                      const content = JSON.stringify(editorState);
+                      console.log(content);
+
+                      return field.onChange(content);
+                    }}
+                  />
+                </LexicalComposer>
+                <FormMessage className="mt-2" />
               </FormItem>
             )}
           />
+
           <div className="space-x-2 self-end">
             {onClose && (
               <Button onClick={onClose} variant="ghost" size="sm">

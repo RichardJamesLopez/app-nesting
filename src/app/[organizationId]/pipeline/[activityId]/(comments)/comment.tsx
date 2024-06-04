@@ -5,11 +5,24 @@ import Image from "next/image";
 import { type User } from "next-auth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { LexicalComposer } from "@lexical/react/LexicalComposer";
+import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
+import { ContentEditable } from "@lexical/react/LexicalContentEditable";
+import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
+import {
+  BeautifulMentionsPlugin,
+  BeautifulMentionNode,
+} from "lexical-beautiful-mentions";
 
 import { type CommentType } from "~/server/api/routers/comment";
 import { Skeleton } from "~/components/ui/skeleton";
 import { api } from "~/trpc/react";
 import { Button } from "~/components/ui/button";
+import {
+  getBeautifulMentionsTheme,
+  MentionsMenu,
+  MentionsMenuItem,
+} from "~/components/mentions";
 
 import { CommentActions } from "./actions";
 import { NewComment } from "./newComment";
@@ -96,7 +109,31 @@ export const Comment: React.FC<{
             </p>
           </div>
         </div>
-        <p className="mt-1 text-sm">{content}</p>
+
+        <LexicalComposer
+          initialConfig={{
+            namespace: "CommentViewer",
+            onError: console.error,
+            nodes: [BeautifulMentionNode],
+            theme: {
+              beautifulMentions: getBeautifulMentionsTheme({ editable: false }),
+            },
+            editorState: content,
+            editable: false,
+          }}
+        >
+          <RichTextPlugin
+            contentEditable={<ContentEditable className="mt-1 text-sm" />}
+            placeholder={null}
+            ErrorBoundary={LexicalErrorBoundary}
+          />
+          <BeautifulMentionsPlugin
+            items={{}}
+            menuComponent={MentionsMenu}
+            menuItemComponent={MentionsMenuItem}
+          />
+        </LexicalComposer>
+
         <CommentActions
           comment={comment}
           self={self}
