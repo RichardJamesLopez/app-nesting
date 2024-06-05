@@ -5,7 +5,9 @@ import {
   sql,
   getTableColumns,
   inArray,
-  like,
+  ilike,
+  isNotNull,
+  not,
 } from "drizzle-orm";
 import { unionAll } from "drizzle-orm/pg-core";
 import * as z from "zod";
@@ -213,25 +215,25 @@ export const commentRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       try {
-        const organizationMemberships = await ctx.db.query.memberships.findMany(
-          {
-            columns: {},
-            where: and(
+        return (await ctx.db
+          .select({
+            id: users.id,
+            value: users.name,
+          })
+          .from(memberships)
+          .innerJoin(users, eq(memberships.userId, users.id))
+          .where(
+            and(
               eq(memberships.organizationId, input.organizationId),
               isNull(memberships.deletedAt),
+              not(eq(users.id, ctx.session.user.id)),
+              isNotNull(users.name),
               input.userNameQuery
-                ? like(users.name, input.userNameQuery)
+                ? ilike(users.name, `%${input.userNameQuery}%`)
                 : undefined,
             ),
-            with: { user: { columns: { id: true, name: true } } },
-            limit: 5,
-          },
-        );
-
-        return organizationMemberships.map(({ user: { id, name } }) => ({
-          id,
-          value: name ?? "",
-        }));
+          )
+          .limit(5)) as { id: string; value: string }[];
       } catch (error) {
         console.error(error);
       }
