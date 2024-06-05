@@ -14,6 +14,7 @@ import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { EditorRefPlugin } from "@lexical/react/LexicalEditorRefPlugin";
+import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
 import {
   BeautifulMentionsPlugin,
   BeautifulMentionNode,
@@ -146,6 +147,7 @@ export function NewComment({
                     ErrorBoundary={LexicalErrorBoundary}
                   />
                   <HistoryPlugin />
+                  {parentId && <AutoFocusPlugin />}
                   <EditorRefPlugin editorRef={editorRef} />
                   <BeautifulMentionsPlugin
                     triggers={["@"]}
