@@ -1,10 +1,23 @@
-import { eq, and, isNull, sql, getTableColumns, inArray } from "drizzle-orm";
+import {
+  eq,
+  and,
+  isNull,
+  sql,
+  getTableColumns,
+  inArray,
+  like,
+} from "drizzle-orm";
 import { unionAll } from "drizzle-orm/pg-core";
 import * as z from "zod";
 import { inferProcedureOutput } from "@trpc/server";
 
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-import { comments, commentReactions, users } from "~/server/db/schema";
+import {
+  comments,
+  commentReactions,
+  users,
+  memberships,
+} from "~/server/db/schema";
 import { commentFormSchema } from "~/lib/validationSchemas";
 
 export const commentRouter = createTRPCRouter({
@@ -186,6 +199,39 @@ export const commentRouter = createTRPCRouter({
           .update(comments)
           .set({ deletedAt: sql`CURRENT_TIMESTAMP` })
           .where(eq(comments.id, input));
+      } catch (error) {
+        console.error(error);
+      }
+    }),
+
+  queryMentions: protectedProcedure
+    .input(
+      z.object({
+        userNameQuery: z.string().nullish(),
+        organizationId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const organizationMemberships = await ctx.db.query.memberships.findMany(
+          {
+            columns: {},
+            where: and(
+              eq(memberships.organizationId, input.organizationId),
+              isNull(memberships.deletedAt),
+              input.userNameQuery
+                ? like(users.name, input.userNameQuery)
+                : undefined,
+            ),
+            with: { user: { columns: { id: true, name: true } } },
+            limit: 5,
+          },
+        );
+
+        return organizationMemberships.map(({ user: { id, name } }) => ({
+          id,
+          value: name ?? "",
+        }));
       } catch (error) {
         console.error(error);
       }

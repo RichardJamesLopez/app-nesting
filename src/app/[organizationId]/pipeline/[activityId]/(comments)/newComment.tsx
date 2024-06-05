@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useCallback } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -33,10 +33,6 @@ import {
   MentionsMenu,
   MentionsMenuItem,
 } from "~/components/mentions";
-
-const mentionItems = {
-  "@": ["Anton", "Boris", "Catherine", "Dmitri", "Elena", "Felix", "Gina"],
-};
 
 export function NewComment({
   dealId,
@@ -87,6 +83,22 @@ export function NewComment({
     createComment.mutate(values);
   };
 
+  const { mutateAsync: queryMentions } = api.comment.queryMentions.useMutation({
+    onError: (error) => {
+      toast.error("Failed to query mentions");
+      console.error(error);
+    },
+  });
+
+  const handleSearch = useCallback(
+    async (_: string, queryString?: string | null) =>
+      (await queryMentions({
+        organizationId,
+        userNameQuery: queryString,
+      })) ?? (await Promise.resolve([])),
+    [organizationId, queryMentions],
+  );
+
   return (
     <div className="flex min-w-48 items-start space-x-2">
       {self.image ? (
@@ -136,7 +148,8 @@ export function NewComment({
                   <HistoryPlugin />
                   <EditorRefPlugin editorRef={editorRef} />
                   <BeautifulMentionsPlugin
-                    items={mentionItems}
+                    triggers={["@"]}
+                    onSearch={handleSearch}
                     menuComponent={MentionsMenu}
                     menuItemComponent={MentionsMenuItem}
                   />
