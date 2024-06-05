@@ -28,5 +28,6 @@ export const commentFormSchema = z.object({
   dealId: z.string(),
   organizationId: z.string(),
   parentId: z.number().optional(),
+  mentionedUserIds: z.array(z.string()).optional(),
 });
 export type CommentFormType = z.infer<typeof commentFormSchema>;

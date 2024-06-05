@@ -19,6 +19,8 @@ import {
   commentReactions,
   users,
   memberships,
+  notifications,
+  type NotificationSourceType,
 } from "~/server/db/schema";
 import { commentFormSchema } from "~/lib/validationSchemas";
 
@@ -145,13 +147,28 @@ export const commentRouter = createTRPCRouter({
     .input(commentFormSchema)
     .mutation(async ({ ctx, input }) => {
       try {
-        await ctx.db.insert(comments).values({
-          content: input.content,
-          dealId: input.dealId,
-          parentId: input.parentId,
-          organizationId: input.organizationId,
-          createdById: ctx.session.user.id,
-        });
+        const [comment] = await ctx.db
+          .insert(comments)
+          .values({
+            content: input.content,
+            dealId: input.dealId,
+            parentId: input.parentId,
+            organizationId: input.organizationId,
+            createdById: ctx.session.user.id,
+          })
+          .returning({ commentId: comments.id });
+
+        if (!comment || !input.mentionedUserIds) return;
+
+        await Promise.allSettled(
+          input.mentionedUserIds.map((userId) =>
+            ctx.db.insert(notifications).values({
+              userId,
+              commentId: comment.commentId,
+              sourceType: "mention" as NotificationSourceType,
+            }),
+          ),
+        );
       } catch (error) {
         console.error(error);
       }

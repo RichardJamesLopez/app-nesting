@@ -18,8 +18,13 @@ import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
 import {
   BeautifulMentionsPlugin,
   BeautifulMentionNode,
+  SerializedBeautifulMentionNode,
 } from "lexical-beautiful-mentions";
-import { $getRoot, type LexicalEditor } from "lexical";
+import {
+  $getRoot,
+  type LexicalEditor,
+  type SerializedElementNode,
+} from "lexical";
 
 import { Button } from "~/components/ui/button";
 import { Form, FormField, FormItem, FormMessage } from "~/components/ui/form";
@@ -81,7 +86,8 @@ export function NewComment({
   });
 
   const onCreate = (values: CommentFormType) => {
-    createComment.mutate(values);
+    const mentionedUserIds = extractMentionedUserIds(values.content);
+    createComment.mutate({ ...values, mentionedUserIds });
   };
 
   const { mutateAsync: queryMentions } = api.comment.queryMentions.useMutation({
@@ -157,12 +163,9 @@ export function NewComment({
                     insertOnBlur={false}
                   />
                   <OnChangePlugin
-                    onChange={(editorState) => {
-                      const content = JSON.stringify(editorState);
-                      console.log(content);
-
-                      return field.onChange(content);
-                    }}
+                    onChange={(editorState) =>
+                      field.onChange(JSON.stringify(editorState))
+                    }
                   />
                 </LexicalComposer>
                 <FormMessage className="mt-2" />
@@ -184,4 +187,28 @@ export function NewComment({
       </Form>
     </div>
   );
+}
+
+function extractMentionedUserIds(lexicalComment: string): string[] {
+  const mentionedUserIds: string[] = [];
+
+  function traverse(
+    node: SerializedElementNode & SerializedBeautifulMentionNode,
+  ) {
+    if (node.type === "beautifulMention" && node.data && node.data.id) {
+      mentionedUserIds.push(node.data.id as string);
+    }
+
+    if (node.children) {
+      for (const child of node.children) {
+        traverse(
+          child as SerializedElementNode & SerializedBeautifulMentionNode,
+        );
+      }
+    }
+  }
+
+  traverse(JSON.parse(lexicalComment).root);
+
+  return [...new Set(mentionedUserIds)];
 }
