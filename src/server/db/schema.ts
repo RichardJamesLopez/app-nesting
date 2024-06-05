@@ -150,7 +150,7 @@ export type OrganizationType = InferSelectModel<typeof organizations>;
 export const organizationsRelations = relations(organizations, ({ many }) => ({
   memberships: many(memberships),
   invites: many(invites),
-  // comments: many(comments),
+  comments: many(comments),
 }));
 
 export const roles = createTable("role", {
