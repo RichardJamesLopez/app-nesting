@@ -152,6 +152,7 @@ export function NewComment({
                     onSearch={handleSearch}
                     menuComponent={MentionsMenu}
                     menuItemComponent={MentionsMenuItem}
+                    insertOnBlur={false}
                   />
                   <OnChangePlugin
                     onChange={(editorState) => {
