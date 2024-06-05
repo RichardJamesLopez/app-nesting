@@ -63,6 +63,7 @@ export const commentsRelations = relations(comments, ({ one, many }) => ({
     relationName: "parentComment",
   }),
   reactions: many(commentReactions),
+  notifications: many(notifications),
 }));
 
 export const commentReactions = createTable(
@@ -123,6 +124,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   memberships: many(memberships),
   invites: many(invites),
   comments: many(comments),
+  notifications: many(notifications),
 }));
 
 export const organizations = createTable(
@@ -304,6 +306,35 @@ export const accounts = createTable(
 
 export const accountsRelations = relations(accounts, ({ one }) => ({
   user: one(users, { fields: [accounts.userId], references: [users.id] }),
+}));
+
+export const notifications = createTable(
+  "notification",
+  {
+    id: serial("id").primaryKey(),
+    userId: varchar("userId", { length: 255 })
+      .notNull()
+      .references(() => users.id),
+    commentId: integer("commentId").references(() => comments.id),
+    sourceType: varchar("sourceType", { length: 255 }).notNull(),
+    isRead: boolean("isRead").default(false).notNull(),
+    createdAt: timestamp("createdAt", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+  },
+  (t) => ({
+    userIdIdx: index("notification_userId_idx").on(t.userId),
+    commentIdIdx: index("notification_commentId_idx").on(t.commentId),
+  }),
+);
+export type NotificationSourceType = "mention";
+
+export const notificationsRelations = relations(notifications, ({ one }) => ({
+  user: one(users, { fields: [notifications.userId], references: [users.id] }),
+  comment: one(comments, {
+    fields: [notifications.commentId],
+    references: [comments.id],
+  }),
 }));
 
 export const sessions = createTable(
