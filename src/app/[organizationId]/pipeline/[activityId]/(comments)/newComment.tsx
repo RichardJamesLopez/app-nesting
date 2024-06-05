@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -12,10 +13,12 @@ import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
+import { EditorRefPlugin } from "@lexical/react/LexicalEditorRefPlugin";
 import {
   BeautifulMentionsPlugin,
   BeautifulMentionNode,
 } from "lexical-beautiful-mentions";
+import { $getRoot, type LexicalEditor } from "lexical";
 
 import { Button } from "~/components/ui/button";
 import { Form, FormField, FormItem, FormMessage } from "~/components/ui/form";
@@ -62,10 +65,13 @@ export function NewComment({
 
   const router = useRouter();
 
+  const editorRef = useRef<LexicalEditor | null | undefined>(null);
+
   const createComment = api.comment.create.useMutation({
     onSuccess: () => {
       toast(`${parentId ? "Reply" : "Comment"} posted`);
       form.reset();
+      editorRef.current?.update(() => $getRoot().clear());
 
       if (onSaveReplySuccess)
         onSaveReplySuccess(); // data from a client component
@@ -128,6 +134,7 @@ export function NewComment({
                     ErrorBoundary={LexicalErrorBoundary}
                   />
                   <HistoryPlugin />
+                  <EditorRefPlugin editorRef={editorRef} />
                   <BeautifulMentionsPlugin
                     items={mentionItems}
                     menuComponent={MentionsMenu}
