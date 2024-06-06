@@ -20,7 +20,7 @@ import {
 import { Label } from "~/components/ui/label";
 import { api } from "~/trpc/server";
 
-import Comments from "./(comments)";
+import Comments from "./comments";
 
 export default async function ActivityPage({
   params,

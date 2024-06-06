@@ -24,8 +24,8 @@ import {
   MentionsMenuItem,
 } from "~/components/mentions";
 
-import { CommentActions } from "./actions";
-import { NewComment } from "./newComment";
+import { CommentActions } from "./commentActions";
+import { CommentForm } from "./commentForm";
 
 function isJSONParsable(value: string | null) {
   if (!value) return false;
@@ -156,7 +156,7 @@ export const Comment: React.FC<{
         />
         <div className="mt-4 border-l-2 border-gray-200 pl-4">
           {showCommentForm && (
-            <NewComment
+            <CommentForm
               dealId={dealId}
               parentId={id}
               organizationId={organizationId}

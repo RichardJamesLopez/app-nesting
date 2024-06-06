@@ -1,8 +1,7 @@
 import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/trpc/server";
-
-import { Comment } from "./comment";
-import { NewComment } from "./newComment";
+import { Comment } from "~/components/comments/comment";
+import { CommentForm } from "~/components/comments/commentForm";
 
 export default async function Comments({
   dealId,
@@ -19,7 +18,7 @@ export default async function Comments({
   return (
     <div>
       <div className="mb-4">
-        <NewComment
+        <CommentForm
           dealId={dealId}
           organizationId={organizationId}
           self={session.user}

@@ -40,7 +40,7 @@ import {
   MentionsMenuItem,
 } from "~/components/mentions";
 
-export function NewComment({
+export function CommentForm({
   dealId,
   parentId,
   organizationId,
