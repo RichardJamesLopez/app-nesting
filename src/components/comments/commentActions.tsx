@@ -28,6 +28,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
+import { cn } from "~/lib/utils";
 
 export const CommentActions: React.FC<{
   self: User;
@@ -66,7 +67,7 @@ export const CommentActions: React.FC<{
         <div className="flex items-center">
           <Button
             size="icon"
-            variant={userReaction === true ? "default" : "ghost"}
+            variant="ghost"
             onClick={() =>
               addReaction.mutate({
                 commentId: id,
@@ -76,7 +77,13 @@ export const CommentActions: React.FC<{
             }
             className="h-min w-min flex-1 p-0.5"
           >
-            <ArrowUpIcon strokeWidth={4} className="h-4 w-4 text-gray-400" />
+            <ArrowUpIcon
+              strokeWidth={4}
+              className={cn(
+                "h-4 w-4",
+                userReaction === true ? "text-gray-800" : "text-gray-400",
+              )}
+            />
           </Button>
           <span className="mx-1 flex-1 text-xs">
             {(totalVote as number) ?? (
@@ -85,7 +92,7 @@ export const CommentActions: React.FC<{
           </span>
           <Button
             size="icon"
-            variant={userReaction === false ? "default" : "ghost"}
+            variant="ghost"
             onClick={() =>
               addReaction.mutate({
                 commentId: id,
@@ -95,7 +102,13 @@ export const CommentActions: React.FC<{
             }
             className="h-min w-min flex-1 p-0.5"
           >
-            <ArrowDownIcon strokeWidth={4} className="h-4 w-4 text-gray-400" />
+            <ArrowDownIcon
+              strokeWidth={4}
+              className={cn(
+                "h-4 w-4",
+                userReaction === false ? "text-gray-800" : "text-gray-400",
+              )}
+            />
           </Button>
         </div>
         <Button
