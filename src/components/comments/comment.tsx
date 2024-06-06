@@ -40,8 +40,9 @@ function isJSONParsable(value: string | null) {
 export const Comment: React.FC<{
   self: User;
   comment: CommentType;
+  threadIds?: number[];
   onChange?: () => void;
-}> = ({ comment, self, onChange }) => {
+}> = ({ comment, self, threadIds, onChange }) => {
   const {
     id,
     content,
@@ -53,13 +54,15 @@ export const Comment: React.FC<{
     replyCount,
   } = comment;
 
+  const withReplies = threadIds?.includes(id);
+
   const {
     data: fetchedReplies,
     refetch,
     isFetched: areRepliesFetched,
   } = api.comment.getAll.useQuery(
     { dealId, organizationId, parentId: id },
-    { enabled: false },
+    { enabled: withReplies },
   );
 
   const router = useRouter();

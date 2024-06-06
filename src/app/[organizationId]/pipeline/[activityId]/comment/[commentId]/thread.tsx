@@ -53,6 +53,7 @@ export default function Thread({
           key={comment.id}
           comment={comment}
           self={session.user}
+          threadIds={threadIds} // to fetch replies of each thread item on init (instead of showing on comment action)
           onChange={() => {
             refetch();
           }}
