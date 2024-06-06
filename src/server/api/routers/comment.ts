@@ -22,6 +22,7 @@ import {
   notifications,
   type NotificationSourceType,
 } from "~/server/db/schema";
+import { db } from "~/server/db";
 import { commentFormSchema } from "~/lib/validationSchemas";
 
 export const commentRouter = createTRPCRouter({
@@ -35,38 +36,9 @@ export const commentRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       try {
-        const totalVotes = ctx.db
-          .select({
-            commentId: commentReactions.commentId,
-            totalVote:
-              sql`COALESCE(SUM(CASE WHEN ${commentReactions.type} THEN 1 ELSE -1 END), 0)`.as(
-                "totalVote",
-              ),
-          })
-          .from(commentReactions)
-          .groupBy(commentReactions.commentId)
-          .as("totalVotes");
-
-        const userReactions = ctx.db
-          .select({
-            commentId: commentReactions.commentId,
-            userReaction:
-              sql`CASE WHEN ${commentReactions.userId} = ${ctx.session.user.id} THEN ${commentReactions.type} ELSE NULL END`.as(
-                "userReaction",
-              ),
-          })
-          .from(commentReactions)
-          .where(eq(commentReactions.userId, ctx.session.user.id))
-          .as("userReactions");
-
-        const replyCounts = ctx.db
-          .select({
-            commentId: comments.parentId,
-            replyCount: sql`COUNT(${comments.id})`.as("replyCount"),
-          })
-          .from(comments)
-          .groupBy(comments.parentId)
-          .as("replyCount");
+        const totalVotes = subqueryGetters.totalVote();
+        const userReactions = subqueryGetters.userReaction(ctx.session.user.id);
+        const replyCounts = subqueryGetters.replyCount();
 
         const isLevelOne = and(
           eq(comments.dealId, input.dealId),
@@ -108,7 +80,7 @@ export const commentRouter = createTRPCRouter({
 
         [levelOneComments, levelTwoComments].forEach((levelNComments) =>
           levelNComments
-            .leftJoin(users, eq(comments.createdById, users.id))
+            .innerJoin(users, eq(comments.createdById, users.id))
             .leftJoin(totalVotes, eq(comments.id, totalVotes.commentId))
             .leftJoin(userReactions, eq(comments.id, userReactions.commentId))
             .leftJoin(replyCounts, eq(comments.id, replyCounts.commentId)),
@@ -125,29 +97,60 @@ export const commentRouter = createTRPCRouter({
 
         const result = await unionAll(levelOneComments, levelTwoComments);
 
-        type Comment = (typeof result)[number] & {
-          replies?: typeof result;
+        return getCommentTree(result);
+      } catch (error) {
+        console.error(error);
+      }
+    }),
+
+  getThread: protectedProcedure
+    .input(
+      z.object({
+        dealId: z.string(),
+        organizationId: z.string(),
+        threadIds: z.array(z.number()),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      try {
+        const totalVotes = subqueryGetters.totalVote();
+        const userReactions = subqueryGetters.userReaction(ctx.session.user.id);
+        const replyCounts = subqueryGetters.replyCount();
+
+        const selectedColumns = {
+          ...getTableColumns(comments),
+          user: {
+            id: users.id,
+            name: users.name,
+            image: users.image,
+          },
+          totalVote: totalVotes.totalVote,
+          userReaction: userReactions.userReaction,
+          replyCount: replyCounts.replyCount,
         };
-        const idToCommentMap = new Map<number, Comment>();
-        const commentTree: Comment[] = [];
 
-        result.forEach((comment) => {
-          idToCommentMap.set(comment.id, { ...comment, replies: [] });
+        const threadQueries = input.threadIds.map((commentId) =>
+          ctx.db
+            .select(selectedColumns)
+            .from(comments)
+            .where(eq(comments.id, commentId))
+            .innerJoin(users, eq(comments.createdById, users.id))
+            .leftJoin(totalVotes, eq(comments.id, totalVotes.commentId))
+            .leftJoin(userReactions, eq(comments.id, userReactions.commentId))
+            .leftJoin(replyCounts, eq(comments.id, replyCounts.commentId)),
+        );
+
+        if (!threadQueries[0]) return;
+
+        if (!threadQueries[1]) return await threadQueries[0];
+
+        let unionedQuery = threadQueries[0].unionAll(threadQueries[1]);
+        threadQueries.slice(2).forEach((query) => {
+          unionedQuery = unionedQuery.unionAll(query);
         });
+        const result = await unionedQuery;
 
-        result.forEach((comment) => {
-          if (
-            comment.parentId === null ||
-            comment.parentId === input.parentId
-          ) {
-            commentTree.push(idToCommentMap.get(comment.id)!);
-          } else {
-            const parent = idToCommentMap.get(comment.parentId);
-            parent?.replies?.push(idToCommentMap.get(comment.id)!);
-          }
-        });
-
-        return commentTree;
+        return getCommentTree(result);
       } catch (error) {
         console.error(error);
       }
@@ -266,6 +269,64 @@ export const commentRouter = createTRPCRouter({
       }
     }),
 });
+
+const subqueryGetters = {
+  totalVote: () =>
+    db
+      .select({
+        commentId: commentReactions.commentId,
+        totalVote:
+          sql`COALESCE(SUM(CASE WHEN ${commentReactions.type} THEN 1 ELSE -1 END), 0)`.as(
+            "totalVote",
+          ),
+      })
+      .from(commentReactions)
+      .groupBy(commentReactions.commentId)
+      .as("totalVotes"),
+  userReaction: (userId: string) =>
+    db
+      .select({
+        commentId: commentReactions.commentId,
+        userReaction:
+          sql`CASE WHEN ${commentReactions.userId} = ${userId} THEN ${commentReactions.type} ELSE NULL END`.as(
+            "userReaction",
+          ),
+      })
+      .from(commentReactions)
+      .where(eq(commentReactions.userId, userId))
+      .as("userReactions"),
+  replyCount: () =>
+    db
+      .select({
+        commentId: comments.parentId,
+        replyCount: sql`COUNT(${comments.id})`.as("replyCount"),
+      })
+      .from(comments)
+      .groupBy(comments.parentId)
+      .as("replyCount"),
+};
+
+function getCommentTree<T extends { id: number; parentId: number | null }>(
+  result: T[],
+): (T & { replies?: T[] })[] {
+  const idToCommentMap = new Map<number, T & { replies?: T[] }>();
+  const commentTree: (T & { replies?: T[] })[] = [];
+
+  result.forEach((comment) => {
+    idToCommentMap.set(comment.id, { ...comment, replies: [] });
+  });
+
+  result.forEach((comment) => {
+    if (comment.parentId === null) {
+      commentTree.push(idToCommentMap.get(comment.id)!);
+    } else {
+      const parent = idToCommentMap.get(comment.parentId);
+      parent?.replies?.push(idToCommentMap.get(comment.id)!);
+    }
+  });
+
+  return commentTree;
+}
 
 export type CommentType = NonNullable<
   inferProcedureOutput<typeof commentRouter.getAll>

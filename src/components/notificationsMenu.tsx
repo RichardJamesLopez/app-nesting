@@ -49,10 +49,18 @@ export function NotificationsMenu() {
               isRead,
               commentId,
               dealId,
+              organizationId,
               mentionedBy: { name, avatar },
             }) => (
               <Fragment key={id}>
-                <DropdownMenuItem className="flex cursor-pointer items-center justify-between space-x-3 rounded-none p-4">
+                <DropdownMenuItem
+                  onClick={() =>
+                    router.push(
+                      `/${organizationId}/pipeline/${dealId}/comment/${commentId}`,
+                    )
+                  }
+                  className="flex cursor-pointer items-center justify-between space-x-3 rounded-none p-4"
+                >
                   {avatar ? (
                     <Image
                       alt="User avatar"
