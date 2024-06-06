@@ -2,9 +2,11 @@
 
 import { useSession } from "next-auth/react";
 import { useState } from "react";
+import { CornerUpLeftIcon } from "lucide-react";
 
 import { api } from "~/trpc/react";
 import { Comment } from "~/components/comments/comment";
+import { Button } from "~/components/ui/button";
 
 export default function Thread({
   dealId,
@@ -31,14 +33,20 @@ export default function Thread({
 
   return (
     <div>
-      <div className="mb-4">
-        this is a thread
-        <button
-          onClick={() => parentId && setThreadIds([...threadIds, parentId])}
+      <h2 className="mb-6 border-b pb-1 text-sm text-muted-foreground">
+        Single comment thread
+      </h2>
+      {parentId && (
+        <Button
+          onClick={() => setThreadIds([...threadIds, parentId])}
+          variant="ghost"
+          size="sm"
+          className="text-xs"
         >
-          show parent
-        </button>
-      </div>
+          <CornerUpLeftIcon className="mr-2 h-3 w-3" />
+          Parent comment
+        </Button>
+      )}
 
       {thread.map((comment) => (
         <Comment
