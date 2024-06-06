@@ -5,7 +5,7 @@ import { useSession, signOut } from "next-auth/react";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAccount } from "wagmi";
 import {
-  UserIcon,
+  // UserIcon,
   WalletMinimalIcon,
   LogOutIcon,
   UsersIcon,
@@ -91,17 +91,20 @@ export function UserMenu({ organizationId }: { organizationId: string }) {
             <Skeleton className="h-10 w-10 rounded-full" />
           )}
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56">
+        <DropdownMenuContent className="w-56" align="end">
           <DropdownMenuLabel>
             <div className="mr-2">{username}</div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem>
+            {/* <DropdownMenuItem className="cursor-pointer">
               <UserIcon className="mr-2 h-4 w-4" />
               <span>Profile</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => openWeb3()}>
+            </DropdownMenuItem> */}
+            <DropdownMenuItem
+              onClick={() => openWeb3()}
+              className="cursor-pointer"
+            >
               <WalletMinimalIcon className="mr-2 h-4 w-4" />
               <span>
                 {!isWeb3Connected ? "Connect wallet" : truncatedWalletAddress}
@@ -126,6 +129,7 @@ export function UserMenu({ organizationId }: { organizationId: string }) {
                       <DropdownMenuCheckboxItem
                         key={organization.id}
                         checked={organization.id === organizationId}
+                        className="cursor-pointer"
                         onCheckedChange={() =>
                           router.push(`/${organization.id}/pipeline`)
                         }
@@ -138,7 +142,7 @@ export function UserMenu({ organizationId }: { organizationId: string }) {
               </DropdownMenuPortal>
             </DropdownMenuSub>
             <SheetTrigger asChild>
-              <DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer">
                 <PlusIcon className="mr-2 h-4 w-4" />
                 New organization
               </DropdownMenuItem>
@@ -148,6 +152,7 @@ export function UserMenu({ organizationId }: { organizationId: string }) {
           <DropdownMenuGroup>
             <DropdownMenuItem
               onClick={() => signOut({ callbackUrl: window.location.origin })}
+              className="cursor-pointer"
             >
               <LogOutIcon className="mr-2 h-4 w-4" />
               <span>Sign out</span>

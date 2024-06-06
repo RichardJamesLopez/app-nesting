@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 
 import { UserMenu } from "~/components/userMenu";
+import { NotificationsMenu } from "~/components/notificationsMenu";
 import { Button } from "~/components/ui/button";
 import {
   CommandDialog,
@@ -82,9 +83,8 @@ export function Header({ organizationId }: { organizationId: string }) {
               <span className="text-xs">⌘</span>K
             </kbd>
           </div>
-          <Button size="icon" variant="ghost">
-            <BellIcon className="h-5 w-5 text-gray-600" />
-          </Button>
+
+          <NotificationsMenu />
 
           <UserMenu organizationId={organizationId} />
         </div>
