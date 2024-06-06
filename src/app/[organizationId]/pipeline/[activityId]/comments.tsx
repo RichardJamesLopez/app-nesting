@@ -14,6 +14,7 @@ export default async function Comments({
   if (!session) return null;
 
   const comments = await api.comment.getAll({ dealId, organizationId });
+  if (!comments) return null;
 
   return (
     <div>
