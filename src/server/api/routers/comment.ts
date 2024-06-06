@@ -133,7 +133,7 @@ export const commentRouter = createTRPCRouter({
           ctx.db
             .select(selectedColumns)
             .from(comments)
-            .where(eq(comments.id, commentId))
+            .where(and(eq(comments.id, commentId), isNull(comments.deletedAt)))
             .innerJoin(users, eq(comments.createdById, users.id))
             .leftJoin(totalVotes, eq(comments.id, totalVotes.commentId))
             .leftJoin(userReactions, eq(comments.id, userReactions.commentId))
@@ -231,6 +231,8 @@ export const commentRouter = createTRPCRouter({
           .update(comments)
           .set({ deletedAt: sql`CURRENT_TIMESTAMP` })
           .where(eq(comments.id, input));
+
+        await ctx.db.delete(notifications).where(eq(notifications.id, input));
       } catch (error) {
         console.error(error);
       }
