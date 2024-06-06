@@ -66,34 +66,7 @@ export const Comment: React.FC<{
 
   const replies = areRepliesFetched ? fetchedReplies : initialReplies;
 
-  const replyCountNumber = Number(replyCount);
-
-  let renderedReplies = null;
-  if (replies?.length)
-    renderedReplies = replies
-      .sort((a, b) => Number(b.createdAt) - Number(a.createdAt))
-      .map((reply) => (
-        <Comment
-          key={reply.id}
-          comment={reply}
-          self={self}
-          onChange={() => {
-            refetch();
-            router.refresh();
-          }} // go one level up to be able to cover the item
-        />
-      ));
-  else if (replyCountNumber)
-    renderedReplies = (
-      <Button
-        onClick={() => refetch()}
-        className="h-min p-1 text-xs"
-        variant="ghost"
-        size="sm"
-      >
-        {replyCountNumber} more repl{replyCountNumber > 1 ? "ies" : "y"}
-      </Button>
-    );
+  const moreRepliesCount = Number(replyCount) - (replies?.length ?? 0);
 
   const [showCommentForm, setShowCommentForm] = useState<boolean>(false);
 
@@ -168,7 +141,31 @@ export const Comment: React.FC<{
               }}
             />
           )}
-          {renderedReplies}
+
+          {replies
+            ?.sort((a, b) => Number(b.createdAt) - Number(a.createdAt))
+            .map((reply) => (
+              <Comment
+                key={reply.id}
+                comment={reply}
+                self={self}
+                onChange={() => {
+                  refetch();
+                  router.refresh();
+                }} // go one level up to be able to cover the item
+              />
+            ))}
+
+          {moreRepliesCount ? (
+            <Button
+              onClick={() => refetch()}
+              className="h-min p-1 text-xs"
+              variant="ghost"
+              size="sm"
+            >
+              {moreRepliesCount} more repl{moreRepliesCount > 1 ? "ies" : "y"}
+            </Button>
+          ) : null}
         </div>
       </div>
     </div>
