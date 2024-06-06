@@ -53,7 +53,7 @@ export default function Thread({
           key={comment.id}
           comment={comment}
           self={session.user}
-          threadIds={threadIds} // to fetch replies of each thread item on init (instead of showing on comment action)
+          threadIds={threadIds} // to fetch replies of each thread item on init (instead of showing on comment action); this hotfix to be removed on removing fetch bubbling
           onChange={() => {
             refetch();
           }}

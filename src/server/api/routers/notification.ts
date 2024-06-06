@@ -1,4 +1,5 @@
 import { eq, and, desc } from "drizzle-orm";
+import * as z from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { comments, users, notifications } from "~/server/db/schema";
@@ -42,4 +43,20 @@ export const notificationRouter = createTRPCRouter({
       console.error(error);
     }
   }),
+
+  markAsRead: protectedProcedure
+    .input(z.number())
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const updatedNotifications = await ctx.db
+          .update(notifications)
+          .set({ isRead: true })
+          .where(eq(notifications.id, input))
+          .returning({ commentId: notifications.commentId });
+
+        return updatedNotifications[0]?.commentId;
+      } catch (error) {
+        console.error(error);
+      }
+    }),
 });

@@ -26,9 +26,13 @@ export function NotificationsMenu() {
   const { data: session } = useSession();
   if (!session) return;
 
-  const { data: notifications } = api.notification.getAll.useQuery();
+  const { data: notifications, refetch: refetchNotifications } =
+    api.notification.getAll.useQuery();
 
-  const { data: hasUnread } = api.notification.getHasUnread.useQuery();
+  const { data: hasUnread, refetch: refetchHasRead } =
+    api.notification.getHasUnread.useQuery();
+
+  const { mutateAsync: markAsRead } = api.notification.markAsRead.useMutation();
 
   return (
     <DropdownMenu modal={false}>
@@ -54,11 +58,14 @@ export function NotificationsMenu() {
             }) => (
               <Fragment key={id}>
                 <DropdownMenuItem
-                  onClick={() =>
+                  onClick={async () => {
+                    await markAsRead(id);
+                    refetchHasRead();
+                    refetchNotifications();
                     router.push(
                       `/${organizationId}/pipeline/${dealId}/comment/${commentId}`,
-                    )
-                  }
+                    );
+                  }}
                   className="flex cursor-pointer items-center justify-between space-x-3 rounded-none p-4"
                 >
                   {avatar ? (
