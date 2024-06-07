@@ -1,8 +1,10 @@
-import { eq, and, isNull } from "drizzle-orm";
+import { eq, and, isNull, sql } from "drizzle-orm";
 import * as z from "zod";
+import { inferProcedureOutput } from "@trpc/server";
 
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-import { memberships, invites } from "~/server/db/schema";
+import { memberships, invites, membershipRoles } from "~/server/db/schema";
+import { RoleIdType } from "~/lib/validationSchemas";
 
 export const membershipRouter = createTRPCRouter({
   getAll: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
@@ -23,7 +25,8 @@ export const membershipRouter = createTRPCRouter({
       console.error(error);
     }
   }),
-  createMember: protectedProcedure
+
+  create: protectedProcedure
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
       try {
@@ -46,4 +49,83 @@ export const membershipRouter = createTRPCRouter({
         console.error(error);
       }
     }),
+
+  remove: protectedProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+        organizationId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        await ctx.db
+          .delete(membershipRoles)
+          .where(
+            and(
+              eq(membershipRoles.userId, input.userId),
+              eq(membershipRoles.organizationId, input.organizationId),
+            ),
+          );
+
+        await ctx.db
+          .delete(memberships)
+          .where(
+            and(
+              eq(memberships.userId, input.userId),
+              eq(memberships.organizationId, input.organizationId),
+            ),
+          );
+      } catch (error) {
+        console.error(error);
+      }
+    }),
+
+  addRole: protectedProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+        organizationId: z.string(),
+        roleId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        await ctx.db.insert(membershipRoles).values({
+          userId: input.userId,
+          organizationId: input.organizationId,
+          roleId: input.roleId as RoleIdType,
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    }),
+
+  removeRole: protectedProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+        organizationId: z.string(),
+        roleId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        await ctx.db
+          .delete(membershipRoles)
+          .where(
+            and(
+              eq(membershipRoles.userId, input.userId),
+              eq(membershipRoles.organizationId, input.organizationId),
+              eq(membershipRoles.roleId, input.roleId),
+            ),
+          );
+      } catch (error) {
+        console.error(error);
+      }
+    }),
 });
+
+export type MembershipType = NonNullable<
+  inferProcedureOutput<typeof membershipRouter.getAll>
+>[number];

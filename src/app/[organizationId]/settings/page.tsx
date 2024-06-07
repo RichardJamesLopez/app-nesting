@@ -21,15 +21,17 @@ export default function SettingsPage({
     onError: () => toast.error("Failed to update settings"),
   });
 
-  const { data: isAdmin } = api.user.getIsAdmin.useQuery();
+  const { data: userRoles } = api.user.getRoles.useQuery();
 
   return (
     <>
       <h1 className="mb-6 text-3xl font-semibold tracking-tight first:mt-0">
         Settings
       </h1>
-      {isAdmin ? <UserManagement organizationId={organizationId} /> : null}
-      {isAdmin && organization.data ? (
+      {userRoles?.isAdmin ? (
+        <UserManagement organizationId={organizationId} />
+      ) : null}
+      {userRoles?.isAdmin && organization.data ? (
         <Visibility
           defaultValues={{
             includeHiddenDeals: organization.data.includeHiddenDeals,

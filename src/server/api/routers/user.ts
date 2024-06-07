@@ -23,7 +23,8 @@ export const userRouter = createTRPCRouter({
       console.error(error);
     }
   }),
-  getIsAdmin: protectedProcedure.query(async ({ ctx }) => {
+
+  getRoles: protectedProcedure.query(async ({ ctx }) => {
     try {
       const user = await ctx.db.query.users.findFirst({
         where: and(eq(users.id, ctx.session.user.id)),
@@ -31,6 +32,7 @@ export const userRouter = createTRPCRouter({
           memberships: {
             with: {
               membershipRoles: true,
+              organization: true,
             },
           },
         },
@@ -38,19 +40,25 @@ export const userRouter = createTRPCRouter({
       if (!user) throw new Error("User not found");
       if (!user.memberships[0]) throw new Error("Membership not found");
 
-      const { organizationId } = user.memberships.reduce(
+      const { organizationId, organization } = user.memberships.reduce(
         (last, x) => (x.lastSelectedAt > last.lastSelectedAt ? x : last),
         user.memberships[0],
       );
 
-      const isUserAdmin = user.memberships
+      const roles = user.memberships
         .find((membership) => membership.organizationId === organizationId)
-        ?.membershipRoles.map(({ roleId }) => roleId)
-        .includes("admin" as RoleIdType);
+        ?.membershipRoles.map(({ roleId }) => roleId);
 
-      return isUserAdmin;
+      return {
+        isAdmin: Boolean(roles?.includes("admin" as RoleIdType)),
+        isOwner: ctx.session.user.id === organization.ownerId,
+      };
     } catch (error) {
       console.error(error);
+      return {
+        isAdmin: false,
+        isOwner: false,
+      };
     }
   }),
 });
