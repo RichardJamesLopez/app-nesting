@@ -58,8 +58,8 @@ export const CommentActions: React.FC<{
       console.error(error);
     },
   });
-  const { data: isAdmin } = api.user.getIsAdmin.useQuery();
-  const isDeletable = isAdmin || comment.createdById === self.id;
+  const { data: userRoles } = api.user.getRoles.useQuery();
+  const isDeletable = userRoles?.isAdmin || comment.createdById === self.id;
 
   return (
     <>
