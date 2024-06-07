@@ -304,6 +304,7 @@ const subqueryGetters = {
         replyCount: sql`COUNT(${comments.id})`.as("replyCount"),
       })
       .from(comments)
+      .where(isNull(comments.deletedAt))
       .groupBy(comments.parentId)
       .as("replyCount"),
 };
