@@ -17,7 +17,7 @@ export default function InvitePage({
   const router = useRouter();
   const invite = api.invite.get.useQuery(params.inviteId);
   const organizations = api.organization.getAll.useQuery();
-  const createMember = api.membership.createMember.useMutation({
+  const createMembership = api.membership.create.useMutation({
     onSuccess: () => {
       organizations.refetch();
       router.push(`/${invite.data?.organizationId}/pipeline`);
@@ -58,7 +58,7 @@ export default function InvitePage({
       <p>{invite.data.inviterName} invited you to join</p>
       <h1 className="mb-4 text-3xl">{invite.data.organizationName}</h1>
       {status === "authenticated" && (
-        <Button onClick={() => createMember.mutate(params.inviteId)}>
+        <Button onClick={() => createMembership.mutate(params.inviteId)}>
           Accept invite
         </Button>
       )}

@@ -143,7 +143,7 @@ export function NewInvite({
                       <SelectItem value="1">1 use</SelectItem>
                       <SelectItem value="5">5 uses</SelectItem>
                       <SelectItem value="10">10 uses</SelectItem>
-                      <SelectItem value="25">25 5uses</SelectItem>
+                      <SelectItem value="25">25 uses</SelectItem>
                       <SelectItem value="50">50 uses</SelectItem>
                       <SelectItem value="100">100 uses</SelectItem>
                     </SelectContent>

@@ -68,7 +68,7 @@ export const dealRouter = createTRPCRouter({
         lastEdited:
           notionResponse.properties["Last edited time"].last_edited_time,
         visibility: notionResponse.properties.Visibility.select.name,
-      };
+      } as DealType;
     } catch (error) {
       console.error(error);
     }

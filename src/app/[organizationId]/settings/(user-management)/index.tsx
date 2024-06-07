@@ -21,7 +21,10 @@ import { Button } from "~/components/ui/button";
 import { MemberActions } from "./memberActions";
 
 export function UserManagement({ organizationId }: { organizationId: string }) {
-  const memberships = api.membership.getAll.useQuery(organizationId ?? "");
+  const { data: memberships, refetch } =
+    api.membership.getAll.useQuery(organizationId);
+
+  const { data: organization } = api.organization.get.useQuery(organizationId);
 
   return (
     <Card className="mb-4">
@@ -47,14 +50,14 @@ export function UserManagement({ organizationId }: { organizationId: string }) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {memberships.data?.map(({ createdAt, user, membershipRoles }) => (
-              <TableRow key={user.email}>
+            {memberships?.map((membership) => (
+              <TableRow key={membership.user.email}>
                 <TableCell className="font-medium">
                   <div className="flex">
-                    {user.image ? (
+                    {membership.user.image ? (
                       <Image
-                        src={user.image}
-                        alt={`${user.name}' avatar`}
+                        src={membership.user.image}
+                        alt={`${membership.user.name}' avatar`}
                         height={24}
                         width={24}
                         className="mr-1 h-8 w-8 rounded-full"
@@ -64,20 +67,27 @@ export function UserManagement({ organizationId }: { organizationId: string }) {
                     )}
                     <div className="flex flex-col space-y-1">
                       <p className="text-sm font-medium leading-none">
-                        {user.name}
+                        {membership.user.name}
                       </p>
                       <p className="text-xs leading-none text-muted-foreground">
-                        {user.email}
+                        {membership.user.email}
                       </p>
                     </div>
                   </div>
                 </TableCell>
                 <TableCell>
-                  {membershipRoles[0]?.role.name ?? "Member"}
+                  {organization?.ownerId === membership.userId
+                    ? "Owner"
+                    : membership.membershipRoles[0]?.role.name ?? "Member"}
                 </TableCell>
-                <TableCell>{formatDistanceToNow(createdAt)} ago</TableCell>
+                <TableCell>
+                  {formatDistanceToNow(membership.createdAt)} ago
+                </TableCell>
                 <TableCell className="text-right">
-                  <MemberActions />
+                  <MemberActions
+                    membership={membership}
+                    onChange={() => refetch()}
+                  />
                 </TableCell>
               </TableRow>
             ))}

@@ -8,13 +8,13 @@ import {
 } from "~/components/ui/breadcrumb";
 import { api } from "~/trpc/server";
 
-import Comments from "./comments";
+import Thread from "./thread";
 import { DealCard } from "~/components/dealCard";
 
-export default async function ActivityPage({
+export default async function CommentPage({
   params,
 }: {
-  params: { activityId: string; organizationId: string };
+  params: { activityId: string; organizationId: string; commentId: string };
 }) {
   const breadcrumb = (
     <Breadcrumb className="mb-6">
@@ -26,7 +26,15 @@ export default async function ActivityPage({
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbPage>Deal</BreadcrumbPage>
+          <BreadcrumbLink
+            href={`/${params.organizationId}/pipeline/${params.activityId}`}
+          >
+            Deal
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbPage>Comment</BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>
@@ -40,9 +48,10 @@ export default async function ActivityPage({
       {deal ? (
         <>
           <DealCard {...deal} />
-          <Comments
+          <Thread
             dealId={params.activityId}
             organizationId={params.organizationId}
+            commentId={Number(params.commentId)}
           />
         </>
       ) : (
