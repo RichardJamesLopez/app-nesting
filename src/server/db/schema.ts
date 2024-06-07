@@ -171,7 +171,9 @@ export const memberships = createTable(
     organizationId: varchar("organizationId", { length: 16 })
       .references(() => organizations.id)
       .notNull(),
-    inviteId: varchar("id", { length: 16 }).references(() => invites.id),
+    inviteId: varchar("id", { length: 16 }).references(() => invites.id, {
+      onDelete: "set null",
+    }),
     createdAt: timestamp("createdAt", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
